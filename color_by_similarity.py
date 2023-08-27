@@ -1,118 +1,23 @@
 
+#TO DO
+#- check pop funktion
+#- Lav bedre output fra run function
+#- rydde op i py doc
+#- Lave visualisering i ipynb med nyt py doc
+#- Lav et print der opdaterer sig selv, så man kan have et fedt download.
+
+
 
 from pymol import cmd
 import numpy as np
 import os
 import sys
-import png
 import time
 from scipy.spatial import cKDTree
 import re
 
 start_time = time.time()
 
-iterations = 3
-tresshold_aa = 100
-max_dist = 6
-remove_chain_duplicate = True
-redundency_tresshold = 0.8 # Removes structure that are more similar than the tresshold to others. 1 means that nothing is removed
-# User arguments - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-arguments = sys.argv
-if len(arguments) == 1:
-    path_ref_structure = input("Please type the path for the reference structure: ")
-    path_folder = input("Please type the path for the folder with the homologues structures: ")
-elif len(arguments) == 2:
-    path_ref_structure = arguments[1]
-    path_folder = input("Please type the path for the folder with the homologues structures: ")
-else:
-    path_ref_structure = arguments[1]
-    path_folder = arguments[2]
-    if len(arguments) > 3:
-        try:
-            iterations = int(arguments[3])
-        except:
-            print("\n- - - - - - - - - - - - - - - - - -\nKEY ERROR")
-            print("iterations needs to be typed as an int!")
-            print("\nUSAGE\n\ncolor_by_similarity.py ref_structure.pdb homologues_structure_folder [iterations=3] [tresshold_aa=100]\n- - - - - - - - - - - - - - - - - -\n")
-            sys.exit(1)
-        if len(arguments) > 4:
-            try:
-                tresshold_aa = float(arguments[4])
-            except:
-                print("\n- - - - - - - - - - - - - - - - - -\nKEY ERROR")
-                print("Tresshold aa needs to be typed as a float!")
-                print("\nUSAGE\n\ncolor_by_similarity.py ref_structure.pdb homologues_structure_folder [iterations=3] [tresshold_aa=100]\n- - - - - - - - - - - - - - - - - -\n")
-                sys.exit(1)
-
-# path_ref_structure = "ublipase.pdb"
-# path_ref_structure = "ref_structure.pdb"
-# path_folder = "homologues_plastic"
-
-
-
-# Importing files - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-try:
-    # cmd.fetch("2gub")
-    # cmd.fetch("3a6z")
-    # cmd.fetch("2zvd")
-    # cmd.fetch("3a70")
-    # ref_structure = "ubli"
-    if remove_chain_duplicate:
-        ref_structure = path_ref_structure.split("/")[-1].split(".")[0]+"__CA"
-    else:
-        ref_structure = path_ref_structure.split("/")[-1].split(".")[0]+"_CA"
-    cmd.load(path_ref_structure)
-    for file in os.listdir(path_folder):
-        cmd.load(path_folder + "/" + file)
-    structure_list_entire = cmd.get_object_list()
-    if remove_chain_duplicate:
-        cmd.hide("everything", "all and not HETATM")
-        for i, structure in enumerate(structure_list_entire):
-            tmp_chains = cmd.get_fastastr(structure).split(">")[1:]
-            chains = dict()
-            for c in tmp_chains:
-                c = c.split("\n")
-                value = "".join(c[1:])
-                if value not in chains.values():
-                    chains[c[0]] = value
-            cmd.select(f"{structure}_", "none")
-            for k in chains.keys():
-                chain_id = k.split("_")[-1]
-                cmd.show("cartoon", f"{structure} and chain {chain_id}")
-                cmd.select(f"{structure}_", f"{structure}_ or (chain {chain_id} and {structure})")
-            structure_list_entire[i] = f"{structure}_"
-    n_homologous_list = len(structure_list_entire) - 1
-    # ref_model = cmd.get_model(f"{ref_structure} and name CA and resi 1:439 and chain A")
-    # homologous_models = []
-    structure_list = []
-    align_structure_list = []
-    for i, structure in enumerate(structure_list_entire):
-        structure_list.append(structure+"_CA")
-        align_structure_list.append(structure+"_align")
-        cmd.select(structure_list[i], structure+" and name CA and not HETATM")
-        # homologous_models.append(cmd.get_model(f"{structure} and name CA"))
-    # models = [ref_model] + homologous_models
-    # print(models)
-except:
-    print("\n- - - - - - - - - - - - - - - - - -\nImport ERROR")
-    print("\nUSAGE\n\ncolor_by_similarity.py ref_structure.pdb homologues_structure_folder [iterations=3] [tresshold_aa=100]\n- - - - - - - - - - - - - - - - - -\n")
-    sys.exit(1)
-
-
-
-
-
-
-
-
-
-# Basic Pymol stuff - - - - - - - - - - - - - - - - - - - - - - - - - - -- - - - - -
-
-cmd.remove("hydrogens")
-
-
-
-# Functions - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 #From https://www.ncbi.nlm.nih.gov/Class/FieldGuide/BLOSUM62.txt
 def aa_to_blosom(aa1,aa2):
@@ -154,6 +59,178 @@ def aa_to_blosom(aa1,aa2):
     id1 = aa_to_id[aa1]
     id2 = aa_to_id[aa2]
     return blosom62[id1][id2]
+
+
+
+def color_by_number(number):
+    """
+    DESCRIPTION
+
+    Rainbow from red to white
+    number 0: red
+    number 1: white
+
+    DEPENDENCIES
+
+    import numpy as np
+    """
+    return [0.8+(number/5),number,number]
+
+
+def color_pymol(model_CA, structure_entire, score_list):
+    """
+    DESCRIPTION
+
+
+
+    DEPENDENCIES
+
+    color_by_number
+    from pymol import cmd
+    """
+    # model = cmd.get_model(structure_entire)
+    for i, atom in enumerate(model_CA.atom):
+        print(structure_entire, atom.resi, atom.resn, atom.chain, score_list[i], color_by_number(score_list[i]))
+        cmd.set_color(f"{atom}color", color_by_number(score_list[i]))
+        cmd.color(f"{atom}color", f"resi {atom.resi} and chain {atom.chain} and {structure_entire}")
+
+    # cmd.set_color(f"color{ref_atom}", color_by_number(number))
+    # cmd.color(f"color{ref_atom}", f"resi {ref_atom.resi} and {ref_structure}")
+
+def select_by_score(score_list, modelatoms):
+    """
+    DESCRIPTION
+
+    Takes list of scores and make a list of strings used for selection for the residues with score above procentive tresshold
+
+    DEPENDENCIES
+
+    import numpy as np
+    """
+    # score_list_no_zeroes = np.array(list(filter(lambda num: num != 0, score_list)))
+    # max = np.max(score_list)
+    tresshold = np.median(np.array(list(filter(lambda num: num != 0, score_list))))
+    out_string = ""
+    chain = ""
+    # tresshold = (max+median)/2
+    for j, score in enumerate(score_list):
+        if score > tresshold:
+            if chain == "":
+                chain = modelatoms[j].chain
+                out_string = f" and ((chain {chain} and (resi {j+1}"
+            elif chain != modelatoms[j].chain:
+                chain = modelatoms[j].chain
+                out_string += f")) or (chain {chain} and (resi {j+1}"
+            else:
+                out_string += f" or resi {j+1}"
+    return out_string+")))"
+    
+
+
+
+
+def run(ref_structure, files, iterations, tresshold_aa, max_dist, remove_chain_duplicate, outfile):
+# redundency_tresshold = 0.8 # Removes structure that are more similar than the tresshold to others. 1 means that nothing is removed
+# User arguments - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+# arguments = sys.argv
+# if len(arguments) == 1:
+#     path_ref_structure = input("Please type the path for the reference structure: ")
+#     path_folder = input("Please type the path for the folder with the homologues structures: ")
+# elif len(arguments) == 2:
+#     path_ref_structure = arguments[1]
+#     path_folder = input("Please type the path for the folder with the homologues structures: ")
+# else:
+#     path_ref_structure = arguments[1]
+#     path_folder = arguments[2]
+#     if len(arguments) > 3:
+#         try:
+#             iterations = int(arguments[3])
+#         except:
+#             print("\n- - - - - - - - - - - - - - - - - -\nKEY ERROR")
+#             print("iterations needs to be typed as an int!")
+#             print("\nUSAGE\n\ncolor_by_similarity.py ref_structure.pdb homologues_structure_folder [iterations=3] [tresshold_aa=100]\n- - - - - - - - - - - - - - - - - -\n")
+#             sys.exit(1)
+#         if len(arguments) > 4:
+#             try:
+#                 tresshold_aa = float(arguments[4])
+#             except:
+#                 print("\n- - - - - - - - - - - - - - - - - -\nKEY ERROR")
+#                 print("Tresshold aa needs to be typed as a float!")
+#                 print("\nUSAGE\n\ncolor_by_similarity.py ref_structure.pdb homologues_structure_folder [iterations=3] [tresshold_aa=100]\n- - - - - - - - - - - - - - - - - -\n")
+#                 sys.exit(1)
+
+# path_ref_structure = "ublipase.pdb"
+# path_ref_structure = "ref_structure.pdb"
+# path_folder = "homologues_plastic"
+
+
+
+# Importing files - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+    try:
+        # cmd.fetch("2gub")
+        # cmd.fetch("3a6z")
+        # cmd.fetch("2zvd")
+        # cmd.fetch("3a70")
+        # ref_structure = "ubli"
+        cmd.load(ref_structure)
+        files = files.pop(ref_structure)
+        if remove_chain_duplicate:
+            ref_structure = ref_structure.split(".")[0]+"__CA"
+        else:
+            ref_structure = ref_structure.split(".")[0]+"_CA"
+        for file in files:
+            cmd.load(file)
+        structure_list_entire = cmd.get_object_list()
+        if remove_chain_duplicate:
+            cmd.hide("everything", "all and not HETATM")
+            for i, structure in enumerate(structure_list_entire):
+                tmp_chains = cmd.get_fastastr(structure).split(">")[1:]
+                chains = dict()
+                for c in tmp_chains:
+                    c = c.split("\n")
+                    value = "".join(c[1:])
+                    if value not in chains.values():
+                        chains[c[0]] = value
+                cmd.select(f"{structure}_", "none")
+                for k in chains.keys():
+                    chain_id = k.split("_")[-1]
+                    cmd.show("cartoon", f"{structure} and chain {chain_id}")
+                    cmd.select(f"{structure}_", f"{structure}_ or (chain {chain_id} and {structure})")
+                structure_list_entire[i] = f"{structure}_"
+        n_homologous_list = len(structure_list_entire) - 1
+        # ref_model = cmd.get_model(f"{ref_structure} and name CA and resi 1:439 and chain A")
+        # homologous_models = []
+        structure_list = []
+        align_structure_list = []
+        for i, structure in enumerate(structure_list_entire):
+            structure_list.append(structure+"_CA")
+            align_structure_list.append(structure+"_align")
+            cmd.select(structure_list[i], structure+" and name CA and not HETATM")
+            # homologous_models.append(cmd.get_model(f"{structure} and name CA"))
+        # models = [ref_model] + homologous_models
+        # print(models)
+    except:
+        print("\n- - - - - - - - - - - - - - - - - -\nImport ERROR")
+        print("\nCouldn't import one of the files in pymol\n- - - - - - - - - - - - - - - - - -\n")
+        sys.exit(1)
+
+
+
+
+
+
+
+
+
+# Basic Pymol stuff - - - - - - - - - - - - - - - - - - - - - - - - - - -- - - - - -
+
+    cmd.remove("hydrogens")
+
+
+
+# Functions - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+
 
 
 
@@ -269,70 +346,6 @@ def aa_to_blosom(aa1,aa2):
 #     return out
 
 
-def color_by_number(number):
-    """
-    DESCRIPTION
-
-    Rainbow from red to white
-    number 0: red
-    number 1: white
-
-    DEPENDENCIES
-
-    import numpy as np
-    """
-    return [0.8+(number/5),number,number]
-
-
-def color_pymol(model_CA, structure_entire, score_list):
-    """
-    DESCRIPTION
-
-
-
-    DEPENDENCIES
-
-    color_by_number
-    from pymol import cmd
-    """
-    # model = cmd.get_model(structure_entire)
-    for i, atom in enumerate(model_CA.atom):
-        print(structure_entire, atom.resi, atom.resn, atom.chain, score_list[i], color_by_number(score_list[i]))
-        cmd.set_color(f"{atom}color", color_by_number(score_list[i]))
-        cmd.color(f"{atom}color", f"resi {atom.resi} and chain {atom.chain} and {structure_entire}")
-
-    # cmd.set_color(f"color{ref_atom}", color_by_number(number))
-    # cmd.color(f"color{ref_atom}", f"resi {ref_atom.resi} and {ref_structure}")
-
-def select_by_score(score_list, modelatoms):
-    """
-    DESCRIPTION
-
-    Takes list of scores and make a list of strings used for selection for the residues with score above procentive tresshold
-
-    DEPENDENCIES
-
-    import numpy as np
-    """
-    # score_list_no_zeroes = np.array(list(filter(lambda num: num != 0, score_list)))
-    # max = np.max(score_list)
-    tresshold = np.median(np.array(list(filter(lambda num: num != 0, score_list))))
-    out_string = ""
-    chain = ""
-    # tresshold = (max+median)/2
-    for j, score in enumerate(score_list):
-        if score > tresshold:
-            if chain == "":
-                chain = modelatoms[j].chain
-                out_string = f" and ((chain {chain} and (resi {j+1}"
-            elif chain != modelatoms[j].chain:
-                chain = modelatoms[j].chain
-                out_string += f")) or (chain {chain} and (resi {j+1}"
-            else:
-                out_string += f" or resi {j+1}"
-    return out_string+")))"
-    
-
 
 
 
@@ -363,21 +376,21 @@ def select_by_score(score_list, modelatoms):
 #draft alignment
 # for struc in structure_list_entire[1:]:
 #     cmd.super(struc, ref_structure)
-cmd.alignto(ref_structure, object="aln")
-# cmd.alignto(shortest_model[1], object="aln")
+    cmd.alignto(ref_structure, object="aln")
+    # cmd.alignto(shortest_model[1], object="aln")
 
-print(structure_list)
-#LOOP start
-break_flag = False
-# outfile = open("log.txt","w")
-to_outfile = [f"structure\tRMSD\tatoms aligned\n"]
-# outfile.write(f"structure\tRMSD\tatoms aligned\n")
-for j in range(iterations):
-    # models = [] ### Gammel
-    model_kd = dict()  ### NY
-    for structure in structure_list:
-        model = cmd.get_model(structure)
-        # models.append(model)  ### Gammel
+    print(structure_list)
+    #LOOP start
+    break_flag = False
+    # outfile = open("log.txt","w")
+    to_outfile = [f"structure\tRMSD\tatoms aligned\n"]
+    # outfile.write(f"structure\tRMSD\tatoms aligned\n")
+    for j in range(iterations):
+        # models = [] ### Gammel
+        model_kd = dict()  ### NY
+        for structure in structure_list:
+            model = cmd.get_model(structure)
+            # models.append(model)  ### Gammel
 
 
 # Your list of coordinates
@@ -395,76 +408,76 @@ for j in range(iterations):
 
 
 ### NYT
-        model_kd[model] = cKDTree([atom.coord for atom in model.atom])
-    score_list = []
-    selection = []
+            model_kd[model] = cKDTree([atom.coord for atom in model.atom])
+        score_list = []
+        selection = []
+        for i, model in enumerate(model_kd.keys()):
+            # homologous_list = models[:i]+models[i+1:]
+            score = []
+            homologous_residues = []
+            for k, ref_atom in enumerate(model.atom):
+                s = 0
+                ref_resn = ref_atom.resn
+                ref_coord = ref_atom.coord
+                max_score = aa_to_blosom(ref_resn,ref_resn) + 4
+                dist_list = []
+                tmp = [ref_atom.resi, ref_atom.resn, ref_atom.chain]
+                for m, kd in model_kd.items():
+                    if m != model:
+                        closest_point_idx = kd.query(ref_coord)[1]
+                        atom = m.atom[closest_point_idx]
+                        dist_resn = [m, np.sqrt(np.sum((np.array(ref_coord)-np.array(atom.coord))**2)), atom.resn, atom.resi]
+                        # print(np.sqrt(np.sum((np.array(ref_coord)-np.array(atom.coord))**2)))
+                        if dist_resn[1] <= max_dist:
+                            s += ((aa_to_blosom(ref_resn,dist_resn[2]) + 4)/(n_homologous_list*max_score))
+                    #     dist_list.append(dist_resn)
+                    #     dist_list.append([])
+                    # for model in homologous_list:
+                    #     dist_resn = [model, float("inf"),"-",""]
+                    #     for atom in model.atom:
+                    #         atom_index = np.array(atom.coord)
+                    #         dist = np.sqrt(np.sum((atom_index-ref_index)**2))
+                            
+                    #         if dist < dist_resn[1]:
+                    #             dist_resn = [model, dist, atom.resn, atom.resi]
+                    #     if dist_resn[1] <= max_dist:
+                    #         score += ((aa_to_blosom(ref_resn,dist_resn[2]) + 4)/(n_homologous_list*max_score))
+                            tmp.append(dist_resn[1:])
+                        dist_list.append(dist_resn)
+                print(tmp,s)
+                score.append(s)
+                homologous_residues.append(dist_list)
+            score_list.append(score)
+
+            tmp_selection = select_by_score(score, model.atom)
+            if len(re.findall(r"\s\d", tmp_selection)) < tresshold_aa:
+                break_flag = True
+            selection.append(tmp_selection)
+        if break_flag:
+            print(f"Colored after {j} iteration(s) of superexposion. \nTry to change the parameter tresshold_aa if a higher number of iterations are wanted.")
+            break
+        to_outfile.append(f"Iteration {j+1}\n")
+        # outfile.write(f"Iteration {j+1}\n")
+        tmp_out = ""
+        for i, structure in enumerate(structure_list):
+            cmd.select(align_structure_list[i], structure+selection[i])
+            if i != 0:
+                super = cmd.super(target=align_structure_list[0], mobile=align_structure_list[i])
+                print(super)
+                tmp_out += f"{structure}\t{super[0]}\t{super[1]}\n"
+                # outfile.write(f"{structure}\t{super[0]}\t{super[1]}\n")
+                # outfile.write(f"{structure}\t{super['RMSD']}\t{super['alignment_length']}\n")
+        to_outfile.append(tmp_out)
+        if to_outfile[-1] == to_outfile[-3]:
+            break
+
+    with open("log.txt","w") as outfile:
+        outfile.write("".join(to_outfile))
+
+    if break_flag == False:
+        print(f"Colored after {iterations} iteration(s) of superexposion.")
     for i, model in enumerate(model_kd.keys()):
-        # homologous_list = models[:i]+models[i+1:]
-        score = []
-        homologous_residues = []
-        for k, ref_atom in enumerate(model.atom):
-            s = 0
-            ref_resn = ref_atom.resn
-            ref_coord = ref_atom.coord
-            max_score = aa_to_blosom(ref_resn,ref_resn) + 4
-            dist_list = []
-            tmp = [ref_atom.resi, ref_atom.resn, ref_atom.chain]
-            for m, kd in model_kd.items():
-                if m != model:
-                    closest_point_idx = kd.query(ref_coord)[1]
-                    atom = m.atom[closest_point_idx]
-                    dist_resn = [m, np.sqrt(np.sum((np.array(ref_coord)-np.array(atom.coord))**2)), atom.resn, atom.resi]
-                    # print(np.sqrt(np.sum((np.array(ref_coord)-np.array(atom.coord))**2)))
-                    if dist_resn[1] <= max_dist:
-                        s += ((aa_to_blosom(ref_resn,dist_resn[2]) + 4)/(n_homologous_list*max_score))
-                #     dist_list.append(dist_resn)
-                #     dist_list.append([])
-                # for model in homologous_list:
-                #     dist_resn = [model, float("inf"),"-",""]
-                #     for atom in model.atom:
-                #         atom_index = np.array(atom.coord)
-                #         dist = np.sqrt(np.sum((atom_index-ref_index)**2))
-                        
-                #         if dist < dist_resn[1]:
-                #             dist_resn = [model, dist, atom.resn, atom.resi]
-                #     if dist_resn[1] <= max_dist:
-                #         score += ((aa_to_blosom(ref_resn,dist_resn[2]) + 4)/(n_homologous_list*max_score))
-                        tmp.append(dist_resn[1:])
-                    dist_list.append(dist_resn)
-            print(tmp,s)
-            score.append(s)
-            homologous_residues.append(dist_list)
-        score_list.append(score)
-
-        tmp_selection = select_by_score(score, model.atom)
-        if len(re.findall(r"\s\d", tmp_selection)) < tresshold_aa:
-            break_flag = True
-        selection.append(tmp_selection)
-    if break_flag:
-        print(f"Colored after {j} iteration(s) of superexposion. \nTry to change the parameter tresshold_aa if a higher number of iterations are wanted.")
-        break
-    to_outfile.append(f"Iteration {j+1}\n")
-    # outfile.write(f"Iteration {j+1}\n")
-    tmp_out = ""
-    for i, structure in enumerate(structure_list):
-        cmd.select(align_structure_list[i], structure+selection[i])
-        if i != 0:
-            super = cmd.super(target=align_structure_list[0], mobile=align_structure_list[i])
-            print(super)
-            tmp_out += f"{structure}\t{super[0]}\t{super[1]}\n"
-            # outfile.write(f"{structure}\t{super[0]}\t{super[1]}\n")
-            # outfile.write(f"{structure}\t{super['RMSD']}\t{super['alignment_length']}\n")
-    to_outfile.append(tmp_out)
-    if to_outfile[-1] == to_outfile[-3]:
-        break
-
-with open("log.txt","w") as outfile:
-    outfile.write("".join(to_outfile))
-
-if break_flag == False:
-    print(f"Colored after {iterations} iteration(s) of superexposion.")
-for i, model in enumerate(model_kd.keys()):
-    color_pymol(model, structure_list_entire[i], score_list[i])
+        color_pymol(model, structure_list_entire[i], score_list[i])
 
 # ### GAMMELT
 
@@ -490,15 +503,16 @@ for i, model in enumerate(model_kd.keys()):
 #     print(f"Ran succesfully {iterations} iteration(s)")
 
 
-#Some pymol stuff
-cmd.hide("cgo", "aln")
-cmd.set("seq_view_label_mode", "1")
-cmd.set("antialias", "4")
-cmd.set("ray_trace_mode", "1")
-# cmd.set("seq_view_fill_color", "black")
+    #Some pymol stuff
+    cmd.hide("cgo", "aln")
+    cmd.set("seq_view_label_mode", "1")
+    cmd.set("antialias", "4")
+    cmd.set("ray_trace_mode", "1")
+    # cmd.set("seq_view_fill_color", "black")
 
-#cmd.util.cnc("all",_self=cmd)
-cmd.save("outfile.pse")
+    #cmd.util.cnc("all",_self=cmd)
+    cmd.save(outfile)
+
 elapsed_time = time.time() - start_time
 print("Elapsed time:", elapsed_time, "seconds")
 # for i, model in enumerate(models): print(scores_by_conservation(model, models[:i]+models[i+1:], 6))
@@ -680,35 +694,33 @@ print("Elapsed time:", elapsed_time, "seconds")
 
 
 
+def make_gradient(width=10, height=100, outfile='gradient.png'):
+    import png
 
-
-
-width = 10
-height = 100
-img = []
-for y in range(height):
-    row = ()
-    for x in range(width):
-        number = y/100
-        # if number < 0.25:
-        #     row = row + (0.9, number*1.6+0.5, 0.5)
-        # elif number < 0.5:
-        #     row = row + (1-(number-0.25)*1.6+0.5, 0.9, 0.5)
-        # elif number < 0.75:
-        #     row = row + (0.5, 0.9, (number-0.5)*1.6+0.5)
-        # else:
-        #     row = row + (0.5, 1-(number-0.75)*1.6+0.5, 0.9)
-        # kage = []
-        for k in color_by_number(number):
-            row += tuple([int(k*255)])
-            # kage.append(int(k*255))
-        # row = row + (kage)
-    img.append(row)
-with open('gradient.png', 'wb') as f:
-    w = png.Writer(width, height, greyscale=False)
-    w.write(f, img)
-# for x in range(10):
-#     print(color_by_number(x/10)*255)
+    img = []
+    for y in range(height):
+        row = ()
+        for x in range(width):
+            number = y/100
+            # if number < 0.25:
+            #     row = row + (0.9, number*1.6+0.5, 0.5)
+            # elif number < 0.5:
+            #     row = row + (1-(number-0.25)*1.6+0.5, 0.9, 0.5)
+            # elif number < 0.75:
+            #     row = row + (0.5, 0.9, (number-0.5)*1.6+0.5)
+            # else:
+            #     row = row + (0.5, 1-(number-0.75)*1.6+0.5, 0.9)
+            # kage = []
+            for k in color_by_number(number):
+                row += tuple([int(k*255)])
+                # kage.append(int(k*255))
+            # row = row + (kage)
+        img.append(row)
+    with open(outfile, 'wb') as f:
+        w = png.Writer(width, height, greyscale=False)
+        w.write(f, img)
+    for x in range(10):
+        print(color_by_number(x/10)*255)
 
 # import png
 
