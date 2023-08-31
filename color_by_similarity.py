@@ -165,53 +165,53 @@ def run(ref_structure, files, iterations, tresshold_aa, max_dist, remove_chain_d
 
 
 # Importing files - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-    try:
+    #try:
         # cmd.fetch("2gub")
         # cmd.fetch("3a6z")
         # cmd.fetch("2zvd")
         # cmd.fetch("3a70")
         # ref_structure = "ubli"
-        cmd.load(ref_structure)
-        files.remove(ref_structure)
-        if remove_chain_duplicate:
-            ref_structure = ref_structure.split(".")[0]+"__CA"
-        else:
-            ref_structure = ref_structure.split(".")[0]+"_CA"
-        for file in files:
-            cmd.load(file)
-        structure_list_entire = cmd.get_object_list()
-        if remove_chain_duplicate:
-            cmd.hide("everything", "all and not HETATM")
-            for i, structure in enumerate(structure_list_entire):
-                tmp_chains = cmd.get_fastastr(structure).split(">")[1:]
-                chains = dict()
-                for c in tmp_chains:
-                    c = c.split("\n")
-                    value = "".join(c[1:])
-                    if value not in chains.values():
-                        chains[c[0]] = value
-                cmd.select(f"{structure}_", "none")
-                for k in chains.keys():
-                    chain_id = k.split("_")[-1]
-                    cmd.show("cartoon", f"{structure} and chain {chain_id}")
-                    cmd.select(f"{structure}_", f"{structure}_ or (chain {chain_id} and {structure})")
-                structure_list_entire[i] = f"{structure}_"
-        n_homologous_list = len(structure_list_entire) - 1
-        # ref_model = cmd.get_model(f"{ref_structure} and name CA and resi 1:439 and chain A")
-        # homologous_models = []
-        structure_list = []
-        align_structure_list = []
+    cmd.load(ref_structure)
+    files.remove(ref_structure)
+    if remove_chain_duplicate:
+        ref_structure = ref_structure.split(".")[0]+"__CA"
+    else:
+        ref_structure = ref_structure.split(".")[0]+"_CA"
+    for file in files:
+        cmd.load(file)
+    structure_list_entire = cmd.get_object_list()
+    if remove_chain_duplicate:
+        cmd.hide("everything", "all and not HETATM")
         for i, structure in enumerate(structure_list_entire):
-            structure_list.append(structure+"_CA")
-            align_structure_list.append(structure+"_align")
-            cmd.select(structure_list[i], structure+" and name CA and not HETATM")
-            # homologous_models.append(cmd.get_model(f"{structure} and name CA"))
-        # models = [ref_model] + homologous_models
-        # print(models)
-    except:
-        print("\n- - - - - - - - - - - - - - - - - -\nImport ERROR")
-        print("\nCouldn't import one of the files in pymol\n- - - - - - - - - - - - - - - - - -\n")
-        sys.exit(1)
+            tmp_chains = cmd.get_fastastr(structure).split(">")[1:]
+            chains = dict()
+            for c in tmp_chains:
+                c = c.split("\n")
+                value = "".join(c[1:])
+                if value not in chains.values():
+                    chains[c[0]] = value
+            cmd.select(f"{structure}_", "none")
+            for k in chains.keys():
+                chain_id = k.split("_")[-1]
+                cmd.show("cartoon", f"{structure} and chain {chain_id}")
+                cmd.select(f"{structure}_", f"{structure}_ or (chain {chain_id} and {structure})")
+            structure_list_entire[i] = f"{structure}_"
+    n_homologous_list = len(structure_list_entire) - 1
+    # ref_model = cmd.get_model(f"{ref_structure} and name CA and resi 1:439 and chain A")
+    # homologous_models = []
+    structure_list = []
+    align_structure_list = []
+    for i, structure in enumerate(structure_list_entire):
+        structure_list.append(structure+"_CA")
+        align_structure_list.append(structure+"_align")
+        cmd.select(structure_list[i], structure+" and name CA and not HETATM")
+        # homologous_models.append(cmd.get_model(f"{structure} and name CA"))
+    # models = [ref_model] + homologous_models
+    # print(models)
+    # except:
+    #     print("\n- - - - - - - - - - - - - - - - - -\nImport ERROR")
+    #     print("\nCouldn't import one of the files in pymol\n- - - - - - - - - - - - - - - - - -\n")
+    #     sys.exit(1)
 
 
 
