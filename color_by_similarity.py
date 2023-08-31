@@ -171,6 +171,7 @@ def run(ref_structure, files, iterations, tresshold_aa, max_dist, remove_chain_d
         # cmd.fetch("2zvd")
         # cmd.fetch("3a70")
         # ref_structure = "ubli"
+    cmd.reinitialize
     cmd.load(ref_structure)
     files.remove(ref_structure)
     if remove_chain_duplicate:
