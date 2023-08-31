@@ -1,6 +1,5 @@
 
 #TO DO
-#- check pop funktion
 #- Lav bedre output fra run function
 #- rydde op i py doc
 #- Lave visualisering i ipynb med nyt py doc
@@ -173,7 +172,7 @@ def run(ref_structure, files, iterations, tresshold_aa, max_dist, remove_chain_d
         # cmd.fetch("3a70")
         # ref_structure = "ubli"
         cmd.load(ref_structure)
-        files = files.pop(ref_structure)
+        files.remove(ref_structure)
         if remove_chain_duplicate:
             ref_structure = ref_structure.split(".")[0]+"__CA"
         else:
