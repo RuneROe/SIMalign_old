@@ -511,7 +511,8 @@ def run(ref_structure, files, iterations, tresshold_aa, max_dist, remove_chain_d
     # cmd.set("seq_view_fill_color", "black")
 
     #cmd.util.cnc("all",_self=cmd)
-    cmd.save(outfile)
+    print(outfile)
+    cmd.save(str(outfile))
 
 elapsed_time = time.time() - start_time
 print("Elapsed time:", elapsed_time, "seconds")
