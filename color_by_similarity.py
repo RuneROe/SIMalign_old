@@ -128,7 +128,7 @@ def select_by_score(score_list, modelatoms):
 
 
 
-def run(ref_structure, files, iterations, tresshold_aa, max_dist, remove_chain_duplicate, outfile):
+def run(ref_structure, files, iterations, tresshold_aa, max_dist, remove_chain_duplicate, outfilename):
 # redundency_tresshold = 0.8 # Removes structure that are more similar than the tresshold to others. 1 means that nothing is removed
 # User arguments - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # arguments = sys.argv
@@ -511,11 +511,9 @@ def run(ref_structure, files, iterations, tresshold_aa, max_dist, remove_chain_d
     # cmd.set("seq_view_fill_color", "black")
 
     #cmd.util.cnc("all",_self=cmd)
-    print(outfile)
-    cmd.save(str(outfile))
+    cmd.save(outfilename)
 
-elapsed_time = time.time() - start_time
-print("Elapsed time:", elapsed_time, "seconds")
+
 # for i, model in enumerate(models): print(scores_by_conservation(model, models[:i]+models[i+1:], 6))
 #super
 # for i, structure in enumerate(structure_list[1:]):
