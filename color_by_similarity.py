@@ -9,13 +9,10 @@
 
 from pymol import cmd
 import numpy as np
-import os
-import sys
 import time
 from scipy.spatial import cKDTree
 import re
 
-start_time = time.time()
 
 
 #From https://www.ncbi.nlm.nih.gov/Class/FieldGuide/BLOSUM62.txt
