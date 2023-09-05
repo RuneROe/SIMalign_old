@@ -186,7 +186,7 @@ def run(ref_structure, files, iterations, tresshold_aa, max_dist, remove_chain_d
 
 # LOOP start
     break_flag = False
-    to_outfile = [f"structure\tRMSD\tatoms aligned\n"]
+    to_outfile = []
     for j in range(iterations):
         model_kd = dict()  
         for structure in structure_list:
@@ -224,17 +224,18 @@ def run(ref_structure, files, iterations, tresshold_aa, max_dist, remove_chain_d
         if break_flag:
             print(f"Colored after {j} iteration(s) of superexposion. \nTry to change the parameter tresshold_aa if a higher number of iterations are wanted.")
             break
-        to_outfile.append(f"Iteration {j+1}\n")
+        to_outfile.append(f"Iteration {j+1}\nstructure\tRMSD\tatoms aligned\n")
         tmp_out = ""
         for i, structure in enumerate(structure_list):
             cmd.select(align_structure_list[i], structure+selection[i])
             if i != 0:
                 super = cmd.super(target=align_structure_list[0], mobile=align_structure_list[i])
-                tmp_out += f"{structure_list_entire[i]}\t{super[0]}\t{super[1]}\n"
+                tmp_out += f"{structure_list_entire[i]}\t{round(super[0],3)}\t{super[1]}\n"
         to_outfile.append(tmp_out)
+        print(to_outfile[-2]+to_outfile[-1])
         if to_outfile[-1] == to_outfile[-3]:
             break
-
+        
     with open("log.txt","w") as outfile:
         outfile.write("".join(to_outfile))
 
