@@ -1,7 +1,6 @@
 
 #TO DO
 #- Lav bedre output fra run function
-#- rydde op i py doc
 #- Lave visualisering i ipynb med nyt py doc
 #- Lav et print der opdaterer sig selv, så man kan have et fedt download.
 
@@ -186,7 +185,7 @@ def run(ref_structure, files, iterations, tresshold_aa, max_dist, remove_chain_d
 
 # LOOP start
     break_flag = False
-    to_outfile = []
+    to_outfile = [""]
     for j in range(iterations):
         model_kd = dict()  
         for structure in structure_list:
