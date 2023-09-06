@@ -265,6 +265,10 @@ def run(ref_structure, files, iterations, tresshold_aa, max_dist, remove_chain_d
 
     cmd.save(outfilename)
 
+    
+
+    return len(cmd.get_model(ref_structure).atom), score_list[0]
+
 
 
 def make_gradient(width=10, height=100, outfile='gradient.png'):
