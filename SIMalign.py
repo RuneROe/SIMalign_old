@@ -119,7 +119,7 @@ def select_by_score(score_list, modelatoms):
 
 
 
-def run(ref_structure, files, iterations, tresshold_aa, max_dist, remove_chain_duplicate, outfilename):
+def run(ref_structure, files, iterations, tresshold_aa, max_dist, remove_chain_duplicate, outfilename, color=True):
     """
     DESCRIPTION
 
@@ -184,25 +184,33 @@ def run(ref_structure, files, iterations, tresshold_aa, max_dist, remove_chain_d
     cmd.alignto(ref_structure, object="aln")
 
 # LOOP start
+    print("Running SIMalign...")
     break_flag = False
     to_outfile = [""]
     for j in range(iterations):
+        # Get models and cKDTree
         model_kd = dict()  
         for structure in structure_list:
             model = cmd.get_model(structure)
             model_kd[model] = cKDTree([atom.coord for atom in model.atom])
+        
         score_list = []
         selection = []
+        # LOOP through models
         for i, model in enumerate(model_kd.keys()):
+
             score = []
-            homologous_residues = []
+            # homologous_residues = []
+            # LOOP through ca atoms to find scores of one model
             for k, ref_atom in enumerate(model.atom):
                 s = 0
                 ref_resn = ref_atom.resn
                 ref_coord = ref_atom.coord
                 max_score = aa_to_blosom(ref_resn,ref_resn) + 4
-                dist_list = []
-                tmp = [ref_atom.resi, ref_atom.resn, ref_atom.chain]
+                # dist_list = []
+                # tmp = [ref_atom.resi, ref_atom.resn, ref_atom.chain]
+
+                # Finding closest AA from other models to ref AA
                 for m, kd in model_kd.items():
                     if m != model:
                         closest_point_idx = kd.query(ref_coord)[1]
@@ -210,18 +218,19 @@ def run(ref_structure, files, iterations, tresshold_aa, max_dist, remove_chain_d
                         dist_resn = [m, np.sqrt(np.sum((np.array(ref_coord)-np.array(atom.coord))**2)), atom.resn, atom.resi]
                         if dist_resn[1] <= max_dist:
                             s += ((aa_to_blosom(ref_resn,dist_resn[2]) + 4)/(n_homologous_list*max_score))
-                            tmp.append(dist_resn[1:])
-                        dist_list.append(dist_resn)
+                            # tmp.append(dist_resn[1:])
+                        # dist_list.append(dist_resn)
                 score.append(s)
-                homologous_residues.append(dist_list)
+                # homologous_residues.append(dist_list)
             score_list.append(score)
 
             tmp_selection = select_by_score(score, model.atom)
+            # Checking that it is not below tresshold_aa
             if len(re.findall(r"\s\d", tmp_selection)) < tresshold_aa:
                 break_flag = True
             selection.append(tmp_selection)
         if break_flag:
-            print(f"Colored after {j} iteration(s) of superexposion. \nTry to change the parameter tresshold_aa if a higher number of iterations are wanted.")
+            print(f"Breaked after {j} iteration(s) of superexposion. \nTry to change the parameter tresshold_aa if a higher number of iterations are wanted.")
             break
         to_outfile.append(f"Iteration {j+1}\nstructure\tRMSD\tatoms aligned\n")
         tmp_out = ""
@@ -233,15 +242,19 @@ def run(ref_structure, files, iterations, tresshold_aa, max_dist, remove_chain_d
         to_outfile.append(tmp_out)
         print(to_outfile[-2]+to_outfile[-1])
         if to_outfile[-1] == to_outfile[-3]:
+            break_flag = True
+            print(f"Breaked after {j+1} iteration(s) of superexposion.")
             break
         
     with open("log.txt","w") as outfile:
         outfile.write("".join(to_outfile))
 
     if break_flag == False:
-        print(f"Colored after {iterations} iteration(s) of superexposion.")
-    for i, model in enumerate(model_kd.keys()):
-        color_pymol(model, structure_list_entire[i], score_list[i])
+        print(f"Completed {iterations} iteration(s) of superexposion.")
+    if color:
+        for i, model in enumerate(model_kd.keys()):
+            print(f"Coloring {structure_list_entire[i]}")
+            color_pymol(model, structure_list_entire[i], score_list[i])
 
 
 # Some pymol stuff - - - - - - - - - - - - - - - - - - - - - - - - - - -- - - - - -
