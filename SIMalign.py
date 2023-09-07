@@ -137,7 +137,7 @@ def run(ref_structure, files, iterations, tresshold_aa, max_dist, remove_chain_d
     color_by_number
     """
     cmd.reinitialize()
-
+    print("Loading structures to pymol...")
 # Importing files - - - - - - - - - - - - - - - - - - - - - - - - - - -- - - - - -
     try:
         cmd.load(ref_structure)
