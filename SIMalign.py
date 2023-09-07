@@ -175,7 +175,7 @@ def run(ref_structure, files, iterations, tresshold_aa, max_dist, remove_chain_d
             cmd.select(structure_list[i], structure+" and name CA and not HETATM")
     except:
         print("\n- - - - - - - - - - - - - - - - - -\nImport ERROR")
-        print("\nCouldn't import one of the files in pymol\n- - - - - - - - - - - - - - - - - -\n")
+        print("\nCouldn't import one or more of the files in pymol\n- - - - - - - - - - - - - - - - - -\n")
         sys.exit(1)
 
 # Basic Pymol stuff - - - - - - - - - - - - - - - - - - - - - - - - - - -- - - - - -
@@ -265,7 +265,7 @@ def run(ref_structure, files, iterations, tresshold_aa, max_dist, remove_chain_d
     cmd.set("ray_trace_mode", "1")
 
     cmd.save(outfilename)
-
+    cmd.quit()
     
 
     return len(cmd.get_model(ref_structure).atom), score_list[0]
