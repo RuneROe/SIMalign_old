@@ -136,11 +136,10 @@ def run(ref_structure, files, iterations, tresshold_aa, max_dist, remove_chain_d
     color_pymol
     color_by_number
     """
-
+    cmd.reinitialize()
 
 # Importing files - - - - - - - - - - - - - - - - - - - - - - - - - - -- - - - - -
     try:
-        cmd.reinitialize
         cmd.load(ref_structure)
         files.remove(ref_structure)
         if remove_chain_duplicate:
@@ -265,8 +264,7 @@ def run(ref_structure, files, iterations, tresshold_aa, max_dist, remove_chain_d
     cmd.set("ray_trace_mode", "1")
 
     cmd.save(outfilename)
-    cmd.quit()
-    
+  
 
     return len(cmd.get_model(ref_structure).atom), score_list[0]
 
