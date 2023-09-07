@@ -227,6 +227,7 @@ def run(ref_structure, files, iterations, tresshold_aa, max_dist, remove_chain_d
             tmp_selection = select_by_score(score, model.atom)
             # Checking that it is not below tresshold_aa
             if len(re.findall(r"\s\d", tmp_selection)) < tresshold_aa:
+                print(structure_list_entire[i], len(re.findall(r"\s\d", tmp_selection)))
                 break_flag = True
             selection.append(tmp_selection)
         if break_flag:
