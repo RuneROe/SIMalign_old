@@ -136,7 +136,7 @@ def downloading_files(ref_structure,files):
 #         # update align
 
         
-def SIMalign(ref_structure, structure_list_entire, iterations, tresshold_aa, max_dist)
+def SIMalign(ref_structure, structure_list_entire, iterations, tresshold_aa, max_dist):
     n_homologous_list = len(structure_list_entire) - 1
     # align_structure_list = []
     # for i, structure in enumerate(structure_list_entire):
