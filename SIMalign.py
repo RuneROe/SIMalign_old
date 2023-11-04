@@ -232,6 +232,7 @@ def run(ref_structure, files, iterations, tresshold_aa, max_dist, outfilename):
     print("Loading structures to pymol...")
 # Importing files - - - - - - - - - - - - - - - - - - - - - - - - - - -- - - - - -
     structure_list_entire = downloading_files(ref_structure,files)
+    ref_structure = ref_structure.split(".")[0]
     
 
 # Basic Pymol stuff - - - - - - - - - - - - - - - - - - - - - - - - - - -- - - - - -
