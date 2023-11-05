@@ -77,17 +77,22 @@ def calculate_virtual_center(resn,N,CA,CB):
 def foldseek_virtual_center(model,model_CA):
     max_resi = int(np.max(np.array([int(x.resi) for x in model_CA.atom])))
     resi = 0
-    resn = None
     CB = None
+    
     for atom in model.atom:
+        print(int(atom.resi),max_resi,atom.chain)
         if int(atom.resi) <= max_resi and atom.chain == "A":
-            if atom.resi != resi:
-                resi = atom.resi
-                if resn != None:
-                    if int(resi) > 1:
-                        np.vstack((virtual_centers,calculate_virtual_center(resn,N,CA,CB)))
-                    else:
-                        virtual_centers = calculate_virtual_center(resn,N,CA,CB)
+            if int(atom.resi) != resi:
+                resi = int(atom.resi)
+                if resi == 2:
+                    virtual_centers = calculate_virtual_center(resn,N,CA,CB)
+                elif resi > 2:
+                    virtual_centers = np.vstack((virtual_centers,calculate_virtual_center(resn,N,CA,CB)))
+                    # print(int(resi))
+                    # if int(resi) == 2:
+                    #     virtual_centers = calculate_virtual_center(resn,N,CA,CB)
+                    # else:
+                    #     np.vstack((virtual_centers,calculate_virtual_center(resn,N,CA,CB)))                  
                 resn = atom.resn
             if atom.name == "N":
                 N = np.array(atom.coord)
@@ -95,7 +100,7 @@ def foldseek_virtual_center(model,model_CA):
                 CA = np.array(atom.coord)
             elif atom.name == "CB" or (atom.name == "C" and resn == "GLY"):
                 CB = np.array(atom.coord)
-    np.vstack((virtual_centers,calculate_virtual_center(resn,N,CA,CB)))
+    virtual_centers = np.vstack((virtual_centers,calculate_virtual_center(resn,N,CA,CB)))
     return virtual_centers
 
 
