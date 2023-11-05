@@ -210,6 +210,7 @@ def SIMalign(ref_structure, structure_list_entire, iterations, tresshold_aa, max
 
     if break_flag == False:
         print(f"Completed {iterations} iteration(s) of superexposion.")
+    return score_list
 
 def run(ref_structure, files, iterations, tresshold_aa, max_dist, outfilename):
     """
@@ -242,7 +243,7 @@ def run(ref_structure, files, iterations, tresshold_aa, max_dist, outfilename):
 
 # LOOP start
     print("Running SIMalign...")
-    SIMalign(ref_structure, structure_list_entire, iterations, tresshold_aa, max_dist)
+    score_list = SIMalign(ref_structure, structure_list_entire, iterations, tresshold_aa, max_dist)
 
 
 
