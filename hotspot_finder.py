@@ -149,16 +149,19 @@ def run(score_list,structure_list,minmax,max_dist):
         closest_to_ref = {}
         ref_is_closest = {}
         for vc, index in middle_s.items():
-            closest_pair = kd.query([float(x) for x in vc.split(",")])
-
-            if closest_pair[0] < max_dist:
-                closest_to_ref[index] = closest_pair[1]
-                if index in ref_is_closest.keys():
-                    ref_is_closest[index].add(closest_pair[1])
+            query = kd.query([float(x) for x in vc.split(",")],k=2)
+            dist = query[0][1]
+            idx = query[1][1]
+            if dist < max_dist:
+                closest_to_ref[index] = idx
+                if idx in ref_is_closest.keys():
+                    ref_is_closest[idx].add(index)
                 else:
-                    ref_is_closest[index] = {closest_pair[1]}
+                    ref_is_closest[idx] = {index}
         hotspot = []
         used_aa = set()
+        print(len(closest_to_ref),closest_to_ref)
+        print(len(ref_is_closest),ref_is_closest)
         for index in closest_to_ref.keys():
             if index not in used_aa:
                 h = {index}
@@ -167,12 +170,18 @@ def run(score_list,structure_list,minmax,max_dist):
                     for ele in h:
                         if ele not in used_aa:
                             add.add(closest_to_ref[ele])
-                            add.union(ref_is_closest[ele])
+                            if ele in ref_is_closest:
+                                add = add.union(ref_is_closest[ele])
                     if add == set():
                         break
-                    h.union(add)
-                    used_aa.union(h)
+                    print(add)
+                    used_aa = used_aa.union(h)
+                    h = h.union(add)
+                    
+                    print(h)
+                    print(used_aa)
                     add = set()
+                    print(add)
                 if len(h) > 1:
                     hotspot.append(h)
         hotspot_list.append(hotspot)
