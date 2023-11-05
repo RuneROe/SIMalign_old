@@ -76,7 +76,7 @@ def calculate_virtual_center(resn,N,CA,CB):
 
 def foldseek_virtual_center(model,model_CA):
     max_resi = int(np.max(np.array([int(x.resi) for x in model_CA.atom])))
-    virtual_centers = []
+    virtual_centers = np.array([])
     resi = 0
     resn = None
     CB = None
@@ -134,10 +134,12 @@ def run(score_list,structure_list,minmax,max_dist):
         model = cmd.get_model(structure_list[i])
         model_CA = cmd.get_model(structure_list[i]+" and name CA and chain A and not HETATM")
         vc_list = foldseek_virtual_center(model,model_CA)
-        print(vc_list,len(vc_list),len(score))
+        print(vc_list)
+        print(len(vc_list),len(score))
         for j, s in enumerate(score):
             if s > minmax[0] and s < minmax[1]:
-                middle_s[vc_list[j]] = j
+                middle_s[vc_list[j,:]] = j
+        print(middle_s)
         kd = cKDTree(middle_s.keys())
         closest_to_ref = {}
         ref_is_closest = {}

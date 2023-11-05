@@ -86,13 +86,13 @@ def select_by_score(score_list, modelatoms):
 def downloading_files(ref_structure,files):
     try:
         cmd.load(ref_structure)
-        files.remove(ref_structure)
         # if remove_chain_duplicate:
         #     ref_structure = ref_structure.split(".")[0]+"__CA"
         # else:
         #     ref_structure = ref_structure.split(".")[0]+"_CA"
         for file in files:
-            cmd.load(file)
+            if file != ref_structure:
+                cmd.load(file)
         structure_list_entire = cmd.get_object_list()
         # if remove_chain_duplicate:
         #     cmd.hide("everything", "all and not HETATM")
