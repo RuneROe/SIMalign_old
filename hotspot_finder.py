@@ -81,7 +81,7 @@ def foldseek_virtual_center(model,model_CA):
     resn = None
     CB = None
     for atom in model.atom:
-        if int(atom.resi) <= max_resi:
+        if int(atom.resi) <= max_resi and atom.chain == "A":
             if atom.resi != resi:
                 resi = atom.resi
                 if resn != None:
