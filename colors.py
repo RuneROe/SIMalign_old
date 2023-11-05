@@ -30,6 +30,13 @@ def color_by_score(structure, score):
         cmd.set_color(f"{atom}color", color_by_number(score[i]))
         cmd.color(f"{atom}color", f"resi {atom.resi} and chain {atom.chain} and {structure}")
 
+def hotspot_to_selection(hotspot):
+    selection = " and ("
+    for index in hotspot:
+        selection +=  f"resi {index+1} or "
+    return selection[:-4]+")"
+
+
 def color_by_hotspot(structure, hotspot):
     grey = [0.9,0.9,0.9]
     colors = [
@@ -47,6 +54,7 @@ def color_by_hotspot(structure, hotspot):
     for i, atom in enumerate(model.atom):
         not_in_hotspot = True
         for j, h in enumerate(hotspot):
+            cmd.select(f"structure_Hotspot{j+1}",f"{structure} and name CA and not HETATM and chain A{hotspot_to_selection(h)}")
             if i in h:
                 not_in_hotspot = False
                 cmd.set_color(f"{atom}color", colors[j%10])
