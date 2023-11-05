@@ -85,7 +85,7 @@ def foldseek_virtual_center(model,model_CA):
             if atom.resi != resi:
                 resi = atom.resi
                 if resn != None:
-                    virtual_centers.append(calculate_virtual_center(resn,N,CA,CB))
+                    np.vstack((virtual_centers,calculate_virtual_center(resn,N,CA,CB)))
                 resn = atom.resn
             if atom.name == "N":
                 N = np.array(atom.coord)
@@ -93,7 +93,7 @@ def foldseek_virtual_center(model,model_CA):
                 CA = np.array(atom.coord)
             elif atom.name == "CB" or (atom.name == "C" and resn == "GLY"):
                 CB = np.array(atom.coord)
-    virtual_centers.append(calculate_virtual_center(resn,N,CA,CB))
+    np.vstack((virtual_centers,calculate_virtual_center(resn,N,CA,CB)))
     return virtual_centers
 
 
