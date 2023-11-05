@@ -80,7 +80,6 @@ def foldseek_virtual_center(model,model_CA):
     CB = None
     
     for atom in model.atom:
-        print(int(atom.resi),max_resi,atom.chain)
         if int(atom.resi) <= max_resi and atom.chain == "A":
             if int(atom.resi) != resi:
                 resi = int(atom.resi)
@@ -141,17 +140,16 @@ def run(score_list,structure_list,minmax,max_dist):
         model = cmd.get_model(structure_list[i])
         model_CA = cmd.get_model(structure_list[i]+" and name CA and chain A and not HETATM")
         vc_list = foldseek_virtual_center(model,model_CA)
-        print(vc_list)
-        print(len(vc_list),len(score))
         for j, s in enumerate(score):
             if s > minmax[0] and s < minmax[1]:
-                middle_s[vc_list[j,:]] = j
+                hashable_list = ",".join([str(x) for x in vc_list[j,:]])
+                middle_s[hashable_list] = j
         print(middle_s)
-        kd = cKDTree(middle_s.keys())
+        kd = cKDTree([[float(y) for y in x.split(",")] for x in middle_s.keys()])
         closest_to_ref = {}
         ref_is_closest = {}
         for vc, index in middle_s.items():
-            closest_pair = kd.query(vc)
+            closest_pair = kd.query([float(x) for x in vc.split(",")])
 
             if closest_pair[0] < max_dist:
                 closest_to_ref[index] = closest_pair[1]
