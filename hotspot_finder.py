@@ -169,7 +169,8 @@ def run(score_list,structure_list,minmax,max_dist):
                 while True:
                     for ele in h:
                         if ele not in used_aa:
-                            add.add(closest_to_ref[ele])
+                            if ele in closest_to_ref:
+                                add.add(closest_to_ref[ele])
                             if ele in ref_is_closest:
                                 add = add.union(ref_is_closest[ele])
                     if add == set():
