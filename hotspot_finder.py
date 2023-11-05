@@ -131,6 +131,7 @@ def run(score_list,structure_list,minmax,max_dist):
         middle_s = {}
         model = cmd.get_model(structure_list[i])
         vc_list = foldseek_virtual_center(model)
+        print(vc_list,len(vc_list),len(score))
         for j, s in enumerate(score):
             if s > minmax[0] and s < minmax[1]:
                 middle_s[vc_list[j]] = j
