@@ -75,13 +75,13 @@ def calculate_virtual_center(resn,N,CA,CB):
 
 
 def foldseek_virtual_center(model,model_CA):
-    max_resi = np.max(np.array([int(x.resi) for x in model_CA.atom]))
+    max_resi = int(np.max(np.array([int(x.resi) for x in model_CA.atom])))
     virtual_centers = []
     resi = 0
     resn = None
     CB = None
     for atom in model.atom:
-        if atom.resi <= max_resi:
+        if int(atom.resi) <= max_resi:
             if atom.resi != resi:
                 resi = atom.resi
                 if resn != None:
