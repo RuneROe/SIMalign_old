@@ -75,26 +75,24 @@ def calculate_virtual_center(resn,N,CA,CB):
 
 
 def foldseek_virtual_center(model,model_CA):
-    m = cmd.get_model(structure+" and name CA and chain A and not HETATM")
-
     max_resi = np.max(np.array([int(x.resi) for x in model_CA.atom]))
     virtual_centers = []
     resi = 0
     resn = None
     CB = None
     for atom in model.atom:
-        if atom.chain == "A"
-        if atom.resi != resi:
-            resi = atom.resi
-            if resn != None:
-                virtual_centers.append(calculate_virtual_center(resn,N,CA,CB))
-            resn = atom.resn
-        if atom.name == "N":
-            N = np.array(atom.coord)
-        elif atom.name == "CA":
-            CA = np.array(atom.coord)
-        elif atom.name == "CB" or (atom.name == "C" and resn == "GLY"):
-            CB = np.array(atom.coord)
+        if atom.resi <= max_resi:
+            if atom.resi != resi:
+                resi = atom.resi
+                if resn != None:
+                    virtual_centers.append(calculate_virtual_center(resn,N,CA,CB))
+                resn = atom.resn
+            if atom.name == "N":
+                N = np.array(atom.coord)
+            elif atom.name == "CA":
+                CA = np.array(atom.coord)
+            elif atom.name == "CB" or (atom.name == "C" and resn == "GLY"):
+                CB = np.array(atom.coord)
     virtual_centers.append(calculate_virtual_center(resn,N,CA,CB))
     return virtual_centers
 
