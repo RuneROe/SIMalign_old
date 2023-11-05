@@ -74,12 +74,16 @@ def calculate_virtual_center(resn,N,CA,CB):
 
 
 
-def foldseek_virtual_center(model):
+def foldseek_virtual_center(model,model_CA):
+    m = cmd.get_model(structure+" and name CA and chain A and not HETATM")
+
+    max_resi = np.max(np.array([int(x.resi) for x in model_CA.atom]))
     virtual_centers = []
     resi = 0
     resn = None
     CB = None
     for atom in model.atom:
+        if atom.chain == "A"
         if atom.resi != resi:
             resi = atom.resi
             if resn != None:
@@ -108,7 +112,7 @@ def add_space(number,max_length,decimaler):
 from pymol import cmd
 
 def virtual_center_to_pdb(virtual_centers,outfilename,structure_name):
-    model = cmd.get_model(structure_name+" and name CA").atom
+    model = cmd.get_model(structure_name+" and name CA and chain A and not HETATM").atom
     with open(outfilename,"w") as out:
         out.write("MODEL\t1\n")
         for i,v in enumerate(virtual_centers):
@@ -130,7 +134,8 @@ def run(score_list,structure_list,minmax,max_dist):
     for i, score in enumerate(score_list):
         middle_s = {}
         model = cmd.get_model(structure_list[i])
-        vc_list = foldseek_virtual_center(model)
+        model_CA = cmd.get_model(structure_list[i]+" and name CA and chain A and not HETATM")
+        vc_list = foldseek_virtual_center(model,model_CA)
         print(vc_list,len(vc_list),len(score))
         for j, s in enumerate(score):
             if s > minmax[0] and s < minmax[1]:
