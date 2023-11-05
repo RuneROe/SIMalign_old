@@ -172,7 +172,7 @@ def SIMalign(ref_structure, structure_list_entire, iterations, tresshold_aa, max
                     if m != model:
                         closest_pair = kd.query(ref_coord)
                         atom = m.atom[closest_pair[1]]
-                        if closest_pair[0] == ref_kd.query(atom)[0] and closest_pair[0] <= max_dist: 
+                        if closest_pair[0] == ref_kd.query(atom.coord)[0] and closest_pair[0] <= max_dist: 
                             s += ((aa_to_blosom(ref_resn,atom.resn) + 4)/(n_homologous_list*max_score))
                             tmp.append((structure_list_entire[x], atom.index))
 
