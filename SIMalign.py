@@ -210,6 +210,8 @@ def SIMalign(ref_structure, structure_list_entire, iterations, tresshold_aa, max
 
     if break_flag == False:
         print(f"Completed {iterations} iteration(s) of superexposion.")
+    for i, structure in enumerate(structure_list_entire):
+        cmd.select(f"{structure}_core",f"{structure} and not HETATM and chain A{selection[i]})
     return score_list
 
 def run(ref_structure, files, iterations, tresshold_aa, max_dist, outfilename):
