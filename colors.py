@@ -29,8 +29,8 @@ def color_by_score(structure, score):
     """
     model = cmd.get_model(structure+" and name CA and not HETATM and chain A")
     for i, atom in enumerate(model.atom):
-        cmd.set_color(f"{i}color", color_by_number(score[i]))
-        cmd.color(f"{i}color", f"resi {atom.resi} and chain {atom.chain} and {structure}")
+        cmd.set_color(f"{str(atom)}color", color_by_number(score[i]))
+        cmd.color(f"{str(atom)}color", f"resi {atom.resi} and chain {atom.chain} and {structure}")
 
 def hotspot_to_selection(hotspot):
     selection = " and ("
