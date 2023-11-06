@@ -16,6 +16,15 @@ from pymol import cmd
 
 # color_by_score(structure, score_list[j])
 
+
+
+
+def hotspot_to_selection(hotspot):
+    selection = " and ("
+    for index in hotspot:
+        selection +=  f"resi {index+1} or "
+    return selection[:-4]+")"
+
 def color_by_score(structure, score):
     """
     DESCRIPTION
@@ -28,16 +37,15 @@ def color_by_score(structure, score):
     from pymol import cmd
     """
     model = cmd.get_model(structure+" and name CA and not HETATM and chain A")
+    select_conserved_list = []
     for i, atom in enumerate(model.atom):
         cmd.set_color(f"{str(atom)+structure}color", color_by_number(score[i]))
         cmd.color(f"{str(atom)+structure}color", f"resi {atom.resi} and chain {atom.chain} and {structure}")
-    # cmd.save(outfile_name)
+        if score[i] > 0.95:
+            select_conserved_list.append(i)
+    cmd.select(f"{structure}_conserved",structure+f" and not HETATM and chain A{hotspot_to_selection(select_conserved_list)}")
 
-def hotspot_to_selection(hotspot):
-    selection = " and ("
-    for index in hotspot:
-        selection +=  f"resi {index+1} or "
-    return selection[:-4]+")"
+
 
 
 def color_by_hotspot(structure, hotspot):
