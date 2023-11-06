@@ -16,7 +16,7 @@ from pymol import cmd
 
 # color_by_score(structure, score_list[j])
 
-def color_by_score(structure, score,outfile_name):
+def color_by_score(structure, score):
     """
     DESCRIPTION
 
@@ -31,7 +31,7 @@ def color_by_score(structure, score,outfile_name):
     for i, atom in enumerate(model.atom):
         cmd.set_color(f"{str(atom)+structure}color", color_by_number(score[i]))
         cmd.color(f"{str(atom)+structure}color", f"resi {atom.resi} and chain {atom.chain} and {structure}")
-    cmd.save(outfile_name)
+    # cmd.save(outfile_name)
 
 def hotspot_to_selection(hotspot):
     selection = " and ("
@@ -76,8 +76,8 @@ def run(color_mode,hotspot_list,score_list,outfile_name,structure_list):
         print("Coloring by similarity:\n")
         for j, structure in enumerate(structure_list):
             print(f"Coloring {structure}")
-            color_by_score(structure, score_list[j],outfile_name)
-    cmd.save(outfile_name)
+            color_by_score(structure, score_list[j])
+    # cmd.save(outfile_name)
 
 # colors.run("similarity",hotspot_list,score_list,outfile_name,structure_list)
 

@@ -255,7 +255,7 @@ def run(ref_structure, files, iterations, tresshold_aa, max_dist, outfilename):
     cmd.set("antialias", "4")
     cmd.set("ray_trace_mode", "1")
 
-    cmd.save(outfilename)
+    # cmd.save(outfilename)
     cmd.save("alignment.aln", selection="aln")
 
     return len(cmd.get_model(ref_structure).atom), score_list, structure_list_entire
