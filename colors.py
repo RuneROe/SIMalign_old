@@ -54,7 +54,7 @@ def color_by_hotspot(structure, hotspot):
     for i, atom in enumerate(model.atom):
         not_in_hotspot = True
         for j, h in enumerate(hotspot):
-            cmd.select(f"structure_Hotspot{j+1}",f"{structure} and name CA and not HETATM and chain A{hotspot_to_selection(h)}")
+            cmd.select(f"{structure}_HS{j+1}",f"{structure} and not HETATM and chain A{hotspot_to_selection(h)}")
             if i in h:
                 not_in_hotspot = False
                 cmd.set_color(f"{atom}color", colors[j%10])

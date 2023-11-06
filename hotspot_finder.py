@@ -129,7 +129,7 @@ def virtual_center_to_pdb(virtual_centers,outfilename,structure_name):
 
 from scipy.spatial import cKDTree
 
-def run(score_list,structure_list,minmax,max_dist):
+def run(score_list,structure_list,minmax,max_dist,hotspot_min_size):
     """
     
     """
@@ -144,7 +144,6 @@ def run(score_list,structure_list,minmax,max_dist):
             if s > minmax[0] and s < minmax[1]:
                 hashable_list = ",".join([str(x) for x in vc_list[j,:]])
                 middle_s[hashable_list] = j
-        print(middle_s)
         kd = cKDTree([[float(y) for y in x.split(",")] for x in middle_s.keys()])
         closest_to_ref = {}
         ref_is_closest = {}
@@ -160,8 +159,6 @@ def run(score_list,structure_list,minmax,max_dist):
                     ref_is_closest[idx] = {index}
         hotspot = []
         used_aa = set()
-        print(len(closest_to_ref),closest_to_ref)
-        print(len(ref_is_closest),ref_is_closest)
         for index in closest_to_ref.keys():
             if index not in used_aa:
                 h = {index}
@@ -175,15 +172,10 @@ def run(score_list,structure_list,minmax,max_dist):
                                 add = add.union(ref_is_closest[ele])
                     if add == set():
                         break
-                    print(add)
                     used_aa = used_aa.union(h)
                     h = h.union(add)
-                    
-                    print(h)
-                    print(used_aa)
                     add = set()
-                    print(add)
-                if len(h) > 1:
+                if len(h) >= hotspot_min_size:
                     hotspot.append(h)
         hotspot_list.append(hotspot)
     return hotspot_list
