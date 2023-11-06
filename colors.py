@@ -14,6 +14,8 @@ def color_by_number(number):
 
 from pymol import cmd
 
+# color_by_score(structure, score_list[j])
+
 def color_by_score(structure, score):
     """
     DESCRIPTION
@@ -27,8 +29,8 @@ def color_by_score(structure, score):
     """
     model = cmd.get_model(structure+" and name CA and not HETATM and chain A")
     for i, atom in enumerate(model.atom):
-        cmd.set_color(f"{atom}color", color_by_number(score[i]))
-        cmd.color(f"{atom}color", f"resi {atom.resi} and chain {atom.chain} and {structure}")
+        cmd.set_color(f"{i}color", color_by_number(score[i]))
+        cmd.color(f"{i}color", f"resi {atom.resi} and chain {atom.chain} and {structure}")
 
 def hotspot_to_selection(hotspot):
     selection = " and ("
@@ -76,7 +78,7 @@ def run(color_mode,hotspot_list,score_list,outfile_name,structure_list):
             color_by_score(structure, score_list[j])
     cmd.save(outfile_name)
 
-
+# colors.run("similarity",hotspot_list,score_list,outfile_name,structure_list)
 
 def make_gradient(width=10, height=100, outfile='gradient.png'):
     import png
