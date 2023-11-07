@@ -10,6 +10,8 @@ def color_by_number(number):
 
     import numpy as np
     """
+    if number >= 1:
+        return [1,1,1]
     return [0.8+(number/5),number,number]
 
 from pymol import cmd
@@ -41,7 +43,7 @@ def color_by_score(structure, score):
     for i, atom in enumerate(model.atom):
         cmd.set_color(f"{str(atom)+structure}color", color_by_number(score[i]))
         cmd.color(f"{str(atom)+structure}color", f"resi {atom.resi} and chain {atom.chain} and {structure}")
-        if score[i] > 0.9:
+        if score[i] > 0.99:
             select_conserved_list.append(i)
     cmd.select(f"{structure}_conserved",structure+f" and not HETATM and chain A{hotspot_to_selection(select_conserved_list)}")
 
