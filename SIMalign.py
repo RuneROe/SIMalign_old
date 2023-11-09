@@ -121,7 +121,7 @@ from Bio import AlignIO
 
 def get_align(alignment_file_name,structure_list):
     alignIO = AlignIO.read(alignment_file_name,"clustal")
-    align = set()
+    align = []
     resi = []
     for seq in alignIO:
         resi.append(0)
@@ -136,7 +136,7 @@ def get_align(alignment_file_name,structure_list):
             if seq[i] != "-":
                 tmp.add((structure_list[j],modelsatoms[j][resi[j]].index))
                 resi[j] += 1
-        align.add(tmp)
+        align.append(tmp)
     return align
 
 
@@ -211,13 +211,13 @@ def SIMalign(ref_structure, structure_list_entire, iterations, tresshold_aa, max
                 if set(tmp) not in align:
                     for ele in align:
                         if tmp[0] in ele:
-                            align.discard(ele)
-                            align.add(set(tmp))
+                            align.remove(ele)
+                            align.append(set(tmp))
                             tmp[1:]
                     for t in tmp[1:]:
                         for ele2 in align:
                             if ele2 != set(tmp) and t in ele2:
-                                align.discard(ele2)
+                                align.remove(ele2)
 
 
                 score.append(s)
@@ -285,6 +285,7 @@ def run(ref_structure, files, iterations, tresshold_aa, max_dist, alignment_file
     cmd.remove("hydrogens")
     cmd.alignto(ref_structure, object="aln")
     cmd.save(alignment_file_name, selection="aln")
+    print("saved")
 
 # LOOP start
     print("Running SIMalign...")
