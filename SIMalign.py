@@ -134,6 +134,12 @@ def get_align(alignment_file_name,structure_list):
         tmp = []
         for j, seq in enumerate(alignIO):
             if seq[i] != "-":
+                print(structure_list)
+                print(j)
+                print(structure_list[j])
+                print(modelsatoms[j])
+                print(resi[j])
+                print(modelsatoms[j][resi[j]])
                 tmp.append((structure_list[j],modelsatoms[j][resi[j]].index))
                 resi[j] += 1
         align.append(tmp)
