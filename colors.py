@@ -76,7 +76,7 @@ def color_by_hotspot(structure, hotspot):
             cmd.set_color(f"{atom}color", grey)
             cmd.color(f"{atom}color", f"resi {atom.resi} and chain {atom.chain} and {structure}")
 
-def run(color_mode,hotspot_list,score_list,outfile_name,structure_list):
+def run(color_mode,hotspot_list,score_list,structure_list):
     if color_mode == "hotspot":
         print("Coloring by hotspots:\n")
         for j, structure in enumerate(structure_list):

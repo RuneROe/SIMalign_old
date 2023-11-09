@@ -117,26 +117,55 @@ def downloading_files(ref_structure,files):
         print("\nCouldn't import one or more of the files in pymol\n- - - - - - - - - - - - - - - - - -\n")
         sys.exit(1)
     
-# update_seq_alignment()
-#     if tmp not in align and i != n_homologous_list:
-#     flag = True
-#     for ele in structure_list[:i]:
-#         #if not gab
-#             flag = False
-#             break
-#     if flag:
-#         count = 0
-#         for ele in structure_list[i+1:]:
-#             count += 1
-#             for wt in structure_list[i+count:]:
-#                 pass #check if  they are in align
-#                     flag = False
-#                     break
-#     if flag:
-#         # update align
+from Bio import AlignIO
 
+def get_align(alignment_file_name,structure_list):
+    alignIO = AlignIO.read(alignment_file_name,"clustal")
+    align = set()
+    resi = []
+    for seq in alignIO:
+        resi.append(0)
+        print(len("".join([str(x) for x in seq.seq.split("-")])))
+    modelsatoms = [cmd.get_model(structure+" and chain A and not HETATM and name CA").atom for structure in structure_list]
+    print(cmd.get_object_list())
+    for ele in modelsatoms:
+        print(len(ele))
+    for i in range(len(alignIO[0].seq)):
+        tmp = set()
+        for j, seq in enumerate(alignIO):
+            if seq[i] != "-":
+                tmp.add((structure_list[j],modelsatoms[j][resi[j]].index))
+                resi[j] += 1
+        align.add(tmp)
+    return align
+
+
+# def update_seq_alignment(align,tmp,i,n_homologous_list,structure_list,ref_structure,ref_index):
+#     align_set = set([set(x) for x in align])
+#     if set(tmp) not in align_set and i != n_homologous_list:
+#         flag = True
+#         for i,tmp_set in enumerate(align):
+#             if (ref_structure, ref_index) in tmp_set:
+#                 break
+#         for ele in structure_list[:i]:
+#             #if not gab
+#                 flag = False
+#                 break
+#         if flag:
+#             count = 0
+#             for ele in structure_list[i+1:]:
+#                 count += 1
+#                 for wt in structure_list[i+count:]:
+#                     pass #check if  they are in align
+#                         flag = False
+#                         break
+#             # update align
+#     return align
+
+def update_alignment(align):
+    cmd.set_raw_alignment("aln",[list(x) for x in align])
         
-def SIMalign(ref_structure, structure_list_entire, iterations, tresshold_aa, max_dist):
+def SIMalign(ref_structure, structure_list_entire, iterations, tresshold_aa, max_dist, alignment_file_name):
     n_homologous_list = len(structure_list_entire) - 1
     # align_structure_list = []
     # for i, structure in enumerate(structure_list_entire):
@@ -144,7 +173,8 @@ def SIMalign(ref_structure, structure_list_entire, iterations, tresshold_aa, max
     break_flag = False
     to_outfile = [""]
     for j in range(iterations):
-        # Get models and cKDTree
+        align = get_align(alignment_file_name,structure_list_entire)
+        # Get models and cKDtree
         model_kd = dict()  
         for structure in structure_list_entire:
             model = cmd.get_model(structure+" and name CA and not HETATM and chain A")
@@ -152,6 +182,7 @@ def SIMalign(ref_structure, structure_list_entire, iterations, tresshold_aa, max
         
         score_list = []
         selection = []
+
         # LOOP through models
         for i, model in enumerate(model_kd.keys()):
 
@@ -176,8 +207,19 @@ def SIMalign(ref_structure, structure_list_entire, iterations, tresshold_aa, max
                             s += ((aa_to_blosom(ref_resn,atom.resn) + 4)/(n_homologous_list*max_score))
                             tmp.append((structure_list_entire[x], atom.index))
 
-                #changing alignment        
-                # update_seq_alignment()
+                #changing alignment
+                if set(tmp) not in align:
+                    for ele in align:
+                        if tmp[0] in ele:
+                            align.discard(ele)
+                            align.add(set(tmp))
+                            tmp[1:]
+                    for t in tmp[1:]:
+                        for ele2 in align:
+                            if ele2 != set(tmp) and t in ele2:
+                                align.discard(ele2)
+
+
                 score.append(s)
             score_list.append(score)
 
@@ -207,14 +249,14 @@ def SIMalign(ref_structure, structure_list_entire, iterations, tresshold_aa, max
         
     with open("log.txt","w") as outfile:
         outfile.write("".join(to_outfile))
-
+    update_alignment(align)
     if break_flag == False:
         print(f"Completed {iterations} iteration(s) of superexposion.")
     for i, structure in enumerate(structure_list_entire):
         cmd.select(f"{structure}_core",f"{structure} and not HETATM and chain A{selection[i]}")
     return score_list
 
-def run(ref_structure, files, iterations, tresshold_aa, max_dist, outfilename):
+def run(ref_structure, files, iterations, tresshold_aa, max_dist, alignment_file_name):
     """
     DESCRIPTION
 
@@ -242,11 +284,12 @@ def run(ref_structure, files, iterations, tresshold_aa, max_dist, outfilename):
 
     cmd.remove("hydrogens")
     cmd.alignto(ref_structure, object="aln")
+    cmd.save(alignment_file_name, selection="aln")
 
 # LOOP start
     print("Running SIMalign...")
-    score_list = SIMalign(ref_structure, structure_list_entire, iterations, tresshold_aa, max_dist)
-
+    score_list = SIMalign(ref_structure, structure_list_entire, iterations, tresshold_aa, max_dist, alignment_file_name)
+    cmd.save(alignment_file_name, selection="aln")
 
 
 # Some pymol stuff - - - - - - - - - - - - - - - - - - - - - - - - - - -- - - - - -
@@ -256,7 +299,7 @@ def run(ref_structure, files, iterations, tresshold_aa, max_dist, outfilename):
     cmd.set("ray_trace_mode", "1")
 
     # cmd.save(outfilename)
-    cmd.save("alignment.aln", selection="aln")
+    
 
     return len(cmd.get_model(ref_structure).atom), score_list, structure_list_entire
 

@@ -1,0 +1,52 @@
+CLUSTAL
+
+SP2                   ------------MSELSAIETAAAIAGGSMTALEACDAAIARIEQRDGPINAVV
+AF-O53325-F1-model_v4 MAMSAKASDDIA--WLPATAQLAVLAAKKVSSAELVELYLSRIDTYNASLNAIV
+SP1                   M-----------AREPTALATAAAIRSGATTARAETEAAIARIEALDGAINAVV
+                                  .....*....*..................**.......**.*
+
+SP2                   VRDFDRARDAAKAADAEIAAAVRK-PLLGVPMTIKESFDIAGLPTSWGFAEHAD
+AF-O53325-F1-model_v4 TVDPDAARRVAKRSDAARARGDELGPLHGLPITVKDSYETAGMRTTCGRRDLAD
+SP1                   VRDFDRALAAADAADARIQAGDTA-PLLGVPMTVKEAFDVEGLPTHWGFRQHAG
+                      ..*.*.*...*...**........ **.*.*.*.*......*..*..*....*.
+
+SP2                   HIATADSLVVSRLKAAGAVFLGKSNIPVGLADWQSVNPNYGRTNNPHDHSRSAG
+AF-O53325-F1-model_v4 YVPTQDAEAVARLRRAGAIIMGKTNMPTGNQDVQASNPVFGRTNNPWDAARTSG
+SP1                   NIATSDAEAVRRLKAAGAIILGKTNVPKGLGDWQSVNSIHGVTNHPLDPTRTPG
+                      ...*.*...*.**..***...**.*.*.*..*.*..*...*.**.*.*..*..*
+
+SP2                   GSSGGAAAALAAGMVPLEYGSDIGGSIRVPAHFCGVWGLKTTFDAVSLEGHYF-
+AF-O53325-F1-model_v4 GSAGGGAAATAAGLTSFDYGSEIGGSTRIPAHYCGLYGHKSTWRSVPLVGHIPS
+SP1                   GSSGGSAAALASGMVPLELGSDIGGSIRIPAHFCGVWGLKPSWGAISSHGHRY-
+                      **.**.***.*.*......**.****.*.***.**..*.*.........**.. 
+
+SP2                   --PRTDSAKA-DLSVVGPMARTPADLALALDITSK---------VPLPQSRIAN
+AF-O53325-F1-model_v4 APGNPGRWGQADMACAGVQVRGARDIIPALEATVGPMRADGGFSYALAPPRAGA
+SP1                   --PGTNGAET-PLGVIGPMARSPDDLAAMLDLLAT---------LPMPRA-SRP
+                        ........ .....*...*...*....*.....         ..........
+
+SP2                   LSGLRILLLTAHPETVADSATISAVERAAAACEASGATVATSSPDL-PDLSALV
+AF-O53325-F1-model_v4 LKDFRVAVWAEDPHCPIDADVRRAMDDAVAALRAAGAHVVEQPATIPVDMAVSH
+SP1                   PRRVL--AITDHPAIRTSAVCRDAVDTAAEALAGAGIEVIRSTDLL-PDLARQH
+                      ............*..........*...*..*....*..*....... .*.....
+
+SP2                   ADYTRMLLVV--LARGLAP--------------------------EGTEPVSLN
+AF-O53325-F1-model_v4 NIFQSLVFGA--FAVDRSTLSPASAAALGLRAVRHPRGEAANALGATLQSHRA-
+SP1                   HAYGQMLSVAFARSDPTLH--------------------------A--SLPNLL
+                      ..........  .......                          .........
+
+SP2                   AWYAMLDDQARMMRAFDRLFESFDAIFCPVLGTTAFAHSDE-PDWAKRSLSIDG
+AF-O53325-F1-model_v4 -WLFADAARHEMRDRWAGFFNEFDVLLLPVTPTPAPLHHNKDHDRLGRTIDVDG
+SP1                   TWLSWQDAQARNTRAWGRLFGEVDAVIAPPAATQAFAHDHA-P-QANRTLDIDG
+                      .*.................*...*....*...*.*..*... .....*....**
+
+SP2                   GIAPFAAQLGWISMATYGGMPALSMPLGADGNGLPINLQIITRNWSDHDAIRIG
+AF-O53325-F1-model_v4 VSRSYWDQLKWNALANIAGTPATTMPITTTATGLPIGIQAMGPAGGDRTTVEFA
+SP1                   VASPYDAHLAWAGVATYPGLPAVVVPVGTA-NGLPVGVQVITDFHRDHDAIATA
+                      ........*.*...*...*.**...*......***...*.......*.......
+
+SP2                   ALVAEA---------LDR---                                 
+AF-O53325-F1-model_v4 ALLTEVLGGFRVPPL------                                 
+SP1                   ALIHRL---------TEGQPA                                 
+                      **....         ...                                    
+

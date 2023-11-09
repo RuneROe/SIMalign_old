@@ -129,7 +129,7 @@ def virtual_center_to_pdb(virtual_centers,outfilename,structure_name):
 
 from scipy.spatial import cKDTree
 
-def run(score_list,structure_list,minmax,max_dist,hotspot_min_size):
+def run_old(score_list,structure_list,minmax,max_dist,hotspot_min_size):
     """
     
     """
@@ -178,4 +178,82 @@ def run(score_list,structure_list,minmax,max_dist,hotspot_min_size):
                 if len(h) >= hotspot_min_size:
                     hotspot.append(h)
         hotspot_list.append(hotspot)
+    return hotspot_list
+
+from Bio import AlignIO
+
+
+
+
+def resi_to_index(resi,ref_structure,structure_list,align):
+    ref_index = structure_list.index(ref_structure)
+    count = 0
+    for index, AA in enumerate(align[ref_index].seq):
+        if AA != "-":
+            count += 1
+        if count == resi:
+            return index
+
+def finish(close_AAs,resi,resn,ref_structure,structure_list,align):
+    ref_index = structure_list.index(ref_structure)
+    amino_acid_translation = {
+    'ALA': 'A',
+    'ARG': 'R',
+    'ASN': 'N',
+    'ASP': 'D',
+    'CYS': 'C',
+    'GLU': 'E',
+    'GLN': 'Q',
+    'GLY': 'G',
+    'HIS': 'H',
+    'ILE': 'I',
+    'LEU': 'L',
+    'LYS': 'K',
+    'MET': 'M',
+    'PHE': 'F',
+    'PRO': 'P',
+    'SER': 'S',
+    'THR': 'T',
+    'TRP': 'W',
+    'TYR': 'Y',
+    'VAL': 'V'}
+    for seq in align:
+        align_char = seq[resi_to_index(resi,ref_structure,structure_list,align)]
+        if align_char != amino_acid_translation[resn] and align_char != "-":
+            flag = True
+            for closeAA in close_AAs:
+                close_index = resi_to_index(closeAA,ref_structure,structure_list,align)
+                if seq[close_index] != align[ref_index][close_index]:
+                    flag = False
+            if flag:
+                return resi - 1
+    return ""
+
+
+def get_close_aa(close_AAs,modelatoms,kd,atom,resi):
+    tmp_set = set([modelatoms[x].resi for x in kd.query_ball_point(atom.coord,4)])
+    tmp_set.discard(resi)
+    return close_AAs.union(tmp_set)
+
+def run(ref_structure,structure_list,alignment_file_name):
+    hotspot_list = []
+    align = AlignIO.read(alignment_file_name,"clustal")
+    for structure in structure_list:
+        hotspot = set()
+        modelatoms = cmd.get_model(structure+" and (not name CA and not name N and not name C and not name O) and chain A and not HETATM").atom
+        kd = cKDTree([atom.coord for atom in modelatoms])
+        resi = 0
+        close_AAs = set()
+        for atom in modelatoms:
+            if resi != int(atom.resi):
+                if resi != 0:
+                    hotspot.add(finish(close_AAs,resi,resn,ref_structure,structure_list,align))
+                    close_AAs = set()
+                    resi = int(atom.resi)
+                    resn = atom.resn
+                    close_AAs = get_close_aa(close_AAs,modelatoms,kd,atom,resi)
+            else:
+                close_AAs = get_close_aa(close_AAs,modelatoms,kd,atom,resi)
+        hotspot.add(finish(close_AAs,resi,resn,ref_structure,structure_list,align))
+        hotspot.discard("")
     return hotspot_list
