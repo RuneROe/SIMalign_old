@@ -131,10 +131,10 @@ def get_align(alignment_file_name,structure_list):
     for ele in modelsatoms:
         print(len(ele))
     for i in range(len(alignIO[0].seq)):
-        tmp = set()
+        tmp = []
         for j, seq in enumerate(alignIO):
             if seq[i] != "-":
-                tmp.add((structure_list[j],modelsatoms[j][resi[j]].index))
+                tmp.append((structure_list[j],modelsatoms[j][resi[j]].index))
                 resi[j] += 1
         align.append(tmp)
     return align
@@ -208,14 +208,14 @@ def SIMalign(ref_structure, structure_list_entire, iterations, tresshold_aa, max
                             tmp.append((structure_list_entire[x], atom.index))
 
                 #changing alignment
-                if set(tmp) not in align:
-                    for ele in align:
+                if set(tmp) not in [set(x) for x in align]:
+                    for ele in [set(x) for x in align]:
                         if tmp[0] in ele:
                             align.remove(ele)
-                            align.append(set(tmp))
+                            align.append(tmp)
                             tmp[1:]
                     for t in tmp[1:]:
-                        for ele2 in align:
+                        for ele2 in [set(x) for x in align]:
                             if ele2 != set(tmp) and t in ele2:
                                 align.remove(ele2)
 
