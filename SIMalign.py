@@ -283,7 +283,7 @@ def run(ref_structure, files, iterations, tresshold_aa, max_dist, alignment_file
 # Basic Pymol stuff - - - - - - - - - - - - - - - - - - - - - - - - - - -- - - - - -
 
     cmd.remove("hydrogens")
-    cmd.alignto(ref_structure+"and chain A", object="aln")
+    cmd.alignto(ref_structure+" and chain A", object="aln")
     cmd.save(alignment_file_name, selection="aln")
     print("saved")
 
