@@ -134,7 +134,7 @@ def get_align(alignment_file_name,structure_list):
         tmp = []
         for j, seq in enumerate(alignIO):
             if seq[i] != "-":
-                tmp.append((structure_list[j],modelsatoms[j][resi[j]-1].index))
+                tmp.append((structure_list[j],modelsatoms[j][resi[j]].index))
                 resi[j] += 1
         align.append(tmp)
     return align
@@ -283,7 +283,7 @@ def run(ref_structure, files, iterations, tresshold_aa, max_dist, alignment_file
 # Basic Pymol stuff - - - - - - - - - - - - - - - - - - - - - - - - - - -- - - - - -
 
     cmd.remove("hydrogens")
-    cmd.alignto(ref_structure, object="aln")
+    cmd.alignto(ref_structure+"and chain A", object="aln")
     cmd.save(alignment_file_name, selection="aln")
     print("saved")
 
