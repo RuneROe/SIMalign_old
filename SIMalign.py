@@ -119,6 +119,19 @@ def downloading_files(ref_structure,files):
     
 from Bio import AlignIO
 
+def remove_other_chain_alignment(alignment_file_name,resi_max_list):
+    alignment = AlignIO.read(alignment_file_name, "clustal")
+    for i, seq in enumerate(alignment):
+        index = 0
+        for pos in seq:
+            if index == resi_max_list[i]:
+                pos == "-"
+            elif pos != "-":
+                index += 1
+    AlignIO.write(alignment,alignment_file_name,"clustal")
+
+
+
 def get_align(alignment_file_name,structure_list):
     alignIO = AlignIO.read(alignment_file_name,"clustal")
     align = []
@@ -294,12 +307,14 @@ def run(ref_structure, files, iterations, tresshold_aa, max_dist, alignment_file
     cmd.remove("hydrogens")
     cmd.alignto(ref_structure+" and chain A", object="aln")
     cmd.save(alignment_file_name, selection="aln")
+    remove_other_chain_alignment(alignment_file_name,[len(cmd.get_model(x+" and chain A and name CA and not HETATM").atom) for x in structure_list_entire])
     print("saved")
 
 # LOOP start
     print("Running SIMalign...")
     score_list = SIMalign(ref_structure, structure_list_entire, iterations, tresshold_aa, max_dist, alignment_file_name)
     cmd.save(alignment_file_name, selection="aln")
+    remove_other_chain_alignment(alignment_file_name,[len(cmd.get_model(x+" and chain A and name CA and not HETATM").atom) for x in structure_list_entire])
 
 
 # Some pymol stuff - - - - - - - - - - - - - - - - - - - - - - - - - - -- - - - - -

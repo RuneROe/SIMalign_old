@@ -219,16 +219,18 @@ def finish(close_AAs,resi,resn,ref_structure,structure_list,align):
     'VAL': 'V'}
     print(align)
     for seq in align:
-        print(seq)
-        print(len(seq))
+        print("seq",seq)
+        print("lenseq",len(seq))
         align_char = seq[resi_to_index(resi,ref_structure,structure_list,align)]
+        print("align_char",align_char)
         if align_char != amino_acid_translation[resn] and align_char != "-":
             flag = True
+            print("close_AAs",close_AAs)
             for closeAA in close_AAs:
                 close_index = resi_to_index(closeAA,ref_structure,structure_list,align)
-                print(close_index)
-                print(ref_index)
-                print(closeAA)
+                print("close_index",close_index)
+                print("ref_index",ref_index)
+                print("closeAA",closeAA)
                 if close_index != None:
                     if seq[close_index] != align[ref_index][close_index]:
                         flag = False
@@ -247,7 +249,7 @@ def run(ref_structure,structure_list,alignment_file_name):
     hotspot_list = []
     align = AlignIO.read(alignment_file_name,"clustal")
     for structure in structure_list:
-        hotspot = set()
+        hotspot = {""}
         modelatoms = cmd.get_model(structure+" and (not name CA and not name N and not name C and not name O) and chain A and not HETATM").atom
         kd = cKDTree([atom.coord for atom in modelatoms])
         resi = 0
@@ -264,4 +266,5 @@ def run(ref_structure,structure_list,alignment_file_name):
                 close_AAs = get_close_aa(close_AAs,modelatoms,kd,atom,resi)
         hotspot.add(finish(close_AAs,resi,resn,ref_structure,structure_list,align))
         hotspot.discard("")
+        hotspot_list.append(hotspot)
     return hotspot_list
