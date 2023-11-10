@@ -249,9 +249,9 @@ def run(ref_structure,structure_list,alignment_file_name):
                 if resi != 0:
                     hotspot.add(finish(close_AAs,resi,resn,ref_structure,structure_list,align))
                     close_AAs = set()
-                    resi = int(atom.resi)
-                    resn = atom.resn
-                    close_AAs = get_close_aa(close_AAs,modelatoms,kd,atom,resi)
+                resi = int(atom.resi)
+                resn = atom.resn
+                close_AAs = get_close_aa(close_AAs,modelatoms,kd,atom,resi)
             else:
                 close_AAs = get_close_aa(close_AAs,modelatoms,kd,atom,resi)
         hotspot.add(finish(close_AAs,resi,resn,ref_structure,structure_list,align))
