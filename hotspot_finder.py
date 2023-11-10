@@ -240,7 +240,7 @@ def finish(close_AAs,resi,resn,ref_structure,structure_list,align):
 
 
 def get_close_aa(close_AAs,modelatoms,kd,atom,resi):
-    tmp_set = set([modelatoms[x].resi for x in kd.query_ball_point(atom.coord,4)])
+    tmp_set = set([modelatoms[x].resi for x in kd.query_ball_point(atom.coord,3)])
     tmp_set.discard(resi)
     return close_AAs.union(tmp_set)
 
