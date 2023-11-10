@@ -185,7 +185,7 @@ def update_alignment(align):
         for k,v in pos.items():
             tmp.append((k,v))
         new_align.append(tmp)
-    cmd.set_raw_alignment("aln",new_align)
+    cmd.set_raw_alignment("aln2",new_align)
         
 def SIMalign(ref_structure, structure_list_entire, iterations, tresshold_aa, max_dist, alignment_file_name):
     n_homologous_list = len(structure_list_entire) - 1
@@ -308,13 +308,13 @@ def run(ref_structure, files, iterations, tresshold_aa, max_dist, alignment_file
     cmd.alignto(ref_structure+" and chain A", object="aln")
     cmd.save(alignment_file_name, selection="aln")
     remove_other_chain_alignment(alignment_file_name,[len(cmd.get_model(x+" and chain A and name CA and not HETATM").atom) for x in structure_list_entire])
-    print("saved")
+
 
 # LOOP start
     print("Running SIMalign...")
     score_list = SIMalign(ref_structure, structure_list_entire, iterations, tresshold_aa, max_dist, alignment_file_name)
-    cmd.save(alignment_file_name, selection="aln")
-    remove_other_chain_alignment(alignment_file_name,[len(cmd.get_model(x+" and chain A and name CA and not HETATM").atom) for x in structure_list_entire])
+    cmd.save(alignment_file_name.split(0)+"2.aln", selection="aln2")
+    remove_other_chain_alignment(alignment_file_name.split(0)+"2.aln",[len(cmd.get_model(x+" and chain A and name CA and not HETATM").atom) for x in structure_list_entire])
 
 
 # Some pymol stuff - - - - - - - - - - - - - - - - - - - - - - - - - - -- - - - - -
