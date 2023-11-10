@@ -244,11 +244,11 @@ def get_close_aa(close_AAs,modelatoms,kd,atom,resi):
     tmp_set.discard(resi)
     return close_AAs.union(tmp_set)
 
-def run(ref_structure,structure_list,alignment_file_name):
+def run(ref_structure,structure_list,alignment_file_name,score_list):
     ref_structure = ref_structure.split(".")[0]
     hotspot_list = []
     align = AlignIO.read(alignment_file_name,"clustal")
-    for structure in structure_list:
+    for i, structure in enumerate(structure_list):
         hotspot = {""}
         modelatoms = cmd.get_model(structure+" and (not name CA and not name N and not name C and not name O) and chain A and not HETATM").atom
         kd = cKDTree([atom.coord for atom in modelatoms])
@@ -256,7 +256,7 @@ def run(ref_structure,structure_list,alignment_file_name):
         close_AAs = set()
         for atom in modelatoms:
             if resi != int(atom.resi):
-                if resi != 0:
+                if resi != 0 and score_list[i][resi-1] < 0.99:
                     hotspot.add(finish(close_AAs,resi,resn,ref_structure,structure_list,align))
                     close_AAs = set()
                 resi = int(atom.resi)
