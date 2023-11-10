@@ -217,12 +217,17 @@ def finish(close_AAs,resi,resn,ref_structure,structure_list,align):
     'TRP': 'W',
     'TYR': 'Y',
     'VAL': 'V'}
+    print(align)
     for seq in align:
+        print(seq)
+        print(len(seq))
         align_char = seq[resi_to_index(resi,ref_structure,structure_list,align)]
         if align_char != amino_acid_translation[resn] and align_char != "-":
             flag = True
             for closeAA in close_AAs:
                 close_index = resi_to_index(closeAA,ref_structure,structure_list,align)
+                print(close_index)
+                print(ref_index)
                 if seq[close_index] != align[ref_index][close_index]:
                     flag = False
             if flag:
