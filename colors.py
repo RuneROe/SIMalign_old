@@ -82,7 +82,8 @@ def hot_new(structure, hotspot):
     cmd.set_color("grey",[0.9,0.9,0.9])
     cmd.color("grey", structure+" and chain A and not HETATM")
     if len(hotspot) > 0:
-        cmd.color("hot", structure+" and chain A and not HETATM"+hotspot_to_selection(hotspot))
+        cmd.select(f"{structure}_HS",f"{structure} and not HETATM and chain A{hotspot_to_selection(hotspot)}")
+        cmd.color("hot", structure+"_HS")
 
 def run(color_mode,hotspot_list,score_list,structure_list):
     if color_mode == "hotspot":
