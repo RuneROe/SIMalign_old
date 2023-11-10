@@ -131,11 +131,11 @@ def get_align(alignment_file_name,structure_list):
     for ele in modelsatoms:
         print(len(ele))
     for i in range(len(alignIO[0].seq)):
-        tmp = []
+        tmp = {}
         for j, seq in enumerate(alignIO):
             if seq[i] != "-":
                 try:
-                    tmp.append((structure_list[j],modelsatoms[j][resi[j]].index))
+                    tmp[structure_list[j]] = modelsatoms[j][resi[j]].index
                 except IndexError:
                     pass
                 resi[j] += 1
@@ -166,7 +166,13 @@ def get_align(alignment_file_name,structure_list):
 #     return align
 
 def update_alignment(align):
-    cmd.set_raw_alignment("aln",[list(x) for x in align])
+    new_align = []
+    for pos in align:
+        tmp = []
+        for k,v in pos.items():
+            tmp.append((k,v))
+        new_align.append(tmp)
+    cmd.set_raw_alignment("aln",new_align)
         
 def SIMalign(ref_structure, structure_list_entire, iterations, tresshold_aa, max_dist, alignment_file_name):
     n_homologous_list = len(structure_list_entire) - 1
@@ -194,7 +200,7 @@ def SIMalign(ref_structure, structure_list_entire, iterations, tresshold_aa, max
 
             # LOOP through ca atoms to find scores of one model
             for ref_atom in model.atom:
-                tmp = [(structure_list_entire[i], ref_atom.index)]
+                tmp = {structure_list_entire[i]: ref_atom.index}
                 s = 0
                 ref_resn = ref_atom.resn
                 ref_coord = ref_atom.coord
@@ -208,19 +214,19 @@ def SIMalign(ref_structure, structure_list_entire, iterations, tresshold_aa, max
                         atom = m.atom[closest_pair[1]]
                         if closest_pair[0] == ref_kd.query(atom.coord)[0] and closest_pair[0] <= max_dist: 
                             s += ((aa_to_blosom(ref_resn,atom.resn) + 4)/(n_homologous_list*max_score))
-                            tmp.append((structure_list_entire[x], atom.index))
+                            tmp[structure_list_entire[x]] = atom.index
 
                 #changing alignment
-                if set(tmp) not in [set(x) for x in align]:
-                    for ele in [set(x) for x in align]:
-                        if tmp[0] in ele:
+                if tmp not in align:
+                    for ele in align:
+                        if structure_list_entire[i] in ele:
                             align.remove(ele)
                             align.append(tmp)
-                            tmp[1:]
-                    for t in tmp[1:]:
-                        for ele2 in [set(x) for x in align]:
-                            if ele2 != set(tmp) and t in ele2:
-                                align.remove(ele2)
+                    for t in tmp.keys():
+                        if t != structure_list_entire[i]:
+                            for ele2 in align:
+                                if ele2 != tmp and t in ele2:
+                                    align.remove(ele2)
 
 
                 score.append(s)
