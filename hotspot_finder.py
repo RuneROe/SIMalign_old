@@ -236,6 +236,7 @@ def get_close_aa(close_AAs,modelatoms,kd,atom,resi):
     return close_AAs.union(tmp_set)
 
 def run(ref_structure,structure_list,alignment_file_name):
+    ref_structure = ref_structure.split(".")[0]
     hotspot_list = []
     align = AlignIO.read(alignment_file_name,"clustal")
     for structure in structure_list:
