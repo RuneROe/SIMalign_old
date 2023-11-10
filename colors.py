@@ -76,12 +76,20 @@ def color_by_hotspot(structure, hotspot):
             cmd.set_color(f"{atom}color", grey)
             cmd.color(f"{atom}color", f"resi {atom.resi} and chain {atom.chain} and {structure}")
 
+
+def hot_new(structure, hotspot):
+    cmd.set_color("hot",[0.81, 0.34, 0.34])
+    cmd.set_color("grey",[0.9,0.9,0.9])
+    cmd.color("grey", structure+" and chain A and not HETATM")
+    if len(hotspot) > 0:
+        cmd.color("hot", structure+" and chain A and not HETATM"+hotspot_to_selection(hotspot))
+
 def run(color_mode,hotspot_list,score_list,structure_list):
     if color_mode == "hotspot":
         print("Coloring by hotspots:\n")
         for j, structure in enumerate(structure_list):
             print(f"Coloring {structure}")
-            color_by_hotspot(structure, hotspot_list[j])
+            hot_new(structure, hotspot_list[j])
     elif color_mode == "similarity":
         print("Coloring by similarity:\n")
         for j, structure in enumerate(structure_list):
