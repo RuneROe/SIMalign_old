@@ -191,7 +191,7 @@ def resi_to_index(resi,ref_structure,structure_list,align):
     for index, AA in enumerate(align[ref_index].seq):
         if AA != "-":
             count += 1
-        if count == resi:
+        if count == int(resi):
             return index
 
 def finish(close_AAs,resi,resn,ref_structure,structure_list,align):
