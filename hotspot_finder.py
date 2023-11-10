@@ -228,7 +228,8 @@ def finish(close_AAs,resi,resn,ref_structure,structure_list,align):
                 close_index = resi_to_index(closeAA,ref_structure,structure_list,align)
                 print(close_index)
                 print(ref_index)
-                if close_AAs != None:
+                print(closeAA)
+                if close_index != None:
                     if seq[close_index] != align[ref_index][close_index]:
                         flag = False
             if flag:
