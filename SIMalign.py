@@ -313,7 +313,7 @@ def run(ref_structure, files, iterations, tresshold_aa, max_dist, alignment_file
 # LOOP start
     print("Running SIMalign...")
     score_list = SIMalign(ref_structure, structure_list_entire, iterations, tresshold_aa, max_dist, alignment_file_name)
-    cmd.save(alignment_file_name+"ny", selection="aln")
+    cmd.save(alignment_file_name, selection="aln")
     remove_other_chain_alignment(alignment_file_name,[len(cmd.get_model(x+" and chain A and name CA and not HETATM").atom) for x in structure_list_entire])
 
 
