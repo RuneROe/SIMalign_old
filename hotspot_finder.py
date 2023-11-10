@@ -228,15 +228,16 @@ def finish(close_AAs,resi,resn,ref_structure,structure_list,align):
                 close_index = resi_to_index(closeAA,ref_structure,structure_list,align)
                 print(close_index)
                 print(ref_index)
-                if seq[close_index] != align[ref_index][close_index]:
-                    flag = False
+                if close_AAs != None:
+                    if seq[close_index] != align[ref_index][close_index]:
+                        flag = False
             if flag:
                 return resi - 1
     return ""
 
 
 def get_close_aa(close_AAs,modelatoms,kd,atom,resi):
-    tmp_set = set([modelatoms[x].resi for x in kd.query_ball_point(atom.coord,4)])
+    tmp_set = set([modelatoms[x].resi for x in kd.query_ball_point(atom.coord,2)])
     tmp_set.discard(resi)
     return close_AAs.union(tmp_set)
 
