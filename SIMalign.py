@@ -306,7 +306,7 @@ def SIMalign(ref_structure, structure_list_entire, iterations, tresshold_aa, max
                             # tmp[structure_list_entire[x]] = atom.index
                             tmp_coordinates.append(atom.coord)
                 
-                tmp_center = weighted_average(tmp_coordinates)
+                tmp_center = average_coordinate(tmp_coordinates)
                 tmp = {}
                 for x, (m, kd) in enumerate(model_kd.items()):
                     closest_pair = kd.query(tmp_center)
@@ -384,7 +384,7 @@ def SIMalign(ref_structure, structure_list_entire, iterations, tresshold_aa, max
         for i, structure in enumerate(structure_list_entire):
             # cmd.select(align_structure_list[i], structure+selection[i])
             if i != 0:
-                print(f"Superexpose",structure,"towards",ref_structure)
+                print(f"superimposing",structure,"towards",ref_structure)
                 # super = cmd.super(target=align_structure_list[0], mobile=align_structure_list[i])
                 super = cmd.super(target=f"{ref_structure} and name CA and not HETATM and chain A{selection[0]}", mobile=f"{structure} and name CA and not HETATM and chain A{selection[i]}")
                 tmp_out += f"{structure_list_entire[i]}\t{round(super[0],3)}\t{super[1]}\n"
@@ -392,14 +392,14 @@ def SIMalign(ref_structure, structure_list_entire, iterations, tresshold_aa, max
         print(to_outfile[-2]+to_outfile[-1])
         if to_outfile[-1] == to_outfile[-3]:
             break_flag = True
-            print(f"Breaked after {j+1} iteration(s) of superexposion.")
+            print(f"Breaked after {j+1} iteration(s) of superimposion.")
             break
         
     with open("log.txt","w") as outfile:
         outfile.write("".join(to_outfile))
     update_alignment(align)
     if break_flag == False:
-        print(f"Completed {iterations} iteration(s) of superexposion.")
+        print(f"Completed {iterations} iteration(s) of superimposion.")
     # for i, structure in enumerate(structure_list_entire):
     #     cmd.select(f"{structure}_core",f"{structure} and not HETATM and chain A{selection[i]}")
     return score_list, selection

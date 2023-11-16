@@ -364,7 +364,7 @@ def run(structure_list,alignment_file_name):
     #             close_AAs = get_close_aa(close_AAs,model.atom,kd,atom,resi)
     #     closeAA_list.append(close_AAs)
     closeAA_list = get_close_aa_list(structure_list,align)
-    print(closeAA_list)
+    # print(closeAA_list)
     hotspot_list = []
     exposed_list = []
     for i, structure in enumerate(structure_list):
