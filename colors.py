@@ -112,7 +112,7 @@ def color_by_score(structure, score):
 
 def run(color_mode,hotspot_list,score_list,structure_list,core_selection,exposed_list):
     #Select core_AA
-    cmd.select("core_AA","not HETATM"+select_by_list(core_selection,structure_list,list_of_lists=False))
+    # cmd.select("core_AA","not HETATM"+select_by_list(core_selection,structure_list,list_of_lists=False))
 
     #Select conserved and nonconserved
     cmd.select("conserved", "not HETATM and chain A"+select_by_list(score_list,structure_list,select_above99=True))

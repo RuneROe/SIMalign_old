@@ -362,7 +362,7 @@ def SIMalign(ref_structure, structure_list_entire, iterations, tresshold_aa, max
         if break_flag:
             print(f"Breaked after {j} iteration(s) of superexposion. \nTry to change the parameter tresshold_aa if a higher number of iterations are wanted.")
             break
-        to_outfile.append(f"Iteration {j+1}\nstructure\tRMSD\tatoms aligned\n")
+        to_outfile.append(f"Iteration {j+1}\nstructure\tRMSD\tresidues aligned\n")
         tmp_out = ""
 
         # tmp = {}
