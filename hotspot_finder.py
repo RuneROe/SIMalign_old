@@ -1,5 +1,7 @@
 import numpy as np
 
+
+
 #from chatgpt
 def normalize_vector(v):
     norm = np.linalg.norm(v)
@@ -194,6 +196,60 @@ def resi_to_index(resi,ref_structure,structure_list,align):
         if count == int(resi):
             return index
 
+def index_to_resi(index,ref_structure,structure_list,align):
+    ref_index = structure_list.index(ref_structure)
+    resi = 0
+    for i, AA in enumerate(align[ref_index].seq):
+        if AA != "-":
+            resi += 1
+        if i == index:
+            return resi
+
+
+def add_hotspot(closeAA_list,atom,i,structure_list,align):
+    amino_acid_translation = {
+    'ALA': 'A',
+    'ARG': 'R',
+    'ASN': 'N',
+    'ASP': 'D',
+    'CYS': 'C',
+    'GLU': 'E',
+    'GLN': 'Q',
+    'GLY': 'G',
+    'HIS': 'H',
+    'ILE': 'I',
+    'LEU': 'L',
+    'LYS': 'K',
+    'MET': 'M',
+    'PHE': 'F',
+    'PRO': 'P',
+    'SER': 'S',
+    'THR': 'T',
+    'TRP': 'W',
+    'TYR': 'Y',
+    'VAL': 'V'}
+    index = None
+    resi_list = []
+    ref_index = resi_to_index(int(atom.resi),structure_list[i],structure_list,align)
+    for j, seq in enumerate(align):
+        align_char = seq[ref_index]
+        if align_char != amino_acid_translation[atom.resn] and align_char != "-":
+            flag = True
+            if not isinstance(closeAA_list[j][ref_index], str):
+                for closeAA in closeAA_list[j][ref_index]:
+                    close_index = resi_to_index(closeAA,structure_list[j],structure_list,align)
+                    if close_index != None:
+                        if seq[close_index] != align[i][close_index]:
+                            flag = False     
+            if flag:
+                index = int(atom.resi)
+                resi_list.append(index_to_resi(ref_index,structure_list[j],structure_list,align))
+            else:
+                resi_list.append("-")
+        else:
+            resi_list.append("-")
+    return index, resi_list
+ 
 def finish(close_AAs,resi,resn,ref_structure,structure_list,align):
     ref_index = structure_list.index(ref_structure)
     amino_acid_translation = {
@@ -217,20 +273,12 @@ def finish(close_AAs,resi,resn,ref_structure,structure_list,align):
     'TRP': 'W',
     'TYR': 'Y',
     'VAL': 'V'}
-    print(align)
     for seq in align:
-        print("seq",seq)
-        print("lenseq",len(seq))
         align_char = seq[resi_to_index(resi,ref_structure,structure_list,align)]
-        print("align_char",align_char)
         if align_char != amino_acid_translation[resn] and align_char != "-":
             flag = True
-            print("close_AAs",close_AAs)
             for closeAA in close_AAs:
                 close_index = resi_to_index(closeAA,ref_structure,structure_list,align)
-                print("close_index",close_index)
-                print("ref_index",ref_index)
-                print("closeAA",closeAA)
                 if close_index != None:
                     if seq[close_index] != align[ref_index][close_index]:
                         flag = False
@@ -239,32 +287,107 @@ def finish(close_AAs,resi,resn,ref_structure,structure_list,align):
     return ""
 
 
+
+def discard_surface_residues(hotspot,structure):
+    import findsurfaceatoms
+    exposed_residues = findsurfaceatoms.findSurfaceResidues(selection=structure+" and chain A and not HETATM")
+    exposed_set = set()
+    for resi in exposed_residues:
+        exposed_set.add(resi[1])
+    new_hotspot = {}
+    for k,v in hotspot.items():
+        if k not in exposed_set:
+            new_hotspot[k] = v
+    return new_hotspot, exposed_set
+
 def get_close_aa(close_AAs,modelatoms,kd,atom,resi):
-    tmp_set = set([modelatoms[x].resi for x in kd.query_ball_point(atom.coord,3)])
+    tmp_set = set([int(modelatoms[x].resi) for x in kd.query_ball_point(atom.coord,4)])
     tmp_set.discard(resi)
     return close_AAs.union(tmp_set)
 
-def run(ref_structure,structure_list,alignment_file_name,score_list):
-    ref_structure = ref_structure.split(".")[0]
-    hotspot_list = []
-    align = AlignIO.read(alignment_file_name,"clustal")
+def get_close_aa_list(structure_list,align):
+    closeAA_list = []
+    for i, seq in enumerate(align):
+        closeAA_list.append([])
+        for ele in seq:
+            closeAA_list[i].append(ele)
+
     for i, structure in enumerate(structure_list):
-        hotspot = {""}
-        modelatoms = cmd.get_model(structure+" and (not name CA and not name N and not name C and not name O) and chain A and not HETATM").atom
-        kd = cKDTree([atom.coord for atom in modelatoms])
+        model = cmd.get_model(structure+" and (not name CA and not name N and not name C and not name O) and chain A and not HETATM")
+        kd = cKDTree([atom.coord for atom in model.atom])
         resi = 0
         close_AAs = set()
-        for atom in modelatoms:
+        for atom in model.atom:
             if resi != int(atom.resi):
-                if resi != 0 and score_list[i][resi-1] < 0.99:
-                    hotspot.add(finish(close_AAs,resi,resn,ref_structure,structure_list,align))
+                if resi != 0:
+                    closeAA_list[i][resi_to_index(resi,structure,structure_list,align)] = close_AAs
                     close_AAs = set()
                 resi = int(atom.resi)
-                resn = atom.resn
-                close_AAs = get_close_aa(close_AAs,modelatoms,kd,atom,resi)
+                close_AAs = get_close_aa(close_AAs,model.atom,kd,atom,resi)
             else:
-                close_AAs = get_close_aa(close_AAs,modelatoms,kd,atom,resi)
-        hotspot.add(finish(close_AAs,resi,resn,ref_structure,structure_list,align))
-        hotspot.discard("")
+                close_AAs = get_close_aa(close_AAs,model.atom,kd,atom,resi)
+        closeAA_list[i][resi_to_index(resi,structure,structure_list,align)] = close_AAs
+    return closeAA_list
+
+
+def run(structure_list,alignment_file_name):
+    # ref_structure = ref_structure.split(".")[0]
+
+    align = AlignIO.read(alignment_file_name,"clustal")
+
+    # closeAA_list = []
+    # for i, seq in enumerate(align):
+    #     closeAA_list.append([])
+    #     for ele in seq:
+    #         closeAA_list[i].append(ele)
+    # # Get models and cKDtree
+    # # model_kd = dict()  
+    # # for structure in structure_list:
+    # #     model = cmd.get_model(structure+" and (not name CA and not name N and not name C and not name O) and chain A and not HETATM")
+    # #     model_kd[model] = cKDTree([atom.coord for atom in model.atom])
+    # for i, structure in enumerate(structure_list):
+    #     # hotspot = {""}
+    #     model = cmd.get_model(structure+" and (not name CA and not name N and not name C and not name O) and chain A and not HETATM")
+    #     kd = cKDTree([atom.coord for atom in model.atom])
+    #     resi = 0
+    #     close_AAs = set()
+    #     for atom in model.atom:
+    #         if resi != int(atom.resi):
+    #             if resi != 0:
+    #                 # hotspot.add(finish(close_AAs,resi,resn,ref_structure,structure_list,align))
+    #                 closeAA_list[i][resi_to_index(resi,structure,structure_list,align)] = close_AAs
+    #                 close_AAs = set()
+    #             resi = int(atom.resi)
+    #             # resn = atom.resn
+    #             close_AAs = get_close_aa(close_AAs,model.atom,kd,atom,resi)
+    #         else:
+    #             close_AAs = get_close_aa(close_AAs,model.atom,kd,atom,resi)
+    #     closeAA_list.append(close_AAs)
+    closeAA_list = get_close_aa_list(structure_list,align)
+    print(closeAA_list)
+    hotspot_list = []
+    exposed_list = []
+    for i, structure in enumerate(structure_list):
+        hotspot = {}
+        for atom in cmd.get_model(structure+" and name CA and not HETATM and chain A").atom:
+            k,v = add_hotspot(closeAA_list,atom,i,structure_list,align)
+            if k != None:
+                hotspot[k] = v
+
+        # hotspot.discard("")
+        hotspot, exposed_set = discard_surface_residues(hotspot,structure)
         hotspot_list.append(hotspot)
-    return hotspot_list
+        exposed_list.append(exposed_set)
+    return hotspot_list, exposed_list
+
+
+def print_hotspot(hotspot_list,structure_list):
+    model_list = []
+    for structure in structure_list:
+        model_list.append(cmd.get_model(structure+" and name CA and chain A and not HETATM").atom)
+    for i, hotspot in enumerate(hotspot_list):
+        print("Printing possible single mutations in "+structure_list[i])
+        for k,v in hotspot.items():
+            for j, resi in enumerate(v):
+                if resi != "-":
+                    print(model_list[i][k-1].resn+model_list[i][k-1].resi+" -> "+model_list[j][resi-1].resn+" as structure: "+structure_list[j])

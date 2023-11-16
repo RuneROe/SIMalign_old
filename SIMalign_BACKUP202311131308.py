@@ -140,7 +140,11 @@ def get_align(alignment_file_name,structure_list):
     resi = []
     for seq in alignIO:
         resi.append(0)
+        print(len("".join([str(x) for x in seq.seq.split("-")])))
     modelsatoms = [cmd.get_model(structure+" and chain A and not HETATM and name CA").atom for structure in structure_list]
+    print(cmd.get_object_list())
+    for ele in modelsatoms:
+        print(len(ele))
     for i in range(len(alignIO[0].seq)):
         tmp = {}
         for j, seq in enumerate(alignIO):
@@ -183,15 +187,12 @@ def update_alignment(align):
         for k,v in pos.items():
             tmp.append((k,v))
         new_align.append(tmp)
-    cmd.set_raw_alignment("aln",new_align)
+    cmd.set_raw_alignment("aln2",new_align)
 
 def process_dicts(dict_list, namelist):
     for i in range(len(namelist)):
         for j in range(i + 1, len(namelist)):
             for dict1 in dict_list:
-                # if len(dict1.keys()) == 1:
-                #     dict_list.remove(dict1)
-                #     break
                 for dict2 in dict_list:
                     if dict1 != dict2:
                         try:
@@ -210,37 +211,9 @@ def average_coordinate(list_of_coordinates):
             average = np.array(x)
         else:
             average += np.array(x)
-    average = average/n
-    return average
+    return (average/n)
 
-def weighted_average(list_of_coordinates):
-    average = average_coordinate(list_of_coordinates)
-    normalized_cordinate_list = []
-    for i, coordinate in enumerate(list_of_coordinates):
-        normalized_cordinate_list.append(np.array(coordinate)-average)
-        for j in range(len(normalized_cordinate_list[0])):
-            index = normalized_cordinate_list[i][j]
-            if index < 0:
-                index = -(1/abs(index)**2)
-            else:
-                index = 1/abs(index)**2
-
-    shifted_average = average_coordinate(normalized_cordinate_list)
-
-    #     normalized_cordinate_list[i]
-    # for j,coord in enumerate(list_of_coordinates):
-    #     for i,ele in enumerate(coord):
-    #         list_of_coordinates[j][i] = 1/((ele-average[i])**3)
-    # for i, x in enumerate(list_of_coordinates):
-    #     if i == 0:
-    #         shifted_average = x
-    #     else:
-    #         shifted_average += x
-    # print(shifted_average)
-    # shifted_average = shifted_average/n
-    return average + shifted_average
-
-def change_align(align,tmp,structure_list_entire,tmp_flag=False):
+def change_align(align,tmp_centers,tmp,structure_list_entire,tmp_flag=False):
     coord_list = []
     if tmp_flag:
         # tmp_old = tmp.copy()
@@ -258,7 +231,10 @@ def change_align(align,tmp,structure_list_entire,tmp_flag=False):
                         flag = False
         if flag:
             align.append(tmp)
-    return align
+            if tmp_flag:
+                coord_list = average_coordinate(coord_list)
+                tmp_centers.append(coord_list)
+    return align, tmp_centers
 
 def SIMalign(ref_structure, structure_list_entire, iterations, tresshold_aa, max_dist, alignment_file_name):
     n_homologous_list = len(structure_list_entire) - 1
@@ -269,6 +245,7 @@ def SIMalign(ref_structure, structure_list_entire, iterations, tresshold_aa, max
     to_outfile = [""]
     for j in range(iterations):
         align = get_align(alignment_file_name,structure_list_entire)
+        print(align)
         # Get models and cKDtree
         model_kd = dict()  
         for structure in structure_list_entire:
@@ -278,9 +255,9 @@ def SIMalign(ref_structure, structure_list_entire, iterations, tresshold_aa, max
         score_list = []
         selection = []
         align = []
-        # tmp_align = []
+        tmp_align = []
         # LOOP through models
-        # tmp_centers = []
+        tmp_centers = []
         for i, model in enumerate(model_kd.keys()):
 
             score = []
@@ -293,8 +270,8 @@ def SIMalign(ref_structure, structure_list_entire, iterations, tresshold_aa, max
                 ref_resn = ref_atom.resn
                 ref_coord = ref_atom.coord
                 max_score = aa_to_blosom(ref_resn,ref_resn) + 4
-                # tmp = {structure_list_entire[i]: ref_atom.index}
-                tmp_coordinates = [ref_coord]
+                tmp = {structure_list_entire[i]: [ref_atom.index,ref_coord]}
+                # tmp_coordinates = [ref_coord]
                 # Finding closest AA from other models to ref AA
                 for x, (m, kd) in enumerate(model_kd.items()):
                     
@@ -303,35 +280,26 @@ def SIMalign(ref_structure, structure_list_entire, iterations, tresshold_aa, max
                         atom = m.atom[closest_pair[1]]
                         if closest_pair[0] == ref_kd.query(atom.coord)[0] and closest_pair[0] <= max_dist: 
                             s += ((aa_to_blosom(ref_resn,atom.resn) + 4)/(n_homologous_list*max_score))
-                            # tmp[structure_list_entire[x]] = atom.index
-                            tmp_coordinates.append(atom.coord)
-                
-                tmp_center = weighted_average(tmp_coordinates)
-                tmp = {}
-                for x, (m, kd) in enumerate(model_kd.items()):
-                    closest_pair = kd.query(tmp_center)
-                    atom = m.atom[closest_pair[1]]
-                    if closest_pair[0] <= max_dist: 
-                        tmp[structure_list_entire[x]] = atom.index
+                            tmp[structure_list_entire[x]] = [atom.index,atom.coord]
+                            # tmp_coordinates.append(atom.coord)
 
-
-                # align = change_align(align,tmp,structure_list_entire)
+                tmp_align, tmp_centers = change_align(tmp_align, tmp_centers,tmp,structure_list_entire,tmp_flag=True)
 
 
 
-                
+                # tmp_centers.append(average_coordinate(tmp_coordinates))
                 score.append(s)
-            
+            score_list.append(score)
 
-                if tmp not in align:
-                    flag = True
-                    for ele in align:
-                        for structure in structure_list_entire:
-                            if structure in ele and structure in tmp:
-                                if tmp[structure] == ele[structure]:
-                                    flag = False
-                    if flag:
-                        align.append(tmp)
+                # if tmp not in align:
+                #     flag = True
+                #     for ele in align:
+                #         for structure in structure_list_entire:
+                #             if structure in ele and structure in tmp:
+                #                 if tmp[structure] == ele[structure]:
+                #                     flag = False
+                #     if flag:
+                #         align.append(tmp)
                 # if tmp not in align:
                 #     print(tmp)
                 #     for ele in align:
@@ -348,7 +316,7 @@ def SIMalign(ref_structure, structure_list_entire, iterations, tresshold_aa, max
 
                 
             
-            score_list.append(score)
+
             tmp_selection = select_by_score(score, model.atom)
             # Checking that it is not below tresshold_aa
             if len(re.findall(r"\s\d", tmp_selection)) < tresshold_aa:
@@ -364,27 +332,29 @@ def SIMalign(ref_structure, structure_list_entire, iterations, tresshold_aa, max
             break
         to_outfile.append(f"Iteration {j+1}\nstructure\tRMSD\tatoms aligned\n")
         tmp_out = ""
+        print(structure_list_entire)
 
         # tmp = {}
-        # tmp_kd = cKDTree(tmp_centers)
-        # print(len(tmp_centers),tmp_centers)
-        # for tmp_center in tmp_centers:
-        #     tmp = {}
-        #     for x, (m, kd) in enumerate(model_kd.items()):
-        #         closest_pair = kd.query(tmp_center)
-        #         atom = m.atom[closest_pair[1]]
-        #         if closest_pair[0] == tmp_kd.query(atom.coord)[0] and closest_pair[0] <= max_dist:
-        #             tmp[structure_list_entire[x]] = atom.index
+        tmp_kd = cKDTree(tmp_centers)
+        print(len(tmp_centers),tmp_centers)
+        for tmp_center in tmp_centers:
+            tmp = {}
+            for x, (m, kd) in enumerate(model_kd.items()):
+                closest_pair = kd.query(tmp_center)
+                atom = m.atom[closest_pair[1]]
+                if closest_pair[0] == tmp_kd.query(atom.coord)[0] and closest_pair[0] <= max_dist:
+                    tmp[structure_list_entire[x]] = atom.index
 
-        #     #changing alignment
-        #     # tmp_align, tmp_centers = change_align(tmp_align, tmp_centers,tmp,structure_list_entire)
-        #     list = []
-        #     align, list = change_align(align,list,tmp,structure_list_entire)
+            #changing alignment
+            # tmp_align, tmp_centers = change_align(tmp_align, tmp_centers,tmp,structure_list_entire)
+            list = []
+            align, list = change_align(align,list,tmp,structure_list_entire)
         align = process_dicts(align,structure_list_entire)
+        print(align)
         for i, structure in enumerate(structure_list_entire):
             # cmd.select(align_structure_list[i], structure+selection[i])
             if i != 0:
-                print(f"Superexpose",structure,"towards",ref_structure)
+                print("super",ref_structure,structure)
                 # super = cmd.super(target=align_structure_list[0], mobile=align_structure_list[i])
                 super = cmd.super(target=f"{ref_structure} and name CA and not HETATM and chain A{selection[0]}", mobile=f"{structure} and name CA and not HETATM and chain A{selection[i]}")
                 tmp_out += f"{structure_list_entire[i]}\t{round(super[0],3)}\t{super[1]}\n"
@@ -400,9 +370,9 @@ def SIMalign(ref_structure, structure_list_entire, iterations, tresshold_aa, max
     update_alignment(align)
     if break_flag == False:
         print(f"Completed {iterations} iteration(s) of superexposion.")
-    # for i, structure in enumerate(structure_list_entire):
-    #     cmd.select(f"{structure}_core",f"{structure} and not HETATM and chain A{selection[i]}")
-    return score_list, selection
+    for i, structure in enumerate(structure_list_entire):
+        cmd.select(f"{structure}_core",f"{structure} and not HETATM and chain A{selection[i]}")
+    return score_list
 
 def run(ref_structure, files, iterations, tresshold_aa, max_dist, alignment_file_name):
     """
@@ -436,8 +406,8 @@ def run(ref_structure, files, iterations, tresshold_aa, max_dist, alignment_file
 
 # LOOP start
     print("Running SIMalign...")
-    score_list, core_selection = SIMalign(ref_structure, structure_list_entire, iterations, tresshold_aa, max_dist, alignment_file_name)
-    cmd.save(alignment_file_name, selection="aln")
+    score_list = SIMalign(ref_structure, structure_list_entire, iterations, tresshold_aa, max_dist, alignment_file_name)
+    cmd.save(alignment_file_name.split(".")[0]+"2.aln", selection="aln2")
     # remove_other_chain_alignment(alignment_file_name.split(0)+"2.aln",[len(cmd.get_model(x+" and chain A and name CA and not HETATM").atom) for x in structure_list_entire])
 
 
@@ -450,7 +420,7 @@ def run(ref_structure, files, iterations, tresshold_aa, max_dist, alignment_file
     # cmd.save(outfilename)
     
 
-    return len(cmd.get_model(ref_structure).atom), score_list, structure_list_entire, core_selection
+    return len(cmd.get_model(ref_structure).atom), score_list, structure_list_entire
 
 
 
