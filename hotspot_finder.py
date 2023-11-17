@@ -332,7 +332,7 @@ def get_close_aa_list(structure_list,align):
 
 def run(structure_list,alignment_file_name):
     # ref_structure = ref_structure.split(".")[0]
-
+    print("Finding hotspots...")
     align = AlignIO.read(alignment_file_name,"clustal")
 
     # closeAA_list = []
@@ -386,8 +386,8 @@ def print_hotspot(hotspot_list,structure_list):
     for structure in structure_list:
         model_list.append(cmd.get_model(structure+" and name CA and chain A and not HETATM").atom)
     for i, hotspot in enumerate(hotspot_list):
-        print("Printing possible single mutations in "+structure_list[i])
+        print("\tPrinting possible single mutations in "+structure_list[i])
         for k,v in hotspot.items():
             for j, resi in enumerate(v):
                 if resi != "-":
-                    print(model_list[i][k-1].resn+model_list[i][k-1].resi+" -> "+model_list[j][resi-1].resn+" as structure: "+structure_list[j])
+                    print("\t\t"+model_list[i][k-1].resn+model_list[i][k-1].resi+" -> "+model_list[j][resi-1].resn+" as structure: "+structure_list[j])

@@ -111,6 +111,7 @@ def color_by_score(structure, score):
 #         cmd.color("hot", structure+"_HS")
 
 def run(color_mode,hotspot_list,score_list,structure_list,core_selection,exposed_list):
+    print("Coloring and selecting...")
     #Select core_AA
     # cmd.select("core_AA","not HETATM"+select_by_list(core_selection,structure_list,list_of_lists=False))
 
@@ -123,7 +124,7 @@ def run(color_mode,hotspot_list,score_list,structure_list,core_selection,exposed
         cmd.select("hotspots","chain A and not HETATM"+select_by_list(hotspot_list,structure_list))
         cmd.select("exposed_AA","chain A and not HETATM"+select_by_list(exposed_list,structure_list))
     if color_mode == "hotspot":
-        print("Coloring by hotspots")
+        print("\tColoring by hotspots")
         cmd.set_color("hot",[0.82, 0.38, 0.83])
         cmd.set_color("grey",[0.9,0.9,0.9])
         cmd.color("grey","not HETATM and not hotspots")
@@ -132,9 +133,9 @@ def run(color_mode,hotspot_list,score_list,structure_list,core_selection,exposed
         #     print(f"Coloring {structure}")
         #     simple_color_by_hotspot(structure, hotspot_list[j])
     elif color_mode == "similarity":
-        print("Coloring by similarity:\n")
+        print("\tColoring by similarity:\n")
         for j, structure in enumerate(structure_list):
-            print(f"Coloring {structure}")
+            print(f"\t\tColoring {structure}")
             color_by_score(structure, score_list[j])
     # cmd.save(outfile_name)
 
