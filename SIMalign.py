@@ -352,7 +352,7 @@ def SIMalign(ref_structure, structure_list_entire, iterations, tresshold_aa, max
             tmp_selection = select_by_score(score, model.atom)
             # Checking that it is not below tresshold_aa
             if len(re.findall(r"\s\d", tmp_selection)) < tresshold_aa:
-                print(structure_list_entire[i], len(re.findall(r"\s\d", tmp_selection)))
+                print("\t"+structure_list_entire[i], len(re.findall(r"\s\d", tmp_selection)))
                 break_flag = True
             selection.append(tmp_selection)
         
