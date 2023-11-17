@@ -21,7 +21,7 @@ from pymol import cmd
 
 
 
-def list_to_selection(list,select_above99):
+def list_to_selection(list,select_above99=False):
     selection_list = []
     for ele in list:
         selection = " and ("
@@ -111,7 +111,7 @@ def color_by_score(structure, score):
 #         cmd.color("hot", structure+"_HS")
 
 def run(color_mode,hotspot_list,score_list,structure_list,core_selection,exposed_list):
-    print("Coloring and selecting...")
+    print("Coloring and selecting in pymol...")
     #Select core_AA
     # cmd.select("core_AA","not HETATM"+select_by_list(core_selection,structure_list,list_of_lists=False))
 
