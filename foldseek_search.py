@@ -14,10 +14,12 @@ def run(database,variable_tresshold,value_tresshold,search_against,ref_structure
             os.system("touch ThermoDB_READY")
         DB = "thermoDB/thermoDB"
     else:
-        print("Downloading database:",database)
-        os.system(f"foldseek databases {database} DB tmp")
-        os.system(f"foldseek createindex DB tmp")
-        DB = "DB"
+        DB = "DB"+database.split("/")[-1]
+        if not os.path.isfile("foldseek_"+DB):
+            print("Downloading database:",database)
+            os.system(f"foldseek databases {database} {DB} tmp")
+            os.system(f"foldseek createindex {DB} tmp")
+            os.system("touch foldseek_"+DB)
     os.system("mkdir foldseek_output")
     if search_against == "ref_structure":
         os.system(f"foldseek easy-search {ref_structure} {DB} foldseek_output/aln.txt tmp --format-output target,{variable_tresshold}")
