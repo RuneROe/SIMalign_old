@@ -360,9 +360,9 @@ def SIMalign(ref_structure, structure_list_entire, iterations, tresshold_aa, max
 
 
         if break_flag:
-            print(f"Breaked after {j} iteration(s) of superexposion. \nTry to change the parameter tresshold_aa if a higher number of iterations are wanted.")
+            print(f"\tBreaked after {j} iteration(s) of superexposion. \nTry to change the parameter tresshold_aa if a higher number of iterations are wanted.")
             break
-        to_outfile.append(f"Iteration {j+1}\nstructure\tRMSD\tresidues aligned\n")
+        to_outfile.append(f"\tIteration {j+1}\nstructure\tRMSD\tresidues aligned\n")
         tmp_out = ""
 
         # tmp = {}
@@ -384,22 +384,22 @@ def SIMalign(ref_structure, structure_list_entire, iterations, tresshold_aa, max
         for i, structure in enumerate(structure_list_entire):
             # cmd.select(align_structure_list[i], structure+selection[i])
             if i != 0:
-                print(f"superimposing",structure,"towards",ref_structure)
+                print(f"\tsuperimposing",structure,"towards",ref_structure)
                 # super = cmd.super(target=align_structure_list[0], mobile=align_structure_list[i])
                 super = cmd.super(target=f"{ref_structure} and name CA and not HETATM and chain A{selection[0]}", mobile=f"{structure} and name CA and not HETATM and chain A{selection[i]}")
-                tmp_out += f"{structure_list_entire[i]}\t{round(super[0],3)}\t{super[1]}\n"
+                tmp_out += f"\t{structure_list_entire[i]}\t{round(super[0],3)}\t{super[1]}\n"
         to_outfile.append(tmp_out)
         print(to_outfile[-2]+to_outfile[-1])
         if to_outfile[-1] == to_outfile[-3]:
             break_flag = True
-            print(f"Breaked after {j+1} iteration(s) of superimposion.")
+            print(f"\tBreaked after {j+1} iteration(s) of superimposion.")
             break
         
     with open("log.txt","w") as outfile:
         outfile.write("".join(to_outfile))
     update_alignment(align)
     if break_flag == False:
-        print(f"Completed {iterations} iteration(s) of superimposion.")
+        print(f"\tCompleted {iterations} iteration(s) of superimposion.")
     # for i, structure in enumerate(structure_list_entire):
     #     cmd.select(f"{structure}_core",f"{structure} and not HETATM and chain A{selection[i]}")
     return score_list, selection
