@@ -274,7 +274,7 @@ def SIMalign(ref_structure, structure_list_entire, iterations, tresshold_aa, max
         if i != 0:
             print(f"\tsuperimposing",structure,"towards",ref_structure)
             # super = cmd.super(target=align_structure_list[0], mobile=align_structure_list[i])
-            super = cmd.super(target=f"{ref_structure} and name CA and not HETATM", mobile=f"{structure} and name CA and not HETATM")
+            super = cmd.super(target=f"{ref_structure} and name CA and not HETATM and chain A", mobile=f"{structure} and name CA and not HETATM and chain A")
             tmp_out += f"\t{structure_list_entire[i]}\t{round(super[0],3)}\t{super[1]}\n"
     to_outfile.append(tmp_out)
     print(to_outfile[-2]+to_outfile[-1][:-1])
