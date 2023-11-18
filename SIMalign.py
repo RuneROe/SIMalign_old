@@ -213,19 +213,19 @@ def average_coordinate(list_of_coordinates):
     average = average/n
     return average
 
-def weighted_average(list_of_coordinates):
-    average = average_coordinate(list_of_coordinates)
-    normalized_cordinate_list = []
-    for i, coordinate in enumerate(list_of_coordinates):
-        normalized_cordinate_list.append(np.array(coordinate)-average)
-        for j in range(len(normalized_cordinate_list[0])):
-            index = normalized_cordinate_list[i][j]
-            if index < 0:
-                index = -(1/abs(index)**2)
-            else:
-                index = 1/abs(index)**2
+# def weighted_average(list_of_coordinates):
+#     average = average_coordinate(list_of_coordinates)
+#     normalized_cordinate_list = []
+#     for i, coordinate in enumerate(list_of_coordinates):
+#         normalized_cordinate_list.append(np.array(coordinate)-average)
+#         for j in range(len(normalized_cordinate_list[0])):
+#             index = normalized_cordinate_list[i][j]
+#             if index < 0:
+#                 index = -(1/abs(index)**2)
+#             else:
+#                 index = 1/abs(index)**2
 
-    shifted_average = average_coordinate(normalized_cordinate_list)
+#     shifted_average = average_coordinate(normalized_cordinate_list)
 
     #     normalized_cordinate_list[i]
     # for j,coord in enumerate(list_of_coordinates):
@@ -238,27 +238,27 @@ def weighted_average(list_of_coordinates):
     #         shifted_average += x
     # print(shifted_average)
     # shifted_average = shifted_average/n
-    return average + shifted_average
+    # return average + shifted_average
 
-def change_align(align,tmp,structure_list_entire,tmp_flag=False):
-    coord_list = []
-    if tmp_flag:
-        # tmp_old = tmp.copy()
-        t = {}
-        for k,v in tmp.items():
-            t[k] = v[0]
-            coord_list.append(v[1])
-        tmp = t
-    if tmp not in align:
-        flag = True
-        for ele in align:
-            for structure in structure_list_entire:
-                if structure in ele and structure in tmp:
-                    if tmp[structure] == ele[structure]:
-                        flag = False
-        if flag:
-            align.append(tmp)
-    return align
+# def change_align(align,tmp,structure_list_entire,tmp_flag=False):
+#     coord_list = []
+#     if tmp_flag:
+#         # tmp_old = tmp.copy()
+#         t = {}
+#         for k,v in tmp.items():
+#             t[k] = v[0]
+#             coord_list.append(v[1])
+#         tmp = t
+#     if tmp not in align:
+#         flag = True
+#         for ele in align:
+#             for structure in structure_list_entire:
+#                 if structure in ele and structure in tmp:
+#                     if tmp[structure] == ele[structure]:
+#                         flag = False
+#         if flag:
+#             align.append(tmp)
+#     return align
 
 def SIMalign(ref_structure, structure_list_entire, iterations, tresshold_aa, max_dist, alignment_file_name):
     n_homologous_list = len(structure_list_entire) - 1
@@ -267,8 +267,19 @@ def SIMalign(ref_structure, structure_list_entire, iterations, tresshold_aa, max
     #     align_structure_list.append(structure+"_align")
     break_flag = False
     to_outfile = [""]
+    to_outfile.append(f"\tIteration 0\n\tstructure\tRMSD\tresidues aligned\n")
+    tmp_out = ""
+    for i, structure in enumerate(structure_list_entire):
+        # cmd.select(align_structure_list[i], structure+selection[i])
+        if i != 0:
+            print(f"\tsuperimposing",structure,"towards",ref_structure)
+            # super = cmd.super(target=align_structure_list[0], mobile=align_structure_list[i])
+            super = cmd.super(target=f"{ref_structure} and name CA and not HETATM", mobile=f"{structure} and name CA and not HETATM")
+            tmp_out += f"\t{structure_list_entire[i]}\t{round(super[0],3)}\t{super[1]}\n"
+    to_outfile.append(tmp_out)
+    print(to_outfile[-2]+to_outfile[-1][:-1])
     for j in range(iterations):
-        align = get_align(alignment_file_name,structure_list_entire)
+        # align = get_align(alignment_file_name,structure_list_entire)
         # Get models and cKDtree
         model_kd = dict()  
         for structure in structure_list_entire:
@@ -386,10 +397,10 @@ def SIMalign(ref_structure, structure_list_entire, iterations, tresshold_aa, max
             if i != 0:
                 print(f"\tsuperimposing",structure,"towards",ref_structure)
                 # super = cmd.super(target=align_structure_list[0], mobile=align_structure_list[i])
-                super = cmd.super(target=f"{ref_structure} and name CA and not HETATM and chain A{selection[0]}", mobile=f"{structure} and name CA and not HETATM and chain A{selection[i]}")
+                super = cmd.super(target=f"{ref_structure} and name CA and not HETATM{selection[0]}", mobile=f"{structure} and name CA and not HETATM{selection[i]}")
                 tmp_out += f"\t{structure_list_entire[i]}\t{round(super[0],3)}\t{super[1]}\n"
         to_outfile.append(tmp_out)
-        print(to_outfile[-2]+to_outfile[-1])
+        print(to_outfile[-2]+to_outfile[-1][:-1])
         if to_outfile[-1] == to_outfile[-3]:
             break_flag = True
             print(f"\tBreaked after {j+1} iteration(s) of superimposion.")
@@ -430,8 +441,8 @@ def run(ref_structure, files, iterations, tresshold_aa, max_dist, alignment_file
 # Basic Pymol stuff - - - - - - - - - - - - - - - - - - - - - - - - - - -- - - - - -
 
     cmd.remove("hydrogens")
-    cmd.alignto(ref_structure, object="aln")
-    cmd.save(alignment_file_name, selection="aln")
+    # cmd.alignto(ref_structure, object="aln")
+    # cmd.save(alignment_file_name, selection="aln")
     # remove_other_chain_alignment(alignment_file_name,[len(cmd.get_model(x+" and chain A and name CA and not HETATM").atom) for x in structure_list_entire])
 
 # LOOP start

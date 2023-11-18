@@ -1,0 +1,8 @@
+Iteration 1
+structure	RMSD	atoms aligned
+SP2	0.349	198
+SP1	0.497	189
+Iteration 2
+structure	RMSD	atoms aligned
+SP2	0.349	198
+SP1	0.497	189

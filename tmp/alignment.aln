@@ -1,52 +1,134 @@
 CLUSTAL
 
-SP2                   ------------MSELSAIETAAAIAGGSMTALEACDAAIARIEQRDGPINAVV
-AF-O53325-F1-model_v4 MAMSAKASDDIA--WLPATAQLAVLAAKKVSSAELVELYLSRIDTYNASLNAIV
-SP1                   M-----------AREPTALATAAAIRSGATTARAETEAAIARIEALDGAINAVV
-                                  .....*....*..................**.......**.*
+SP3          --MSELSAIETAAAIAGGSMTALEACDAAIARIEQRDGPINAVVVRDFDRAREAAKAADGEVA
+SP1          MAR-EPTALATAAAIRSGATTARAETEAAIARIEALDGAINAVVVRDFDRALAAADAADARIQ
+SP2          --MSELSAIETAAAIAGGSMTALEACDAAIARIEQRDGPINAVVVRDFDRARDAAKAADAEIA
+A0A1B6ZCQ7   ---------------------------------------------------------------
+               . ...........................................................
 
-SP2                   VRDFDRARDAAKAADAEIAAAVRK-PLLGVPMTIKESFDIAGLPTSWGFAEHAD
-AF-O53325-F1-model_v4 TVDPDAARRVAKRSDAARARGDELGPLHGLPITVKDSYETAGMRTTCGRRDLAD
-SP1                   VRDFDRALAAADAADARIQAGDTA-PLLGVPMTVKEAFDVEGLPTHWGFRQHAG
-                      ..*.*.*...*...**........ **.*.*.*.*......*..*..*....*.
+SP3          AGVSKPLLGVPMTIKESIDIAGLPTSWGFAEHADHIATADSVVVSRLKAAGAVFLGKTNIPVA
+SP1          AGDTAPLLGVPMTVKEAFDVEGLPTHWGFRQHAGNIATSDAEAVRRLKAAGAIILGKTNVPKG
+SP2          AAVRKPLLGVPMTIKESFDIAGLPTSWGFAEHADHIATADSLVVSRLKAAGAVFLGKSNIPVG
+A0A1B6ZCQ7   ---------------------------------------------------------------
+             ...............................................................
 
-SP2                   HIATADSLVVSRLKAAGAVFLGKSNIPVGLADWQSVNPNYGRTNNPHDHSRSAG
-AF-O53325-F1-model_v4 YVPTQDAEAVARLRRAGAIIMGKTNMPTGNQDVQASNPVFGRTNNPWDAARTSG
-SP1                   NIATSDAEAVRRLKAAGAIILGKTNVPKGLGDWQSVNSIHGVTNHPLDPTRTPG
-                      ...*.*...*.**..***...**.*.*.*..*.*..*...*.**.*.*..*..*
+SP3          LADWQSSNPNYGRTNNPHDLTRSAGGSSGGAAAALAAGMVPLEYGSDIGGSIRVPAHFCGVWG
+SP1          LGDWQSVNSIHGVTNHPLDPTRTPGGSSGGSAAALASGMVPLELGSDIGGSIRIPAHFCGVWG
+SP2          LADWQSVNPNYGRTNNPHDHSRSAGGSSGGAAAALAAGMVPLEYGSDIGGSIRVPAHFCGVWG
+A0A1B6ZCQ7   ---------------------------------------------------------------
+             ...............................................................
 
-SP2                   GSSGGAAAALAAGMVPLEYGSDIGGSIRVPAHFCGVWGLKTTFDAVSLEGHYF-
-AF-O53325-F1-model_v4 GSAGGGAAATAAGLTSFDYGSEIGGSTRIPAHYCGLYGHKSTWRSVPLVGHIPS
-SP1                   GSSGGSAAALASGMVPLELGSDIGGSIRIPAHFCGVWGLKPSWGAISSHGHRY-
-                      **.**.***.*.*......**.****.*.***.**..*.*.........**.. 
+SP3          LKTTFDAVSLEGHYLPRTDGARGELGVVGPMARNPQDLALALDLTSRIALPIARIDTLNGL-R
+SP1          LKPSWGAISSHGHRYPGTNGAETPLGVIGPMARSPDDLAAMLDLLATLPMPRASRP----PRR
+SP2          LKTTFDAVSLEGHYFPRTDSAKADLSVVGPMARTPADLALALDITSKVPLPQSRIANLSGL-R
+A0A1B6ZCQ7   ---------------------------------------------------------------
+             ..................................................... ..  ... .
 
-SP2                   --PRTDSAKA-DLSVVGPMARTPADLALALDITSK---------VPLPQSRIAN
-AF-O53325-F1-model_v4 APGNPGRWGQADMACAGVQVRGARDIIPALEATVGPMRADGGFSYALAPPRAGA
-SP1                   --PGTNGAET-PLGVIGPMARSPDDLAAMLDLLAT---------LPMPRA-SRP
-                        ........ .....*...*...*....*.....         ..........
+SP3          ILLLTHHPRAAADSAVVAAVEKAAESCAAQGAQVSTSNADLPDLSKLVSDYTRMLLIVLAQG-
+SP1          VLAITDHPAIRTSAVCRDAVDTAAEALAGAGIEVIRSTDLLPDLARQHHAYGQMLSVAFARSD
+SP2          ILLLTAHPETVADSATISAVERAAAACEASGATVATSSPDLPDLSALVADYTRMLLVVLARG-
+A0A1B6ZCQ7   ---------------------------------------------------------------
+             .............................. ..............................  
 
-SP2                   LSGLRILLLTAHPETVADSATISAVERAAAACEASGATVATSSPDL-PDLSALV
-AF-O53325-F1-model_v4 LKDFRVAVWAEDPHCPIDADVRRAMDDAVAALRAAGAHVVEQPATIPVDMAVSH
-SP1                   PRRVL--AITDHPAIRTSAVCRDAVDTAAEALAGAGIEVIRSTDLL-PDLARQH
-                      ............*..........*...*..*....*..*....... .*.....
+SP3          ---KAPEGTEPVSLNAWYGMLDDQARTIRGFDRLFDSFDAIFCPVLGTSAFPHSDE-ADWGKR
+SP1          PTLH-AS---LPNLLTWLSWQDAQARNTRAWGRLFGEVDAVIAPPAATQAFAHDHAPQ--ANR
+SP2          ---LAPEGTEPVSLNAWYAMLDDQARMMRAFDRLFESFDAIFCPVLGTTAFAHSDE-PDWAKR
+A0A1B6ZCQ7   ---------------------------------------------------------------
+                . .    .............................................. .  ...
 
-SP2                   ADYTRMLLVV--LARGLAP--------------------------EGTEPVSLN
-AF-O53325-F1-model_v4 NIFQSLVFGA--FAVDRSTLSPASAAALGLRAVRHPRGEAANALGATLQSHRA-
-SP1                   HAYGQMLSVAFARSDPTLH--------------------------A--SLPNLL
-                      ..........  .......                          .........
+SP3          TLTIDGADTPFGSQLAWISMATYCGMPALSMPVGTDANGLPIGLQIITRNWSDHDAVRIGALV
+SP1          TLDIDGVASPYDAHLAWAGVATYPGLPAVVVPVGTAN-GLPVGVQVITDFHRDHDAIATAALI
+SP2          SLSIDGGIAPFAAQLGWISMATYGGMPALSMPLGADGNGLPINLQIITRNWSDHDAIRIGALV
+A0A1B6ZCQ7   ---------------------------------------------------------------
+             ..................................... .........................
 
-SP2                   AWYAMLDDQARMMRAFDRLFESFDAIFCPVLGTTAFAHSDE-PDWAKRSLSIDG
-AF-O53325-F1-model_v4 -WLFADAARHEMRDRWAGFFNEFDVLLLPVTPTPAPLHHNKDHDRLGRTIDVDG
-SP1                   TWLSWQDAQARNTRAWGRLFGEVDAVIAPPAATQAFAHDHA-P-QANRTLDIDG
-                      .*.................*...*....*...*.*..*... .....*....**
+SP3          ADALAAMSELSAIETAAAIAGGSMTALEACDAAIARIEQRDGPINAVVVRDFDRAREAAKAAD
+SP1          HRLTEGQ--------------------------------------------------------
+SP2          AEALDR---------------------------------------------------------
+A0A1B6ZCQ7   ---------------------------------------------------------------
+             .....                                                          
 
-SP2                   GIAPFAAQLGWISMATYGGMPALSMPLGADGNGLPINLQIITRNWSDHDAIRIG
-AF-O53325-F1-model_v4 VSRSYWDQLKWNALANIAGTPATTMPITTTATGLPIGIQAMGPAGGDRTTVEFA
-SP1                   VASPYDAHLAWAGVATYPGLPAVVVPVGTA-NGLPVGVQVITDFHRDHDAIATA
-                      ........*.*...*...*.**...*......***...*.......*.......
+SP3          GEVAAGVSKPLLGVPMTIKESIDIAGLPTSWGFAEHADHIATADSVVVSRLKAAGAVFLGKTN
+SP1          ---------------------------------------------------------------
+SP2          ---------------------------------------------------------------
+A0A1B6ZCQ7   ---------------------------------------------------------------
+                                                                            
 
-SP2                   ALVAEA---------LDR---                                 
-AF-O53325-F1-model_v4 ALLTEVLGGFRVPPL------                                 
-SP1                   ALIHRL---------TEGQPA                                 
-                      **....         ...                                    
+SP3          IPVALADWQSSNPNYGRTNNPHDLTRSAGGSSGGAAAALAAGMVPLEYGSDIGGSIRVPAHFC
+SP1          ---------------------------------------------------------------
+SP2          ---------------------------------------------------------------
+A0A1B6ZCQ7   ---------------------------------------------------------------
+                                                                            
+
+SP3          GVWGLKTTFDAVSLEGHYLPRTDGARGELGVVGPMARNPQDLALALDLTSRIALPIARIDTLN
+SP1          ---------------------------------------------------------------
+SP2          ---------------------------------------------------------------
+A0A1B6ZCQ7   ---------------------------------------------------------------
+                                                                            
+
+SP3          GLRILLLTHHPRAAADSAVVAAVEKAAESCAAQGAQVSTSNADLPDLSKLVSDYTRMLLIVLA
+SP1          ---------------------------------------------------------------
+SP2          ---------------------------------------------------------------
+A0A1B6ZCQ7   ---------------------------------------------------------------
+                                                                            
+
+SP3          QGKAPEGTEPVSLNAWYGMLDDQARTIRGFDRLFDSFDAIFCPVLGTSAFPHSDEADWGKRTL
+SP1          ---------------------------------------------------------------
+SP2          ---------------------------------------------------------------
+A0A1B6ZCQ7   ---------------------------------------------------------------
+                                                                            
+
+SP3          TIDGADTPFGSQLAWISMATYCGMPALSMPVGTDANGLPIGLQIITRNWSDHDAVRIGALVAD
+SP1          ---------------------------------------------------------------
+SP2          ---------------------------------------------------------------
+A0A1B6ZCQ7   ---------------------------------------------------------------
+                                                                            
+
+SP3          ALAA-----------------------------------------------------------
+SP1          ----PA---------------------------------------------------------
+SP2          ---------------------------------------------------------------
+A0A1B6ZCQ7   ----MVVAHLTDEQTATKLAAVIASGKLTAVEATEAAIARIEEQDVSINAVVVRDFDRARQQA
+                 .                                                          
+
+SP3          ---------------------------------------------------------------
+SP1          ---------------------------------------------------------------
+SP2          ---------------------------------------------------------------
+A0A1B6ZCQ7   RDADARLAKGDSAPLLGVPMTVKESFNIAGLQTCWGVEAAAGNIADEDSAVVKRLKAAGAVIL
+                                                                            
+
+SP3          ---------------------------------------------------------------
+SP1          ---------------------------------------------------------------
+SP2          ---------------------------------------------------------------
+A0A1B6ZCQ7   GKTNIPPMLTDWFAENPVYGRTNNPHDLARSPGGSSGGAAAAVASGMVPVDYGSDIGGSIRVP
+                                                                            
+
+SP3          ---------------------------------------------------------------
+SP1          ---------------------------------------------------------------
+SP2          ---------------------------------------------------------------
+A0A1B6ZCQ7   AHYCGVWGLKPTYGIISKEGHFPPGIKEGAEGALSVVGPLARSADDLELLFEATIDRSLPKAT
+                                                                            
+
+SP3          ---------------------------------------------------------------
+SP1          ---------------------------------------------------------------
+SP2          ---------------------------------------------------------------
+A0A1B6ZCQ7   TALSQSRILLVLDHPSVALEDAMRRQIEDVAAALEDAGAEISRESDLLPDLEKQHHNYMRMLN
+                                                                            
+
+SP3          ---------------------------------------------------------------
+SP1          ---------------------------------------------------------------
+SP2          ---------------------------------------------------------------
+A0A1B6ZCQ7   VAVTAGAPRPDGSEVTVREWLRMGDAQARNQRQWRALFAEFDYMLAPVSSTPAFVHDTRPMKD
+                                                                            
+
+SP3          ---------------------------------------------------------------
+SP1          ---------------------------------------------------------------
+SP2          ---------------------------------------------------------------
+A0A1B6ZCQ7   RQLMINGAPDRFAGQLAWAGLVTYPGLPATVLPIGSVDGLPVGLQVVADQYQDHKTIDGARQI
+                                                                            
+
+SP3          ------                                                         
+SP1          ------                                                         
+SP2          ------                                                         
+A0A1B6ZCQ7   EALLGG                                                         
+                                                                            
 
