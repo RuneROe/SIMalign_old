@@ -200,7 +200,6 @@ def run(color_mode,hotspot_list,score_list,structure_list,core_selection,exposed
 
 
 import py3Dmol
-import SIMalign
 
 def show_pdb(ref_structure,color_mode,score_list,len_ref_structure,hotspot_list):
     view = py3Dmol.view(js='https://3dmol.org/build/3Dmol.js',)
@@ -209,7 +208,7 @@ def show_pdb(ref_structure,color_mode,score_list,len_ref_structure,hotspot_list)
     if color_mode == "similarity":
         color_list = []
         for score in score_list[0]:
-            tmp = SIMalign.color_by_number(score)
+            tmp = color_by_number(score)
             string = "rgb("
             for number in tmp:
                 string += str(int(number*255))+","
