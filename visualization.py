@@ -124,7 +124,7 @@ def structure_formating(structure_format,show_in_pymol,color_by_element):
             cmd.show("spheres","not HETATM")
             cmd.set("sphere_transparency", "0.7")
     if show_in_pymol != "everything":
-        cmd.hide("everythin","not chain A")
+        cmd.hide("everything","not chain A")
         if show_in_pymol != "entire_chain_A":
             cmd.hide("everything","exposed_AA")
             if show_in_pymol != "only_not_conserved_core":
@@ -132,10 +132,20 @@ def structure_formating(structure_format,show_in_pymol,color_by_element):
     if color_by_element:
         cmd.util.cnc()
 
+def select_exposed_AA(structure_list):
+    import findsurfaceatoms
+    exposed_list = []
+    for structure in structure_list:
+        exposed_residues = findsurfaceatoms.findSurfaceResidues(selection=structure+" and chain A and not HETATM")
+        exposed_set = set()
+        for resi in exposed_residues:
+            exposed_set.add(resi[1])
+        exposed_list.append(exposed_set)
+    cmd.select("exposed_AA","chain A and not HETATM"+select_by_list(exposed_list,structure_list))
 
 def run(color_mode,hotspot_list,score_list,structure_list,core_selection,exposed_list,structure_format,show_in_pymol,color_by_element):
     print("Coloring and selecting in pymol...")
-    structure_formating(structure_format,show_in_pymol,color_by_element)
+    
     #Select core_AA
     # print("not HETATM"+select_by_list(core_selection,structure_list,list_of_lists=False))
     # print("not HETATM and chain A"+select_by_list(score_list,structure_list,select_above99=True))
@@ -152,6 +162,9 @@ def run(color_mode,hotspot_list,score_list,structure_list,core_selection,exposed
         #Select hotspots and exposed AA
         cmd.select("hotspots","chain A and not HETATM"+select_by_list(hotspot_list,structure_list))
         cmd.select("exposed_AA","chain A and not HETATM"+select_by_list(exposed_list,structure_list))
+    else:
+        select_exposed_AA(structure_list)
+    structure_formating(structure_format,show_in_pymol,color_by_element)
     if color_mode == "hotspot":
         print("\tColoring by hotspots")
         cmd.set_color("hot",[0.82, 0.38, 0.83])
