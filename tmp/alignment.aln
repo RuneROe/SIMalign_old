@@ -1,134 +1,92 @@
 CLUSTAL
 
-SP3          --MSELSAIETAAAIAGGSMTALEACDAAIARIEQRDGPINAVVVRDFDRAREAAKAADGEVA
-SP1          MAR-EPTALATAAAIRSGATTARAETEAAIARIEALDGAINAVVVRDFDRALAAADAADARIQ
-SP2          --MSELSAIETAAAIAGGSMTALEACDAAIARIEQRDGPINAVVVRDFDRARDAAKAADAEIA
-A0A1B6ZCQ7   ---------------------------------------------------------------
-               . ...........................................................
+SP3          -------MSELSAIETAAAIAGGSMTALEACDAAIARIEQRDGPINAVVVRDFDRAREAAKAA
+SP1          MA-----R-EPTALATAAAIRSGATTARAETEAAIARIEALDGAINAVVVRDFDRALAAADAA
+SP2          -------MSELSAIETAAAIAGGSMTALEACDAAIARIEQRDGPINAVVVRDFDRARDAAKAA
+A0A1B6ZCQ7   MVVAHLTD-EQTATKLAAVIASGKLTAVEATEAAIARIEEQDVSINAVVVRDFDRARQQARDA
+                    . *..*...**.*..*..**.....*******..*..************...*..*
 
-SP3          AGVSKPLLGVPMTIKESIDIAGLPTSWGFAEHADHIATADSVVVSRLKAAGAVFLGKTNIPVA
-SP1          AGDTAPLLGVPMTVKEAFDVEGLPTHWGFRQHAGNIATSDAEAVRRLKAAGAIILGKTNVPKG
-SP2          AAVRKPLLGVPMTIKESFDIAGLPTSWGFAEHADHIATADSLVVSRLKAAGAVFLGKSNIPVG
-A0A1B6ZCQ7   ---------------------------------------------------------------
-             ...............................................................
+SP3          DGEVAAGVSKPLLGVPMTIKESIDIAGLPTSWGFAEHADHIATADSVVVSRLKAAGAVFLGKT
+SP1          DARIQAGDTAPLLGVPMTVKEAFDVEGLPTHWGFRQHAGNIATSDAEAVRRLKAAGAIILGKT
+SP2          DAEIAAAVRKPLLGVPMTIKESFDIAGLPTSWGFAEHADHIATADSLVVSRLKAAGAVFLGKS
+A0A1B6ZCQ7   DARLAKGDSAPLLGVPMTVKESFNIAGLQTCWGVEAAAGNIADEDSAVVKRLKAAGAVILGKT
+             *.........********.**.....**.*.**....*..**..*...*.*******..***.
 
-SP3          LADWQSSNPNYGRTNNPHDLTRSAGGSSGGAAAALAAGMVPLEYGSDIGGSIRVPAHFCGVWG
-SP1          LGDWQSVNSIHGVTNHPLDPTRTPGGSSGGSAAALASGMVPLELGSDIGGSIRIPAHFCGVWG
-SP2          LADWQSVNPNYGRTNNPHDHSRSAGGSSGGAAAALAAGMVPLEYGSDIGGSIRVPAHFCGVWG
-A0A1B6ZCQ7   ---------------------------------------------------------------
-             ...............................................................
+SP3          NIPVALADWQSSNPNYGRTNNPHDLTRSAGGSSGGAAAALAAGMVPLEYGSDIGGSIRVPAHF
+SP1          NVPKGLGDWQSVNSIHGVTNHPLDPTRTPGGSSGGSAAALASGMVPLELGSDIGGSIRIPAHF
+SP2          NIPVGLADWQSVNPNYGRTNNPHDHSRSAGGSSGGAAAALAAGMVPLEYGSDIGGSIRVPAHF
+A0A1B6ZCQ7   NIPPMLTDWFAENPVYGRTNNPHDLARSPGGSSGGAAAAVASGMVPVDYGSDIGGSIRVPAHY
+             *.*..*.**...*...*.**.*.*..*..******.***.*.****...*********.***.
 
-SP3          LKTTFDAVSLEGHYLPRTDGARGELGVVGPMARNPQDLALALDLTSRIALPIARIDTLNGL-R
-SP1          LKPSWGAISSHGHRYPGTNGAETPLGVIGPMARSPDDLAAMLDLLATLPMPRASRP----PRR
-SP2          LKTTFDAVSLEGHYFPRTDSAKADLSVVGPMARTPADLALALDITSKVPLPQSRIANLSGL-R
-A0A1B6ZCQ7   ---------------------------------------------------------------
-             ..................................................... ..  ... .
+SP3          CGVWGLKTTFDAVSLEGHYLPRT-DGARGELGVVGPMARNPQDLALALDLTSRIALPIARI-D
+SP1          CGVWGLKPSWGAISSHGHRYPGT-NGAETPLGVIGPMARSPDDLAAMLDLLATLPMPRASR-P
+SP2          CGVWGLKTTFDAVSLEGHYFPRT-DSAKADLSVVGPMARTPADLALALDITSKVPLPQSRI-A
+A0A1B6ZCQ7   CGVWGLKPTYGIISKEGHFPPGIKEGAEGALSVVGPLARSADDLELLFEATIDRSLPKA-TTA
+             *******......*..**..*.. ..*...*.*.**.**...**............*.. . .
 
-SP3          ILLLTHHPRAAADSAVVAAVEKAAESCAAQGAQVSTSNADLPDLSKLVSDYTRMLLIVLAQG-
-SP1          VLAITDHPAIRTSAVCRDAVDTAAEALAGAGIEVIRSTDLLPDLARQHHAYGQMLSVAFARSD
-SP2          ILLLTAHPETVADSATISAVERAAAACEASGATVATSSPDLPDLSALVADYTRMLLVVLARG-
-A0A1B6ZCQ7   ---------------------------------------------------------------
-             .............................. ..............................  
+SP3          TLNGL-RILLLTHHPRAAADSAVVAAVEKAAESCAAQGAQVSTSNADLPDLSKLVSDYTRMLL
+SP1          ----PRRVLAITDHPAIRTSAVCRDAVDTAAEALAGAGIEVIRSTDLLPDLARQHHAYGQMLS
+SP2          NLSGL-RILLLTAHPETVADSATISAVERAAAACEASGATVATSSPDLPDLSALVADYTRMLL
+A0A1B6ZCQ7   L-SQS-RILLVLDHPSVALEDAMRRQIEDVAAALEDAGAEISRESDLLPDLEKQHHNYMRMLN
+               ... *.*....**...............*...... .........****......*..**.
 
-SP3          ---KAPEGTEPVSLNAWYGMLDDQARTIRGFDRLFDSFDAIFCPVLGTSAFPHSDE-ADWGKR
-SP1          PTLH-AS---LPNLLTWLSWQDAQARNTRAWGRLFGEVDAVIAPPAATQAFAHDHAPQ--ANR
-SP2          ---LAPEGTEPVSLNAWYAMLDDQARMMRAFDRLFESFDAIFCPVLGTTAFAHSDE-PDWAKR
-A0A1B6ZCQ7   ---------------------------------------------------------------
-                . .    .............................................. .  ...
+SP3          IVLAQG----KAPEGTEPVSLNAWYGMLDDQARTIRGFDRLFDSFDAIFCPVLGTSAFPHSDE
+SP1          VAFARSDPTLH-AS---LPNLLTWLSWQDAQARNTRAWGRLFGEVDAVIAPPAATQAFAHDHA
+SP2          VVLARG----LAPEGTEPVSLNAWYAMLDDQARMMRAFDRLFESFDAIFCPVLGTTAFAHSDE
+A0A1B6ZCQ7   VAVTAG----APRPDGSEVTVREWLRMGDAQARNQRQWRALFAEFDYMLAPVSSTPAFVHDTR
+             .....     . .    ......*....*.***..*....**...*....*...*.**.*...
 
-SP3          TLTIDGADTPFGSQLAWISMATYCGMPALSMPVGTDANGLPIGLQIITRNWSDHDAVRIGALV
-SP1          TLDIDGVASPYDAHLAWAGVATYPGLPAVVVPVGTAN-GLPVGVQVITDFHRDHDAIATAALI
-SP2          SLSIDGGIAPFAAQLGWISMATYGGMPALSMPLGADGNGLPINLQIITRNWSDHDAIRIGALV
-A0A1B6ZCQ7   ---------------------------------------------------------------
-             ..................................... .........................
+SP3          -ADWGKRTLTIDGADTPFGSQLAWISMATYCGMPALSMPVGTDANGLPIGLQIITRNWSDHDA
+SP1          PQ--ANRTLDIDGVASPYDAHLAWAGVATYPGLPAVVVPVGTAN-GLPVGVQVITDFHRDHDA
+SP2          -PDWAKRSLSIDGGIAPFAAQLGWISMATYGGMPALSMPLGADGNGLPINLQIITRNWSDHDA
+A0A1B6ZCQ7   -PM-KDRQLMINGAPDRFAGQLAWAGLVTYPGLPATVLPIGSVD-GLPVGLQVVADQYQDHKT
+              .  ..*.*.*.*........*.*....**.*.**...*.*... ***...*.......**..
 
-SP3          ADALAAMSELSAIETAAAIAGGSMTALEACDAAIARIEQRDGPINAVVVRDFDRAREAAKAAD
-SP1          HRLTEGQ--------------------------------------------------------
-SP2          AEALDR---------------------------------------------------------
-A0A1B6ZCQ7   ---------------------------------------------------------------
-             .....                                                          
+SP3          VRIGALVADALAAMSELSAIETAAAIAGGSMTALEACDAAIARIEQRDGPINAVVVRDFDRAR
+SP1          IATAALIHRLTEGQ-------------------------------------------------
+SP2          IRIGALVAEALDR--------------------------------------------------
+A0A1B6ZCQ7   IDGARQIEALLGG--------------------------------------------------
+             ............                                                   
 
-SP3          GEVAAGVSKPLLGVPMTIKESIDIAGLPTSWGFAEHADHIATADSVVVSRLKAAGAVFLGKTN
+SP3          EAAKAADGEVAAGVSKPLLGVPMTIKESIDIAGLPTSWGFAEHADHIATADSVVVSRLKAAGA
 SP1          ---------------------------------------------------------------
 SP2          ---------------------------------------------------------------
 A0A1B6ZCQ7   ---------------------------------------------------------------
                                                                             
 
-SP3          IPVALADWQSSNPNYGRTNNPHDLTRSAGGSSGGAAAALAAGMVPLEYGSDIGGSIRVPAHFC
+SP3          VFLGKTNIPVALADWQSSNPNYGRTNNPHDLTRSAGGSSGGAAAALAAGMVPLEYGSDIGGSI
 SP1          ---------------------------------------------------------------
 SP2          ---------------------------------------------------------------
 A0A1B6ZCQ7   ---------------------------------------------------------------
                                                                             
 
-SP3          GVWGLKTTFDAVSLEGHYLPRTDGARGELGVVGPMARNPQDLALALDLTSRIALPIARIDTLN
+SP3          RVPAHFCGVWGLKTTFDAVSLEGHYLPRTDGARGELGVVGPMARNPQDLALALDLTSRIALPI
 SP1          ---------------------------------------------------------------
 SP2          ---------------------------------------------------------------
 A0A1B6ZCQ7   ---------------------------------------------------------------
                                                                             
 
-SP3          GLRILLLTHHPRAAADSAVVAAVEKAAESCAAQGAQVSTSNADLPDLSKLVSDYTRMLLIVLA
+SP3          ARIDTLNGLRILLLTHHPRAAADSAVVAAVEKAAESCAAQGAQVSTSNADLPDLSKLVSDYTR
 SP1          ---------------------------------------------------------------
 SP2          ---------------------------------------------------------------
 A0A1B6ZCQ7   ---------------------------------------------------------------
                                                                             
 
-SP3          QGKAPEGTEPVSLNAWYGMLDDQARTIRGFDRLFDSFDAIFCPVLGTSAFPHSDEADWGKRTL
+SP3          MLLIVLAQGKAPEGTEPVSLNAWYGMLDDQARTIRGFDRLFDSFDAIFCPVLGTSAFPHSDEA
 SP1          ---------------------------------------------------------------
 SP2          ---------------------------------------------------------------
 A0A1B6ZCQ7   ---------------------------------------------------------------
                                                                             
 
-SP3          TIDGADTPFGSQLAWISMATYCGMPALSMPVGTDANGLPIGLQIITRNWSDHDAVRIGALVAD
+SP3          DWGKRTLTIDGADTPFGSQLAWISMATYCGMPALSMPVGTDANGLPIGLQIITRNWSDHDAVR
 SP1          ---------------------------------------------------------------
 SP2          ---------------------------------------------------------------
 A0A1B6ZCQ7   ---------------------------------------------------------------
                                                                             
 
-SP3          ALAA-----------------------------------------------------------
-SP1          ----PA---------------------------------------------------------
-SP2          ---------------------------------------------------------------
-A0A1B6ZCQ7   ----MVVAHLTDEQTATKLAAVIASGKLTAVEATEAAIARIEEQDVSINAVVVRDFDRARQQA
-                 .                                                          
-
-SP3          ---------------------------------------------------------------
-SP1          ---------------------------------------------------------------
-SP2          ---------------------------------------------------------------
-A0A1B6ZCQ7   RDADARLAKGDSAPLLGVPMTVKESFNIAGLQTCWGVEAAAGNIADEDSAVVKRLKAAGAVIL
-                                                                            
-
-SP3          ---------------------------------------------------------------
-SP1          ---------------------------------------------------------------
-SP2          ---------------------------------------------------------------
-A0A1B6ZCQ7   GKTNIPPMLTDWFAENPVYGRTNNPHDLARSPGGSSGGAAAAVASGMVPVDYGSDIGGSIRVP
-                                                                            
-
-SP3          ---------------------------------------------------------------
-SP1          ---------------------------------------------------------------
-SP2          ---------------------------------------------------------------
-A0A1B6ZCQ7   AHYCGVWGLKPTYGIISKEGHFPPGIKEGAEGALSVVGPLARSADDLELLFEATIDRSLPKAT
-                                                                            
-
-SP3          ---------------------------------------------------------------
-SP1          ---------------------------------------------------------------
-SP2          ---------------------------------------------------------------
-A0A1B6ZCQ7   TALSQSRILLVLDHPSVALEDAMRRQIEDVAAALEDAGAEISRESDLLPDLEKQHHNYMRMLN
-                                                                            
-
-SP3          ---------------------------------------------------------------
-SP1          ---------------------------------------------------------------
-SP2          ---------------------------------------------------------------
-A0A1B6ZCQ7   VAVTAGAPRPDGSEVTVREWLRMGDAQARNQRQWRALFAEFDYMLAPVSSTPAFVHDTRPMKD
-                                                                            
-
-SP3          ---------------------------------------------------------------
-SP1          ---------------------------------------------------------------
-SP2          ---------------------------------------------------------------
-A0A1B6ZCQ7   RQLMINGAPDRFAGQLAWAGLVTYPGLPATVLPIGSVDGLPVGLQVVADQYQDHKTIDGARQI
-                                                                            
-
-SP3          ------                                                         
-SP1          ------                                                         
-SP2          ------                                                         
-A0A1B6ZCQ7   EALLGG                                                         
+SP3          IGALVADALAA--                                                  
+SP1          -----------PA                                                  
+SP2          -------------                                                  
+A0A1B6ZCQ7   -------------                                                  
                                                                             
 

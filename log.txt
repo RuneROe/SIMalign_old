@@ -1,15 +1,10 @@
 	Iteration 1
 	structure	RMSD	residues aligned
-	SP1	0.482	187
-	SP2	0.349	203
-	A0A1B6ZCQ7	0.603	190
+	SP1	0.542	331
+	SP2	0.379	382
+	A0A1B6ZCQ7	0.708	381
 	Iteration 2
 	structure	RMSD	residues aligned
-	SP1	0.486	187
+	SP1	0.486	186
 	SP2	0.349	203
-	A0A1B6ZCQ7	0.603	190
-	Iteration 3
-	structure	RMSD	residues aligned
-	SP1	0.486	187
-	SP2	0.349	203
-	A0A1B6ZCQ7	0.603	190
+	A0A1B6ZCQ7	0.604	189

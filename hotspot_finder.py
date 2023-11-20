@@ -205,6 +205,23 @@ def index_to_resi(index,ref_structure,structure_list,align):
         if i == index:
             return resi
 
+def bigger_AA(target_AA,ref_AA):
+    if ref_AA == target_AA:
+        return False
+    elif ref_AA == "G":
+        return False
+    elif ref_AA == "A" and target_AA not in {"G","P"}:
+        return False
+    elif ref_AA == "V" and target_AA == "I":
+        return False
+    elif ref_AA == "F" and target_AA == "Y":
+        return False
+    elif ref_AA == "S" and target_AA in {"C","T"}:
+        return False
+    else:
+        return True
+
+
 
 def add_hotspot(closeAA_list,atom,i,structure_list,align):
     amino_acid_translation = {
@@ -239,7 +256,8 @@ def add_hotspot(closeAA_list,atom,i,structure_list,align):
                 for closeAA in closeAA_list[j][ref_index]:
                     close_index = resi_to_index(closeAA,structure_list[j],structure_list,align)
                     if close_index != None:
-                        if seq[close_index] != align[i][close_index]:
+                        if bigger_AA(seq[close_index],align[i][close_index]):
+                        # if seq[close_index] != align[i][close_index]:
                             flag = False     
             if flag:
                 index = int(atom.resi)

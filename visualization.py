@@ -112,7 +112,7 @@ def color_by_score(structure, score):
 
 
 
-def structure_formating(structure_format,show_in_pymol,color_by_element):
+def structure_formating(structure_format,show_in_pymol):
     cmd.hide("everything","not chain A")
     if structure_format == "cartoon":
         cmd.show_as("cartoon","not HETATM")
@@ -125,12 +125,13 @@ def structure_formating(structure_format,show_in_pymol,color_by_element):
             cmd.set("sphere_transparency", "0.7")
     if show_in_pymol != "everything":
         cmd.hide("everything","not chain A")
-        if show_in_pymol != "entire_chain_A":
+        if show_in_pymol != "entire_chain_A" and show_in_pymol != "only_not_conserved":
             cmd.hide("everything","exposed_AA")
             if show_in_pymol != "only_not_conserved_core":
                 cmd.hide("everthing","conserved")
-    if color_by_element:
-        cmd.util.cnc()
+        elif show_in_pymol == "only_not_conserved":
+            cmd.hide("everything","conserved")
+
 
 def select_exposed_AA(structure_list):
     import findsurfaceatoms
@@ -164,7 +165,7 @@ def run(color_mode,hotspot_list,score_list,structure_list,core_selection,exposed
         cmd.select("exposed_AA","chain A and not HETATM"+select_by_list(exposed_list,structure_list))
     else:
         select_exposed_AA(structure_list)
-    structure_formating(structure_format,show_in_pymol,color_by_element)
+    structure_formating(structure_format,show_in_pymol)
     if color_mode == "hotspot":
         print("\tColoring by hotspots")
         cmd.set_color("hot",[0.82, 0.38, 0.83])
@@ -179,6 +180,8 @@ def run(color_mode,hotspot_list,score_list,structure_list,core_selection,exposed
         for j, structure in enumerate(structure_list):
             print(f"\t\tColoring {structure}")
             color_by_score(structure, score_list[j])
+    if color_by_element:
+        cmd.util.cnc("all")
     # cmd.save(outfile_name)
 
 # colors.run("similarity",hotspot_list,score_list,outfile_name,structure_list)

@@ -186,6 +186,7 @@ def update_alignment(align):
     cmd.set_raw_alignment("aln",new_align)
 
 def process_dicts(dict_list, namelist):
+    dictlen = len(dict_list)
     for i in range(len(namelist)):
         for j in range(i + 1, len(namelist)):
             for dict1 in dict_list:
@@ -196,9 +197,53 @@ def process_dicts(dict_list, namelist):
                     if dict1 != dict2:
                         try:
                             if dict1[namelist[i]] < dict2[namelist[i]] and dict1[namelist[j]] > dict2[namelist[j]]:
-                                del dict1[namelist[j]]
-                            if dict1[namelist[i]] > dict2[namelist[i]] and dict1[namelist[j]] < dict2[namelist[j]]:
-                                del dict1[namelist[i]]
+                                # if abs(dict2[namelist[j]]-dict2[namelist[i]]) > abs(dict1[namelist[j]]-dict1[namelist[i]]):
+                                #     for x in range(len(dict_list)):
+                                #         if dict_list[x][namelist[j]] > dict2[namelist[j]] and {namelist[j]:dict2[namelist[j]]} not in dict_list:
+                                #             # print(hej[:0]+["hej"]+hej[0:])
+                                #             dict_list = dict_list[:x]+[{namelist[j]:dict2[namelist[j]]}]+dict_list[x:]
+                                #     # dict_list.append({namelist[j]:dict2[namelist[j]]})
+                                if abs(dict2[namelist[i]]-dict2[namelist[j]]) > dictlen:
+                                    # print("hje")
+                                    del dict2[namelist[j]]
+                                else:
+                                    # print(f"del dict1[namelist[j]]{namelist[j]} {dict1}")
+                                    del dict1[namelist[j]]
+
+                                # else:
+                                #     for x in range(len(dict_list)):
+                                #         if dict_list[x][namelist[j]] > dict1[namelist[j]] and {namelist[j]:dict1[namelist[j]]} not in dict_list:
+                                #             # print(hej[:0]+["hej"]+hej[0:])
+                                #             dict_list = dict_list[:x]+[{namelist[j]:dict2[namelist[j]]}]+dict_list[x:]
+                                #     # dict_list.append({namelist[j]:dict1[namelist[j]]})
+                                #     print(f"del dict1[namelist[j]]{namelist[j]} {dict1}")
+                                #     del dict1[namelist[j]]
+                                    
+                            # elif dict1[namelist[i]] > dict2[namelist[i]] and dict1[namelist[j]] < dict2[namelist[j]]:
+                            #     # if abs(dict2[namelist[j]]-dict2[namelist[i]]) > abs(dict1[namelist[j]]-dict1[namelist[i]]):
+                            #     #     for x in range(len(dict_list)):
+                            #     #         if dict_list[x][namelist[i]] > dict2[namelist[i]] and {namelist[i]:dict2[namelist[i]]} not in dict_list:
+                            #     #             # print(hej[:0]+["hej"]+hej[0:])
+                            #     #             dict_list = dict_list[:x]+[{namelist[i]:dict2[namelist[i]]}]+dict_list[x:]
+                            #     #     # dict_list.append({namelist[j]:dict2[namelist[j]]})
+                            #         print(f"del dict2[namelist[i]]{namelist[i]} {dict2}")
+                            #         del dict2[namelist[i]]
+
+                                # else:
+                                #     for x in range(len(dict_list)):
+                                #         if dict_list[x][namelist[i]] > dict1[namelist[i]] and {namelist[i]:dict1[namelist[i]]} not in dict_list:
+                                #             # print(hej[:0]+["hej"]+hej[0:])
+                                #             dict_list = dict_list[:x]+[{namelist[i]:dict2[namelist[i]]}]+dict_list[x:]
+                                #     dict_list.append({namelist[i]:dict1[namelist[i]]})
+                                #     print(f"del dict1[namelist[i]]{namelist[i]} {dict1}")
+                                #     del dict1[namelist[i]]        
+                            
+                                # if abs(dict2[namelist[j]]-dict2[namelist[i]]) > abs(dict1[namelist[j]]-dict1[namelist[i]]):
+                                #     del dict2[namelist[i]]
+                                # else:
+                                    # dict_list.append({namelist[i]:dict1[namelist[i]]})
+                                    # print(f"del dict1[namelist[i]]{namelist[i]} {dict1}")
+                                    # del dict1[namelist[i]]
                         except:
                             pass
     return dict_list
@@ -267,27 +312,51 @@ def SIMalign(ref_structure, structure_list_entire, iterations, tresshold_aa, max
     #     align_structure_list.append(structure+"_align")
     break_flag = False
     to_outfile = [""]
-    to_outfile.append(f"\tIteration 0\n\tstructure\tRMSD\tresidues aligned\n")
-    tmp_out = ""
-    for i, structure in enumerate(structure_list_entire):
-        # cmd.select(align_structure_list[i], structure+selection[i])
-        if i != 0:
-            print(f"\tsuperimposing",structure,"towards",ref_structure)
-            # super = cmd.super(target=align_structure_list[0], mobile=align_structure_list[i])
-            super = cmd.super(target=f"{ref_structure} and name CA and not HETATM and chain A", mobile=f"{structure} and name CA and not HETATM and chain A")
-            tmp_out += f"\t{structure_list_entire[i]}\t{round(super[0],3)}\t{super[1]}\n"
-    to_outfile.append(tmp_out)
-    print(to_outfile[-2]+to_outfile[-1][:-1])
+    # to_outfile.append(f"\tIteration 0\n\tstructure\tRMSD\tresidues aligned\n")
+    # tmp_out = ""
+    # for i, structure in enumerate(structure_list_entire):
+    #     # cmd.select(align_structure_list[i], structure+selection[i])
+    #     if i != 0:
+    #         print(f"\tsuperimposing",structure,"towards",ref_structure)
+    #         # super = cmd.super(target=align_structure_list[0], mobile=align_structure_list[i])
+    #         super = cmd.super(target=f"{ref_structure} and name CA and not HETATM and chain A", mobile=f"{structure} and name CA and not HETATM and chain A")
+    #         tmp_out += f"\t{structure_list_entire[i]}\t{round(super[0],3)}\t{super[1]}\n"
+    # to_outfile.append(tmp_out)
+    # print(to_outfile[-2]+to_outfile[-1][:-1])
+
+
+
+    selection = []
     for j in range(iterations):
         # align = get_align(alignment_file_name,structure_list_entire)
         # Get models and cKDtree
+
+
+        to_outfile.append(f"\tIteration {j+1}\n\tstructure\tRMSD\tresidues aligned\n")
+        tmp_out = ""
+        
+        for i, structure in enumerate(structure_list_entire):
+            # cmd.select(align_structure_list[i], structure+selection[i])
+            if i != 0:
+                print(f"\tsuperimposing",structure,"towards",ref_structure)
+                # super = cmd.super(target=align_structure_list[0], mobile=align_structure_list[i])
+                if selection == []:
+                    super = cmd.super(target=f"{ref_structure} and name CA and not HETATM and chain A", mobile=f"{structure} and name CA and not HETATM and chain A")
+                else:
+                    super = cmd.super(target=f"{ref_structure} and name CA and not HETATM{selection[0]}", mobile=f"{structure} and name CA and not HETATM{selection[i]}")
+                tmp_out += f"\t{structure_list_entire[i]}\t{round(super[0],3)}\t{super[1]}\n"
+        to_outfile.append(tmp_out)
+        selection = []
+
+
+
         model_kd = dict()  
         for structure in structure_list_entire:
             model = cmd.get_model(structure+" and name CA and not HETATM and chain A")
             model_kd[model] = cKDTree([atom.coord for atom in model.atom])
         
         score_list = []
-        selection = []
+        
         align = []
         # tmp_align = []
         # LOOP through models
@@ -324,11 +393,14 @@ def SIMalign(ref_structure, structure_list_entire, iterations, tresshold_aa, max
                     atom = m.atom[closest_pair[1]]
                     if closest_pair[0] <= max_dist: 
                         tmp[structure_list_entire[x]] = atom.index
+                # if tmp == {}:
+                #     tmp[structure_list_entire[i]] = ref_atom.index
+                #     print("Empty tmp")
 
 
                 # align = change_align(align,tmp,structure_list_entire)
 
-
+# print(hej[:4]+["hej"]+hej[4:])
 
                 
                 score.append(s)
@@ -342,7 +414,27 @@ def SIMalign(ref_structure, structure_list_entire, iterations, tresshold_aa, max
                                 if tmp[structure] == ele[structure]:
                                     flag = False
                     if flag:
-                        align.append(tmp)
+                        if align == []:
+                            align.append(tmp)
+                        else:
+                            for structure in structure_list_entire:
+                                if structure in tmp.keys():
+                                    key = structure
+                                    break
+                            for x in range(len(align)+1):
+
+                                # key = tmp.keys()[0]
+                                try:
+                                # print(tmp,align)
+                                    if x == len(align):
+                                        align.append(tmp)
+                                        break
+                                    elif tmp[key] < align[x][key]:
+                                        align = align[:x]+[tmp]+align[x:]
+                                        break
+                                except:
+                                    pass
+                        # align.append(tmp)
                 # if tmp not in align:
                 #     print(tmp)
                 #     for ele in align:
@@ -373,8 +465,9 @@ def SIMalign(ref_structure, structure_list_entire, iterations, tresshold_aa, max
         if break_flag:
             print(f"\tBreaked after {j} iteration(s) of superexposion. \nTry to change the parameter tresshold_aa if a higher number of iterations are wanted.")
             break
-        to_outfile.append(f"\tIteration {j+1}\n\tstructure\tRMSD\tresidues aligned\n")
-        tmp_out = ""
+
+
+        
 
         # tmp = {}
         # tmp_kd = cKDTree(tmp_centers)
@@ -391,15 +484,12 @@ def SIMalign(ref_structure, structure_list_entire, iterations, tresshold_aa, max
         #     # tmp_align, tmp_centers = change_align(tmp_align, tmp_centers,tmp,structure_list_entire)
         #     list = []
         #     align, list = change_align(align,list,tmp,structure_list_entire)
+        # print(align)
         align = process_dicts(align,structure_list_entire)
-        for i, structure in enumerate(structure_list_entire):
-            # cmd.select(align_structure_list[i], structure+selection[i])
-            if i != 0:
-                print(f"\tsuperimposing",structure,"towards",ref_structure)
-                # super = cmd.super(target=align_structure_list[0], mobile=align_structure_list[i])
-                super = cmd.super(target=f"{ref_structure} and name CA and not HETATM{selection[0]}", mobile=f"{structure} and name CA and not HETATM{selection[i]}")
-                tmp_out += f"\t{structure_list_entire[i]}\t{round(super[0],3)}\t{super[1]}\n"
-        to_outfile.append(tmp_out)
+        # print(align)
+        
+
+
         print(to_outfile[-2]+to_outfile[-1][:-1])
         if to_outfile[-1] == to_outfile[-3]:
             break_flag = True
@@ -408,6 +498,7 @@ def SIMalign(ref_structure, structure_list_entire, iterations, tresshold_aa, max
         
     with open("log.txt","w") as outfile:
         outfile.write("".join(to_outfile))
+    # print(align)
     update_alignment(align)
     if break_flag == False:
         print(f"\tCompleted {iterations} iteration(s) of superimposion.")
