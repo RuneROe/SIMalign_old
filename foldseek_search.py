@@ -58,7 +58,6 @@ def run(database,variable_tresshold,value_tresshold,search_against,ref_structure
                 else:
                     for line in infile:
                         line_list = line.split("\t")
-                        print(line_list)
                         variable = float(line_list[1][:-1])
                         if low_flag:
                             if variable < value_tresshold:
