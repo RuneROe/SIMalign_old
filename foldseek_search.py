@@ -9,7 +9,7 @@ def download_AF(name,outfolder,infilenames):
         cif = name.split(".")[:-1]
     else:
         cif = name+".cif"
-    print("/tDownloading:",cif)
+    print("\tDownloading:",cif)
     os.system(f"gsutil -m cp gs://public-datasets-deepmind-alphafold-v4/{cif} {outfolder}/.")
     infilenames.append(outfolder+"/"+cif)
     return infilenames
@@ -29,7 +29,7 @@ def run(database,variable_tresshold,value_tresshold,search_against,ref_structure
         low_flag = True
     if database == "Thermophilic_DB":
         if not os.path.isfile("ThermoDB_READY"): 
-            print("/tDownloading thermophilic database")
+            print("\tDownloading thermophilic database")
             os.system("pip install gdown")
             os.system("gdown --folder https://drive.google.com/drive/u/1/folders/1FN3Cfl94J0ML2UmRADNFuTAqabOkxdfN")
             os.system("touch ThermoDB_READY")
@@ -37,7 +37,7 @@ def run(database,variable_tresshold,value_tresshold,search_against,ref_structure
     else:
         DB = "DB"+database.split("/")[-1]
         if not os.path.isfile("foldseek_"+DB):
-            print("/tDownloading database:",database)
+            print("\tDownloading database:",database)
             os.system(f"./foldseek/bin/foldseek databases {database} {DB} tmp")
             os.system(f"./foldseek/bin/foldseek createindex {DB} tmp")
             os.system("touch foldseek_"+DB)
@@ -57,7 +57,8 @@ def run(database,variable_tresshold,value_tresshold,search_against,ref_structure
                         infilenames = download_AF(lines[i][:-1],"foldseek_output/structures",infilenames)
                 else:
                     for line in infile:
-                        line_list = line.split("/t")
+                        line_list = line.split("\t")
+                        print(line_list)
                         variable = float(line_list[1][:-1])
                         if low_flag:
                             if variable < value_tresshold:
