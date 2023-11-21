@@ -232,6 +232,6 @@ def show_pdb(ref_structure,color_mode,score_list,len_ref_structure,hotspot_list)
         view.setStyle({'cartoon':{'colorscheme':{'prop':'resi',"gradient":"linear",'colors':color_list,'min':1,'max':len_ref_structure}}})
     else:
         view.setStyle({'cartoon': {'color':'spectrum'}})
+    return view
 
-
-    view.zoomTo()
+    
