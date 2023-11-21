@@ -14,6 +14,12 @@ def download_AF(name,outfolder,infilenames):
     infilenames.append(outfolder+"/"+cif)
     return infilenames
 
+def foldseek_search(structure, DB,variable_tresshold):
+    if variable_tresshold == "number_of_structures":
+        os.system(f"./foldseek/bin/foldseek easy-search {structure} {DB} foldseek_output/{structure.split('.')[0]}.txt tmp --format-output target")
+    else:
+        os.system(f"./foldseek/bin/foldseek easy-search {structure} {DB} foldseek_output/{structure.split('.')[0]}.txt tmp --format-output target,{variable_tresshold}")
+
 
 def run(database,variable_tresshold,value_tresshold,search_against,ref_structure,infilenames): 
     print("Running foldseek...")
@@ -23,7 +29,7 @@ def run(database,variable_tresshold,value_tresshold,search_against,ref_structure
         low_flag = True
     if database == "Thermophilic_DB":
         if not os.path.isfile("ThermoDB_READY"): 
-            print("Downloading thermophilic database")
+            print("/tDownloading thermophilic database")
             os.system("pip install gdown")
             os.system("gdown --folder https://drive.google.com/drive/u/1/folders/1FN3Cfl94J0ML2UmRADNFuTAqabOkxdfN")
             os.system("touch ThermoDB_READY")
@@ -31,28 +37,33 @@ def run(database,variable_tresshold,value_tresshold,search_against,ref_structure
     else:
         DB = "DB"+database.split("/")[-1]
         if not os.path.isfile("foldseek_"+DB):
-            print("Downloading database:",database)
+            print("/tDownloading database:",database)
             os.system(f"./foldseek/bin/foldseek databases {database} {DB} tmp")
             os.system(f"./foldseek/bin/foldseek createindex {DB} tmp")
             os.system("touch foldseek_"+DB)
     os.system("mkdir foldseek_output")
     if search_against == "ref_structure":
-        os.system(f"./foldseek/bin/foldseek easy-search {ref_structure} {DB} foldseek_output/aln.txt tmp --format-output target,{variable_tresshold}")
+        foldseek_search(ref_structure, DB,variable_tresshold)
     else:
         for structure in infilenames:
-            os.system(f"./foldseek/bin/foldseek easy-search {structure} {DB} foldseek_output/{structure.split('.')[0]}.txt tmp --format-output target,{variable_tresshold}")
+            foldseek_search(structure, DB,variable_tresshold)
     os.system("mkdir foldseek_output/structures")
     for file in os.listdir("foldseek_output"):
-        if file != "structures":
+        if file.endswith(".txt"):
             with open("foldseek_output/"+file) as infile:
-                for line in infile:
-                    line_list = line.split("/t")
-                    variable = line_list[1]
-                    if low_flag:
-                        if variable < value_tresshold:
+                if variable_tresshold == "number_of_structures":
+                    lines = infile.readlines()
+                    for i in range(int(value_tresshold)):
+                        infilenames = download_AF(lines[i][:-1],"foldseek_output/structures",infilenames)
+                else:
+                    for line in infile:
+                        line_list = line.split("/t")
+                        variable = float(line_list[1][:-1])
+                        if low_flag:
+                            if variable < value_tresshold:
+                                infilenames = download_AF(line_list[0],"foldseek_output/structures",infilenames)
+                        elif variable > value_tresshold:
                             infilenames = download_AF(line_list[0],"foldseek_output/structures",infilenames)
-                    elif variable > value_tresshold:
-                        infilenames = download_AF(line_list[0],"foldseek_output/structures",infilenames)
     return infilenames
 
 
