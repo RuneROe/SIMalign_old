@@ -40,7 +40,7 @@ def run(database,variable_tresshold,value_tresshold,search_against,ref_structure
         os.system(f"./foldseek/bin/foldseek easy-search {ref_structure} {DB} foldseek_output/aln.txt tmp --format-output target,{variable_tresshold}")
     else:
         for structure in infilenames:
-            os.system(f"./foldseek/bin/foldseek easy-search {structure} {DB} foldseek_output/{structure.split(".")[0]}.txt tmp --format-output target,{variable_tresshold}")
+            os.system(f"./foldseek/bin/foldseek easy-search {structure} {DB} foldseek_output/{structure.split('.')[0]}.txt tmp --format-output target,{variable_tresshold}")
     os.system("mkdir foldseek_output/structures")
     for file in os.listdir("foldseek_output"):
         if file != "structures":
