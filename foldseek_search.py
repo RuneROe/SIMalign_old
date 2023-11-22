@@ -3,15 +3,17 @@
 #     local_script_path = f"/content/{script}.py"
 #     os.system(f"wget {raw_script} -O {local_script_path}")
 import os
+import urllib.request
 
 def download_AF(name,outfolder,infilenames):
     if name.endswith("cif.gz"):
-        cif = name.split(".")[:-1]
+        pdb = name.split(".")[:-2]+".pdb"
     else:
-        cif = name+".cif"
-    print("\tDownloading:",cif)
-    os.system(f"gsutil -m cp gs://public-datasets-deepmind-alphafold-v4/{cif} {outfolder}/.")
-    infilenames.append(outfolder+"/"+cif)
+        pdb = name+".pdb"
+    print("\tDownloading:",pdb)
+    url = "https://alphafold.ebi.ac.uk/files/"+pdb
+    urllib.request.urlretrieve(url,outfolder+"/"+pdb)
+    infilenames.append(outfolder+"/"+pdb)
     return infilenames
 
 def foldseek_search(structure, DB,variable_tresshold):
