@@ -7,7 +7,7 @@ import urllib.request
 
 def download_AF(name,outfolder,infilenames):
     if name.endswith("cif.gz"):
-        pdb = name.split(".")[:-2]+".pdb"
+        pdb = ".".join(name.split(".")[:-2])+".pdb"
     else:
         pdb = name+".pdb"
     print("\tDownloading:",pdb)
