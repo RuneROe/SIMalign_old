@@ -49,7 +49,11 @@ def run(database,variable_tresshold,value_tresshold,search_against,ref_structure
     else:
         for structure in infilenames:
             foldseek_search(structure, DB,variable_tresshold)
-    os.system("mkdir foldseek_output/structures")
+    if "structures" in os.listdir("foldseek_output"):
+        for file in os.listdir("foldseek_output/structures"):
+            os.remove("foldseek_output/structures/"+file)
+    else:
+        os.system("mkdir foldseek_output/structures")
     for file in os.listdir("foldseek_output"):
         if file.endswith(".txt"):
             with open("foldseek_output/"+file) as infile:
