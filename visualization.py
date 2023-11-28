@@ -78,11 +78,11 @@ def color_by_score(structure, score):
 # def color_by_hotspot(structure, hotspot):
 #     grey = [0.9,0.9,0.9]
 #     colors = [
-#         [0.81, 0.34, 0.34], 
-#         [0.42, 0.47, 0.91], 
-#         [0.4, 0.84, 0.47], 
-#         [0.82, 0.38, 0.83], 
-#         [0.91, 0.64, 0.45], 
+#         [0.81, 0.34, 0.34], #red
+#         [0.42, 0.47, 0.91], #blue
+#         [0.4, 0.84, 0.47], #lime
+#         [0.82, 0.38, 0.83], #purble
+#         [0.91, 0.64, 0.45], #
 #         [0.41, 0.89, 0.7], 
 #         [0.27, 0.71, 0.84], 
 #         [0.69, 0.56, 0.82], 
@@ -182,6 +182,10 @@ def run(color_mode,hotspot_list,score_list,structure_list,core_selection,exposed
             color_by_score(structure, score_list[j])
     if color_by_element:
         cmd.util.cnc("all")
+    cmd.hide("cgo", "aln")
+    cmd.set("seq_view_label_mode", "1")
+    cmd.set("antialias", "4")
+    cmd.set("ray_trace_mode", "1")
     # cmd.save(outfile_name)
 
 # colors.run("similarity",hotspot_list,score_list,outfile_name,structure_list)
