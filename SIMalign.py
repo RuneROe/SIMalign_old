@@ -527,7 +527,7 @@ def run(ref_structure, files, iterations, tresshold_aa, max_dist, alignment_file
     print("Loading structures to pymol...")
 # Importing files - - - - - - - - - - - - - - - - - - - - - - - - - - -- - - - - -
     ref_structure, structure_list_entire = downloading_files(ref_structure,files)
-
+    cmd.alignto(ref_structure)
 
 # Basic Pymol stuff - - - - - - - - - - - - - - - - - - - - - - - - - - -- - - - - -
 
@@ -542,14 +542,6 @@ def run(ref_structure, files, iterations, tresshold_aa, max_dist, alignment_file
     cmd.save(alignment_file_name, selection="aln")
     # remove_other_chain_alignment(alignment_file_name.split(0)+"2.aln",[len(cmd.get_model(x+" and chain A and name CA and not HETATM").atom) for x in structure_list_entire])
 
-
-# Some pymol stuff - - - - - - - - - - - - - - - - - - - - - - - - - - -- - - - - -
-    cmd.hide("cgo", "aln")
-    cmd.set("seq_view_label_mode", "1")
-    cmd.set("antialias", "4")
-    cmd.set("ray_trace_mode", "1")
-
-    # cmd.save(outfilename)
     
 
     return len(cmd.get_model(ref_structure).atom), score_list, structure_list_entire, core_selection
