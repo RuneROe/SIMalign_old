@@ -216,6 +216,8 @@ def bigger_AA(target_AA,ref_AA):
         return False
     elif ref_AA == "F" and target_AA == "Y":
         return False
+    elif ref_AA == "L" and target_AA in {"F","Y"}:
+        return False
     elif ref_AA == "S" and target_AA in {"C","T"}:
         return False
     else:
