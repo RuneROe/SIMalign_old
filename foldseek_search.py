@@ -1,7 +1,3 @@
-# def get_file(file):
-#     raw_script = f"https://raw.githubusercontent.com/RuneROe/git_color_by_similarity/master/{file}"
-#     local_script_path = f"/content/{script}.py"
-#     os.system(f"wget {raw_script} -O {local_script_path}")
 import os
 import urllib.request
 
@@ -23,6 +19,12 @@ def foldseek_search(structure, DB,variable_tresshold):
         os.system(f"./foldseek/bin/foldseek easy-search {structure} {DB} foldseek_output/{structure.split('.')[0]}.txt tmp --format-output target,{variable_tresshold}")
 
 
+def remove_old_structures():
+    if "foldseek_output" in os.listdir():
+        if "structures" in os.listdir("foldseek_output"):
+            for file in os.listdir("foldseek_output/structures"):
+                os.remove("foldseek_output/structures/"+file)
+
 def run(database,variable_tresshold,value_tresshold,search_against,ref_structure,infilenames): 
     print("Running foldseek...")
     low_flag = False
@@ -43,6 +45,7 @@ def run(database,variable_tresshold,value_tresshold,search_against,ref_structure
             os.system(f"./foldseek/bin/foldseek databases {database} {DB} tmp")
             os.system(f"./foldseek/bin/foldseek createindex {DB} tmp")
             os.system("touch foldseek_"+DB)
+    remove_old_structures()
     os.system("mkdir foldseek_output")
     if search_against == "ref_structure":
         foldseek_search(ref_structure, DB,variable_tresshold)
@@ -71,24 +74,3 @@ def run(database,variable_tresshold,value_tresshold,search_against,ref_structure
                         elif variable > value_tresshold:
                             infilenames = download_AF(line_list[0],"foldseek_output/structures",infilenames)
     return infilenames
-
-
-    
-    
-
-# import os
-# mainfolder = "homologs_foldseekAF-proteome"
-# for file in os.listdir(mainfolder):
-# 	file = f"{mainfolder}/{file}"
-# 	folder = file.split(".")[0]
-# 	print(f"Making folder: {folder}")
-# 	os.system(f"mkdir {folder}")
-# 	with open(file,"r") as infile:
-# 		lines = infile.readlines()[:20]
-# 		for line in lines:
-# 			if line.endswith("cif.gz"):
-# 				cif = ".".join(line.split("\t")[1].split(".")[:-1])
-# 			else:
-# 				cif = line.split("\t")[1]+".cif"
-# 			print(f"Downloading: {cif} to {folder}")
-# 			os.system(f"gsutil -m cp gs://public-datasets-deepmind-alphafold-v4/{cif} {folder}/.")

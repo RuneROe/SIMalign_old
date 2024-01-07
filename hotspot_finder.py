@@ -223,9 +223,13 @@ def bigger_AA(target_AA,ref_AA):
     else:
         return True
 
+def dist_points(coord1, coord2):
+    coord1 = np.array(coord1)
+    coord2 = np.array(coord2)
+    distance = np.linalg.norm(coord2 - coord1)
+    return distance
 
-
-def add_hotspot(closeAA_list,atom,i,structure_list,align):
+def add_hotspot(closeAA_list,atom,i,structure_list,align,models):
     amino_acid_translation = {
     'ALA': 'A',
     'ARG': 'R',
@@ -245,14 +249,14 @@ def add_hotspot(closeAA_list,atom,i,structure_list,align):
     'SER': 'S',
     'THR': 'T',
     'TRP': 'W',
-    'TYR': 'Y',
+    'TYR': 'Y',    
     'VAL': 'V'}
     index = None
     resi_list = []
     ref_index = resi_to_index(int(atom.resi),structure_list[i],structure_list,align)
     for j, seq in enumerate(align):
         align_char = seq[ref_index]
-        if align_char != amino_acid_translation[atom.resn] and align_char != "-":
+        if align_char != amino_acid_translation[atom.resn] and align_char != "-" and dist_points(atom.coord,models[j].atom[index_to_resi(ref_index,structure_list[j],structure_list,align)-1]) < 1.5:
             flag = True
             if not isinstance(closeAA_list[j][ref_index], str):
                 for closeAA in closeAA_list[j][ref_index]:
@@ -355,6 +359,10 @@ def run(structure_list,alignment_file_name):
     print("Finding hotspots...")
     align = AlignIO.read(alignment_file_name,"clustal")
 
+
+    models = []
+    for structure in structure_list:
+        models.append(cmd.get_model(structure+" and name CA and chain A and not HETATM"))
     # closeAA_list = []
     # for i, seq in enumerate(align):
     #     closeAA_list.append([])
@@ -390,7 +398,7 @@ def run(structure_list,alignment_file_name):
     for i, structure in enumerate(structure_list):
         hotspot = {}
         for atom in cmd.get_model(structure+" and name CA and not HETATM and chain A").atom:
-            k,v = add_hotspot(closeAA_list,atom,i,structure_list,align)
+            k,v = add_hotspot(closeAA_list,atom,i,structure_list,align,models)
             if k != None:
                 hotspot[k] = v
 
@@ -401,7 +409,7 @@ def run(structure_list,alignment_file_name):
     return hotspot_list, exposed_list
 
 
-def print_hotspot(hotspot_list,structure_list):
+def print_hotspot(hotspot_list,structure_list,print_hospots_from_structure):
     model_list = []
     for structure in structure_list:
         model_list.append(cmd.get_model(structure+" and name CA and chain A and not HETATM").atom)
@@ -411,3 +419,5 @@ def print_hotspot(hotspot_list,structure_list):
             for j, resi in enumerate(v):
                 if resi != "-":
                     print("\t\t"+model_list[i][k-1].resn+model_list[i][k-1].resi+" -> "+model_list[j][resi-1].resn+" as structure: "+structure_list[j])
+        if print_hospots_from_structure == "ref_structure":
+            break
