@@ -256,25 +256,28 @@ def add_hotspot(closeAA_list,atom,i,structure_list,align,models):
     ref_index = resi_to_index(int(atom.resi),structure_list[i],structure_list,align)
     for j, seq in enumerate(align):
         align_char = seq[ref_index]
-        if align_char != amino_acid_translation[atom.resn] and align_char != "-":# and dist_points(atom.coord,models[j].atom[index_to_resi(ref_index,structure_list[j],structure_list,align)-1].coord) < 1.5:
-            print(models[j])
-            print(structure_list[j])
-            print(index_to_resi(ref_index,structure_list[j],structure_list,align)-1)
-            print(models[j].atom[index_to_resi(ref_index,structure_list[j],structure_list,align)-1].coord)
-            flag = True
-            if not isinstance(closeAA_list[j][ref_index], str):
-                for closeAA in closeAA_list[j][ref_index]:
-                    close_index = resi_to_index(closeAA,structure_list[j],structure_list,align)
-                    if close_index != None:
-                        if bigger_AA(seq[close_index],align[i][close_index]):
-                        # if seq[close_index] != align[i][close_index]:
-                            flag = False     
-            if flag:
-                index = int(atom.resi)
-                resi_list.append(index_to_resi(ref_index,structure_list[j],structure_list,align))
+        try:
+            if align_char != amino_acid_translation[atom.resn] and align_char != "-" and dist_points(atom.coord,models[j].atom[index_to_resi(ref_index,structure_list[j],structure_list,align)-1].coord) < 1.5:
+                # print(models[j])
+                # print(structure_list[j])
+                # print(index_to_resi(ref_index,structure_list[j],structure_list,align)-1)
+                # print(models[j].atom[index_to_resi(ref_index,structure_list[j],structure_list,align)-1].coord)
+                flag = True
+                if not isinstance(closeAA_list[j][ref_index], str):
+                    for closeAA in closeAA_list[j][ref_index]:
+                        close_index = resi_to_index(closeAA,structure_list[j],structure_list,align)
+                        if close_index != None:
+                            if bigger_AA(seq[close_index],align[i][close_index]):
+                            # if seq[close_index] != align[i][close_index]:
+                                flag = False     
+                if flag:
+                    index = int(atom.resi)
+                    resi_list.append(index_to_resi(ref_index,structure_list[j],structure_list,align))
+                else:
+                    resi_list.append("-")
             else:
                 resi_list.append("-")
-        else:
+        except:
             resi_list.append("-")
     return index, resi_list
  
