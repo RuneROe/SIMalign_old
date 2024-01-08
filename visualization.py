@@ -40,6 +40,9 @@ def list_to_selection(list,select_above99=False):
             selection_list.append(selection[:-4]+")")
     return selection_list
 
+
+
+
 def select_by_list(selection_list,structure_list,list_of_lists=True,select_above99=False):
     if list_of_lists and select_above99:
         selection_list = list_to_selection(selection_list,select_above99=True)
@@ -49,7 +52,10 @@ def select_by_list(selection_list,structure_list,list_of_lists=True,select_above
     for i, structure in enumerate(structure_list):
         if selection_list[i] != "":
             selection += structure+selection_list[i]+") or ("
-    return selection[:-4]+")"
+    if len(selection) < 10:
+        return ""
+    else:
+        return selection[:-4]+")"
 
 
 def color_by_score(structure, score):
