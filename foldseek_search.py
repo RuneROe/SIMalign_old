@@ -38,7 +38,8 @@ def run(database,variable_tresshold,value_tresshold,search_against,ref_structure
             print("\tDownloading thermophilic database")
             os.system("pip install gdown")
             print("\t\tgdown installed")
-            os.system("gdown --folder https://drive.google.com/drive/u/1/folders/1FN3Cfl94J0ML2UmRADNFuTAqabOkxdfN")
+            # os.system("gdown --folder https://drive.google.com/drive/u/1/folders/1FN3Cfl94J0ML2UmRADNFuTAqabOkxdfN")
+            os.system("gdown https://drive.google.com/file/d/1255hcwjyDTE7tR7Ahmik57W7cgyYuHkP/view?usp=sharing")
             print("\t\tThermophilic DB downloaded")
             os.system("touch ThermoDB_READY")
         DB = "thermoDB/thermoDB"
