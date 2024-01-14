@@ -74,7 +74,7 @@ def add_hotspot(closeAA_list,atom,i,structure_list,align,models):
     for j, seq in enumerate(align):
         align_char = seq[ref_index]
         try:
-            if align_char != amino_acid_translation[atom.resn] and align_char != "-" and dist_points(atom.coord,models[j].atom[index_to_resi(ref_index,structure_list[j],structure_list,align)-1].coord) < 1.5:
+            if align_char != amino_acid_translation[atom.resn] and align_char != "-" and dist_points(atom.coord,models[j].atom[index_to_resi(ref_index,structure_list[j],structure_list,align)-1].coord) < 1:
                 flag = True
                 if not isinstance(closeAA_list[j][ref_index], str):
                     for closeAA in closeAA_list[j][ref_index]:
@@ -104,7 +104,7 @@ def discard_surface_residues(hotspot,structure):
     for k,v in hotspot.items():
         if k not in exposed_set:
             new_hotspot[k] = v
-    return new_hotspot, exposed_set
+    return hotspot, exposed_set  #Now it does not discard exposed hotspot -> change to new_hotspot to discard
 
 def get_close_aa(close_AAs,modelatoms,kd,atom,resi):
     tmp_set = set([int(modelatoms[x].resi) for x in kd.query_ball_point(atom.coord,4)])
