@@ -94,7 +94,7 @@ def add_hotspot(closeAA_list,atom,i,structure_list,align,models):
     return index, resi_list
 
 
-def discard_surface_residues(hotspot,structure):
+def discard_surface_residues(hotspot,structure,discard_exposed):
     import findsurfaceatoms
     exposed_residues = findsurfaceatoms.findSurfaceResidues(selection=structure+" and chain A and not HETATM")
     exposed_set = set()
@@ -104,7 +104,10 @@ def discard_surface_residues(hotspot,structure):
     for k,v in hotspot.items():
         if k not in exposed_set:
             new_hotspot[k] = v
-    return hotspot, exposed_set  #Now it does not discard exposed hotspot -> change to new_hotspot to discard
+    if discard_exposed:
+        return new_hotspot, exposed_set
+    else:
+        return hotspot, exposed_set
 
 def get_close_aa(close_AAs,modelatoms,kd,atom,resi):
     tmp_set = set([int(modelatoms[x].resi) for x in kd.query_ball_point(atom.coord,4)])
@@ -136,7 +139,7 @@ def get_close_aa_list(structure_list,align):
     return closeAA_list
 
 
-def run(structure_list,alignment_file_name):
+def run(structure_list,alignment_file_name,discard_exposed):
     print("Finding hotspots...")
     align = AlignIO.read(alignment_file_name,"clustal")
 
@@ -155,7 +158,7 @@ def run(structure_list,alignment_file_name):
             if k != None:
                 hotspot[k] = v
 
-        hotspot, exposed_set = discard_surface_residues(hotspot,structure)
+        hotspot, exposed_set = discard_surface_residues(hotspot,structure,discard_exposed)
         hotspot_list.append(hotspot)
         exposed_list.append(exposed_set)
     return hotspot_list, exposed_list
