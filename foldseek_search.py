@@ -31,17 +31,13 @@ def run(database,variable_tresshold,value_tresshold,search_against,ref_structure
     low_is_good = {"evalue","rmsd"}   
     if variable_tresshold in low_is_good:
         low_flag = True
-    print("mayby thermo")
     if database == "Thermophilic_DB":
-        print("thermo")
         if not os.path.isfile("ThermoDB_READY"): 
-            print("\tDownloading thermophilic database")
+            print("\tDownloading thermophilic database...")
             os.system("pip install gdown")
-            print("\t\tgdown installed")
             os.system("gdown --folder https://drive.google.com/drive/u/1/folders/1FN3Cfl94J0ML2UmRADNFuTAqabOkxdfN")
-            print("hej")
             # os.system("gdown https://drive.google.com/file/d/1255hcwjyDTE7tR7Ahmik57W7cgyYuHkP/view?usp=sharing")
-            print("\t\tThermophilic DB downloaded")
+            print("\t\tDone")
             os.system("touch ThermoDB_READY")
         DB = "thermoDB/thermoDB"
     else:

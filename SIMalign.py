@@ -151,7 +151,7 @@ def average_coordinate(list_of_coordinates):
     return average
 
 
-def SIMalign(ref_structure, structure_list_entire, iterations, tresshold_aa, max_dist, alignment_file_name):
+def SIMalign(ref_structure, structure_list_entire, iterations, tresshold_aa, max_dist, max_initial_rmsd):
     n_homologous_list = len(structure_list_entire) - 1
     break_flag = False
     to_outfile = [""]
@@ -168,6 +168,9 @@ def SIMalign(ref_structure, structure_list_entire, iterations, tresshold_aa, max
                 print(f"\tsuperimposing",structure,"towards",ref_structure)
                 if selection == []:
                     super = cmd.super(target=f"{ref_structure} and name CA and not HETATM and chain A", mobile=f"{structure} and name CA and not HETATM and chain A")
+                    if super[0] > max_initial_rmsd:
+                        print(f"Structure {structure} was deleted because the RMSD to {ref_structure} was above 5Å: {super[0]}Å")
+                        cmd.delete(structure)
                 else:
                     super = cmd.super(target=f"{ref_structure} and name CA and not HETATM{selection[0]}", mobile=f"{structure} and name CA and not HETATM{selection[i]}")
                 tmp_out += f"\t{structure_list_entire[i]}\t{round(super[0],3)}\t{super[1]}\n"
@@ -275,7 +278,7 @@ def SIMalign(ref_structure, structure_list_entire, iterations, tresshold_aa, max
         print(f"\tCompleted {iterations} iteration(s) of superimposion.")
     return score_list, selection
 
-def run(ref_structure, files, iterations, tresshold_aa, max_dist, alignment_file_name):
+def run(ref_structure, files, iterations, tresshold_aa, max_dist, alignment_file_name, max_initial_rmsd):
     """
     DESCRIPTION
 
@@ -296,7 +299,7 @@ def run(ref_structure, files, iterations, tresshold_aa, max_dist, alignment_file
     print("Loading structures to pymol...")
 # Importing files - - - - - - - - - - - - - - - - - - - - - - - - - - -- - - - - -
     ref_structure, structure_list_entire = downloading_files(ref_structure,files)
-    cmd.alignto(ref_structure)
+    # cmd.alignto(ref_structure)
 
 # Basic Pymol stuff - - - - - - - - - - - - - - - - - - - - - - - - - - -- - - - - -
 
@@ -305,7 +308,7 @@ def run(ref_structure, files, iterations, tresshold_aa, max_dist, alignment_file
 
 # LOOP start
     print("Running SIMalign...")
-    score_list, core_selection = SIMalign(ref_structure, structure_list_entire, iterations, tresshold_aa, max_dist, alignment_file_name)
+    score_list, core_selection = SIMalign(ref_structure, structure_list_entire, iterations, tresshold_aa, max_dist, max_initial_rmsd)
     cmd.save(alignment_file_name, selection="aln")
 
     
