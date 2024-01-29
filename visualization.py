@@ -168,7 +168,7 @@ def run(color_mode,hotspot_list,score_list,structure_list,core_selection,exposed
     if hotspot_list != None:
         #Select hotspots and exposed AA
         cmd.select("hotspots","chain A and not HETATM"+select_by_list(hotspot_list,structure_list))
-    if exposed_list != None:
+    if exposed_list != None and exposed_list != []:
         cmd.select("exposed_AA","chain A and not HETATM"+select_by_list(exposed_list,structure_list))
     else:
         select_exposed_AA(structure_list)
