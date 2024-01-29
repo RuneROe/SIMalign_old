@@ -176,7 +176,7 @@ def SIMalign(ref_structure, structure_list_entire, iterations, tresshold_aa, max
                 tmp_out += f"\t{structure_list_entire[i]}\t{round(super[0],3)}\t{super[1]}\n"
         to_outfile.append(tmp_out)
         selection = []
-
+        structure_list_entire = cmd.get_object_list()
 
         # Get models and cKDtree
         model_kd = dict()  
@@ -276,7 +276,7 @@ def SIMalign(ref_structure, structure_list_entire, iterations, tresshold_aa, max
     update_alignment(align)
     if break_flag == False:
         print(f"\tCompleted {iterations} iteration(s) of superimposion.")
-    return score_list, selection
+    return score_list, selection, structure_list_entire
 
 def run(ref_structure, files, iterations, tresshold_aa, max_dist, alignment_file_name, max_initial_rmsd):
     """
@@ -308,7 +308,7 @@ def run(ref_structure, files, iterations, tresshold_aa, max_dist, alignment_file
 
 # LOOP start
     print("Running SIMalign...")
-    score_list, core_selection = SIMalign(ref_structure, structure_list_entire, iterations, tresshold_aa, max_dist, max_initial_rmsd)
+    score_list, core_selection, structure_list_entire = SIMalign(ref_structure, structure_list_entire, iterations, tresshold_aa, max_dist, max_initial_rmsd)
     cmd.save(alignment_file_name, selection="aln")
 
     
