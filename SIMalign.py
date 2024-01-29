@@ -169,7 +169,7 @@ def SIMalign(ref_structure, structure_list_entire, iterations, tresshold_aa, max
                 if selection == []:
                     super = cmd.super(target=f"{ref_structure} and name CA and not HETATM and chain A", mobile=f"{structure} and name CA and not HETATM and chain A")
                     if super[0] > max_initial_rmsd:
-                        print(f"Structure {structure} was deleted because the RMSD to {ref_structure} was above 5Å: {super[0]}Å")
+                        print(f"\tStructure {structure} was deleted because the RMSD to {ref_structure} was above 5Å: {super[0]}Å")
                         cmd.delete(structure)
                 else:
                     super = cmd.super(target=f"{ref_structure} and name CA and not HETATM{selection[0]}", mobile=f"{structure} and name CA and not HETATM{selection[i]}")
