@@ -6,7 +6,7 @@ from Bio import AlignIO
 
 def resi_to_index(resi,ref_structure,structure_list,align):
     model = cmd.get_model(ref_structure+" and name CA and chain A")
-    resi = resi - model.atom[0].resi + 1
+    resi = resi - int(model.atom[0].resi) + 1
     ref_index = structure_list.index(ref_structure)
     count = 0
     for index, AA in enumerate(align[ref_index].seq):
@@ -18,7 +18,7 @@ def resi_to_index(resi,ref_structure,structure_list,align):
 def index_to_resi(index,ref_structure,structure_list,align):
     ref_index = structure_list.index(ref_structure)
     model = cmd.get_model(ref_structure+" and name CA and chain A")
-    resi = model.atom[0].resi - 1
+    resi = int(model.atom[0].resi) - 1
     for i, AA in enumerate(align[ref_index].seq):
         if AA != "-":
             resi += 1
