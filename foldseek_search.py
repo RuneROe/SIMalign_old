@@ -6,7 +6,7 @@ def download_AF(name,outfolder,infilenames,database):
         name = name.split(".")[0]
         if name not in infilenames:
             infilenames.append(name)
-            return infilenames
+        return infilenames
     elif name.endswith("cif.gz"):
         pdb = ".".join(name.split(".")[:-2])+".pdb"
     else:
