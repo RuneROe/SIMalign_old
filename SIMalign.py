@@ -81,7 +81,10 @@ def downloading_files(ref_structure,files):
         cmd.load(ref_structure)
         for file in files:
             if file != ref_structure:
-                cmd.load(file)
+                if len(file.split(".")) == 1:
+                    cmd.fetch(file)
+                else:
+                    cmd.load(file)
         structure_list_entire = cmd.get_object_list()
         
         return structure_list_entire[0], structure_list_entire

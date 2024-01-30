@@ -1,8 +1,11 @@
 import os
 import urllib.request
 
-def download_AF(name,outfolder,infilenames):
-    if name.endswith("cif.gz"):
+def download_AF(name,outfolder,infilenames,database):
+    if database == "PDB":
+        infilenames.append(name.split(".")[0])
+        return infilenames
+    elif name.endswith("cif.gz"):
         pdb = ".".join(name.split(".")[:-2])+".pdb"
     else:
         pdb = name+".pdb"
@@ -65,14 +68,14 @@ def run(database,variable_tresshold,value_tresshold,search_against,ref_structure
                 if variable_tresshold == "number_of_structures":
                     lines = infile.readlines()
                     for i in range(int(value_tresshold)):
-                        infilenames = download_AF(lines[i][:-1],"foldseek_output/structures",infilenames)
+                        infilenames = download_AF(lines[i][:-1],"foldseek_output/structures",infilenames,database)
                 else:
                     for line in infile:
                         line_list = line.split("\t")
                         variable = float(line_list[1][:-1])
                         if low_flag:
                             if variable < value_tresshold:
-                                infilenames = download_AF(line_list[0],"foldseek_output/structures",infilenames)
+                                infilenames = download_AF(line_list[0],"foldseek_output/structures",infilenames,database)
                         elif variable > value_tresshold:
-                            infilenames = download_AF(line_list[0],"foldseek_output/structures",infilenames)
+                            infilenames = download_AF(line_list[0],"foldseek_output/structures",infilenames,database)
     return infilenames
