@@ -3,8 +3,10 @@ import urllib.request
 
 def download_AF(name,outfolder,infilenames,database):
     if database == "PDB":
-        infilenames.append(name.split(".")[0])
-        return infilenames
+        name = name.split(".")[0]
+        if name not in infilenames:
+            infilenames.append(name)
+            return infilenames
     elif name.endswith("cif.gz"):
         pdb = ".".join(name.split(".")[:-2])+".pdb"
     else:
