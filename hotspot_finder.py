@@ -133,7 +133,8 @@ def get_close_aa_list(structure_list,align):
                 close_AAs = get_close_aa(close_AAs,model.atom,kd,atom,resi)
             else:
                 close_AAs = get_close_aa(close_AAs,model.atom,kd,atom,resi)
-        closeAA_list[i][resi_to_index(resi,structure,structure_list,align)] = close_AAs
+        if resi_to_index(resi,structure,structure_list,align) != None:
+            closeAA_list[i][resi_to_index(resi,structure,structure_list,align)] = close_AAs
     return closeAA_list
 
 
