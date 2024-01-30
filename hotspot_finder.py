@@ -5,6 +5,8 @@ from Bio import AlignIO
 
 
 def resi_to_index(resi,ref_structure,structure_list,align):
+    model = cmd.get_model(ref_structure+" and name CA and chain A")
+    resi = resi - model.atom[0].resi + 1
     ref_index = structure_list.index(ref_structure)
     count = 0
     for index, AA in enumerate(align[ref_index].seq):
@@ -15,7 +17,8 @@ def resi_to_index(resi,ref_structure,structure_list,align):
 
 def index_to_resi(index,ref_structure,structure_list,align):
     ref_index = structure_list.index(ref_structure)
-    resi = 0
+    model = cmd.get_model(ref_structure+" and name CA and chain A")
+    resi = model.atom[0].resi - 1
     for i, AA in enumerate(align[ref_index].seq):
         if AA != "-":
             resi += 1
@@ -121,7 +124,7 @@ def get_close_aa_list(structure_list,align):
     for i, structure in enumerate(structure_list):
         model = cmd.get_model(structure+" and (not name CA and not name N and not name C and not name O) and chain A and not HETATM")
         kd = cKDTree([atom.coord for atom in model.atom])
-        resi = model.atom[0].resi - 1
+        resi = 0
         close_AAs = set()
         for atom in model.atom:
             if resi != int(atom.resi):
