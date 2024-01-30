@@ -126,9 +126,8 @@ def get_close_aa_list(structure_list,align):
         for atom in model.atom:
             if resi != int(atom.resi):
                 if resi != 0:
-                    print(resi_to_index(resi,structure,structure_list,align))
-                    print(structure, resi)
-                    closeAA_list[i][resi_to_index(resi,structure,structure_list,align)] = close_AAs
+                    if resi_to_index(resi,structure,structure_list,align) != None:
+                        closeAA_list[i][resi_to_index(resi,structure,structure_list,align)] = close_AAs
                     close_AAs = set()
                 resi = int(atom.resi)
                 close_AAs = get_close_aa(close_AAs,model.atom,kd,atom,resi)
