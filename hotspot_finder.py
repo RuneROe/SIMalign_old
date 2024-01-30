@@ -121,20 +121,24 @@ def get_close_aa_list(structure_list,align):
     for i, structure in enumerate(structure_list):
         model = cmd.get_model(structure+" and (not name CA and not name N and not name C and not name O) and chain A and not HETATM")
         kd = cKDTree([atom.coord for atom in model.atom])
-        resi = 0
+        resi = model.atom[0].resi - 1
         close_AAs = set()
         for atom in model.atom:
             if resi != int(atom.resi):
                 if resi != 0:
-                    if resi_to_index(resi,structure,structure_list,align) != None:
-                        closeAA_list[i][resi_to_index(resi,structure,structure_list,align)] = close_AAs
+                    # if resi_to_index(resi,structure,structure_list,align) != None:
+                    closeAA_list[i][resi_to_index(resi,structure,structure_list,align)] = close_AAs
+                    # else:
+                        # pass
                     close_AAs = set()
                 resi = int(atom.resi)
                 close_AAs = get_close_aa(close_AAs,model.atom,kd,atom,resi)
             else:
                 close_AAs = get_close_aa(close_AAs,model.atom,kd,atom,resi)
-        if resi_to_index(resi,structure,structure_list,align) != None:
-            closeAA_list[i][resi_to_index(resi,structure,structure_list,align)] = close_AAs
+        # if resi_to_index(resi,structure,structure_list,align) != None:
+        closeAA_list[i][resi_to_index(resi,structure,structure_list,align)] = close_AAs
+        # else:
+            # pass
     return closeAA_list
 
 
