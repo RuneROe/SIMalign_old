@@ -69,7 +69,7 @@ def color_by_score(structure, score):
     color_by_number
     from pymol import cmd
     """
-    model = cmd.get_model(structure+" and name CA and not HETATM and chain A")
+    model = cmd.get_model(structure)
     # select_conserved_list = []
     for i, atom in enumerate(model.atom):
         cmd.set_color(f"{str(atom)+structure}color", color_by_number(score[i]))
@@ -143,7 +143,7 @@ def select_exposed_AA(structure_list):
     import findsurfaceatoms
     exposed_list = []
     for structure in structure_list:
-        exposed_residues = findsurfaceatoms.findSurfaceResidues(selection=structure+" and chain A and not HETATM")
+        exposed_residues = findsurfaceatoms.findSurfaceResidues(selection=structure)
         exposed_set = set()
         for resi in exposed_residues:
             exposed_set.add(resi[1])

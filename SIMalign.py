@@ -88,6 +88,9 @@ def downloading_files(ref_structure,files):
                     print("\t\tLoad:",file)
                     cmd.load(file)
         structure_list_entire = cmd.get_object_list()
+        structure_list = []
+        for structure in structure_list_entire:
+            structure_list.append(structure+" and chain "+cmd.get_model(structure+" and not HETATM and name CA").atom[0].chain)
         
         return structure_list_entire[0], structure_list_entire
     except:

@@ -5,7 +5,7 @@ from Bio import AlignIO
 
 
 def resi_to_index(resi,ref_structure,structure_list,align):
-    model = cmd.get_model(ref_structure+" and name CA and chain A")
+    model = cmd.get_model(ref_structure+" and name CA")
     resi = resi - int(model.atom[0].resi) + 1
     ref_index = structure_list.index(ref_structure)
     count = 0
@@ -17,7 +17,7 @@ def resi_to_index(resi,ref_structure,structure_list,align):
 
 def index_to_resi(index,ref_structure,structure_list,align):
     ref_index = structure_list.index(ref_structure)
-    model = cmd.get_model(ref_structure+" and name CA and chain A")
+    model = cmd.get_model(ref_structure+" and name CA")
     resi = int(model.atom[0].resi) - 1
     for i, AA in enumerate(align[ref_index].seq):
         if AA != "-":
@@ -99,7 +99,7 @@ def add_hotspot(closeAA_list,atom,i,structure_list,align,models):
 
 def discard_surface_residues(hotspot,structure):
     import findsurfaceatoms
-    exposed_residues = findsurfaceatoms.findSurfaceResidues(selection=structure+" and chain A and not HETATM")
+    exposed_residues = findsurfaceatoms.findSurfaceResidues(selection=structure)
     exposed_set = set()
     for resi in exposed_residues:
         exposed_set.add(resi[1])
@@ -122,7 +122,7 @@ def get_close_aa_list(structure_list,align):
             closeAA_list[i].append(ele)
 
     for i, structure in enumerate(structure_list):
-        model = cmd.get_model(structure+" and (not name CA and not name N and not name C and not name O) and chain A and not HETATM")
+        model = cmd.get_model(structure+" and (not name CA and not name N and not name C and not name O)")
         kd = cKDTree([atom.coord for atom in model.atom])
         resi = 0
         close_AAs = set()
@@ -152,14 +152,14 @@ def run(structure_list,alignment_file_name,discard_exposed):
 
     models = []
     for structure in structure_list:
-        models.append(cmd.get_model(structure+" and name CA and chain A and not HETATM"))
+        models.append(cmd.get_model(structure+" and name CA"))
 
     closeAA_list = get_close_aa_list(structure_list,align)
     hotspot_list = []
     exposed_list = []
     for i, structure in enumerate(structure_list):
         hotspot = {}
-        for atom in cmd.get_model(structure+" and name CA and not HETATM and chain A").atom:
+        for atom in cmd.get_model(structure+" and name CA").atom:
             k,v = add_hotspot(closeAA_list,atom,i,structure_list,align,models)
             if k != None:
                 hotspot[k] = v
@@ -176,7 +176,7 @@ def run(structure_list,alignment_file_name,discard_exposed):
 def print_hotspot(hotspot_list,structure_list,print_hospots_from_structure):
     model_list = []
     for structure in structure_list:
-        model_list.append(cmd.get_model(structure+" and name CA and chain A and not HETATM").atom)
+        model_list.append(cmd.get_model(structure+" and name CA").atom)
     for i, hotspot in enumerate(hotspot_list):
         print("\tPrinting possible single mutations in "+structure_list[i])
         for k,v in hotspot.items():
