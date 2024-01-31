@@ -76,23 +76,25 @@ def select_by_score(score_list, modelatoms):
     return out_string+")))"
     
 
+def select_first_chain(structure_list_entire):
+    structure_list = []
+    for structure in structure_list_entire:
+        structure_list.append(structure+" and not HETATM and chain "+cmd.get_model(structure+" and not HETATM and name CA").atom[0].chain)
+    return structure_list
+
 def downloading_files(ref_structure,files):
     try:
         cmd.load(ref_structure)
         for file in files:
             if file != ref_structure:
                 if len(file.split(".")) == 1:
-                    print("\t\tFetch:",file)
+                    print("\tFetch:",file)
                     cmd.fetch(file)
                 else:
-                    print("\t\tLoad:",file)
+                    print("\tLoad:",file)
                     cmd.load(file)
-        structure_list_entire = cmd.get_object_list()
-        structure_list = []
-        for structure in structure_list_entire:
-            structure_list.append(structure+" and not HETATM and chain "+cmd.get_model(structure+" and not HETATM and name CA").atom[0].chain)
-        
-        return structure_list_entire[0], structure_list_entire
+        structure_list = select_first_chain(cmd.get_object_list())      
+        return structure_list[0], structure_list
     except:
         print("\n- - - - - - - - - - - - - - - - - -\nImport ERROR")
         print("\nCouldn't import one or more of the files in pymol\n- - - - - - - - - - - - - - - - - -\n")
@@ -184,7 +186,7 @@ def SIMalign(ref_structure, structure_list_entire, iterations, tresshold_aa, max
                 tmp_out += f"\t{structure_list_entire[i]}\t{round(super[0],3)}\t{super[1]}\n"
         to_outfile.append(tmp_out)
         selection = []
-        structure_list_entire = cmd.get_object_list()
+        structure_list_entire = select_first_chain(cmd.get_object_list())
 
         # Get models and cKDtree
         model_kd = dict()  
