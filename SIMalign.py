@@ -90,7 +90,7 @@ def downloading_files(ref_structure,files):
         structure_list_entire = cmd.get_object_list()
         structure_list = []
         for structure in structure_list_entire:
-            structure_list.append(structure+" and chain "+cmd.get_model(structure+" and not HETATM and name CA").atom[0].chain)
+            structure_list.append(structure+" and not HETATM and chain "+cmd.get_model(structure+" and not HETATM and name CA").atom[0].chain)
         
         return structure_list_entire[0], structure_list_entire
     except:
@@ -108,7 +108,7 @@ def get_align(alignment_file_name,structure_list):
     resi = []
     for seq in alignIO:
         resi.append(0)
-    modelsatoms = [cmd.get_model(structure+" and chain A and not HETATM and name CA").atom for structure in structure_list]
+    modelsatoms = [cmd.get_model(structure+" and name CA").atom for structure in structure_list]
     for i in range(len(alignIO[0].seq)):
         tmp = {}
         for j, seq in enumerate(alignIO):
@@ -175,12 +175,12 @@ def SIMalign(ref_structure, structure_list_entire, iterations, tresshold_aa, max
             if i != 0:
                 print(f"\tsuperimposing",structure,"towards",ref_structure)
                 if selection == []:
-                    super = cmd.super(target=f"{ref_structure} and name CA and not HETATM and chain A", mobile=f"{structure} and name CA and not HETATM and chain A")
+                    super = cmd.super(target=f"{ref_structure} and name CA", mobile=f"{structure} and name CA")
                     if super[0] > max_initial_rmsd:
                         print(f"\tStructure {structure} was deleted because the RMSD to {ref_structure} was above 5Å: {super[0]}Å")
                         cmd.delete(structure)
                 else:
-                    super = cmd.super(target=f"{ref_structure} and name CA and not HETATM{selection[0]}", mobile=f"{structure} and name CA and not HETATM{selection[i]}")
+                    super = cmd.super(target=f"{ref_structure} and name CA{selection[0]}", mobile=f"{structure} and name CA{selection[i]}")
                 tmp_out += f"\t{structure_list_entire[i]}\t{round(super[0],3)}\t{super[1]}\n"
         to_outfile.append(tmp_out)
         selection = []
@@ -189,7 +189,7 @@ def SIMalign(ref_structure, structure_list_entire, iterations, tresshold_aa, max
         # Get models and cKDtree
         model_kd = dict()  
         for structure in structure_list_entire:
-            model = cmd.get_model(structure+" and name CA and not HETATM and chain A")
+            model = cmd.get_model(structure+" and name CA")
             model_kd[model] = cKDTree([atom.coord for atom in model.atom])
         
         score_list = []
