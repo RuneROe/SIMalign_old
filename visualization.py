@@ -71,9 +71,9 @@ def color_by_score(structure, score):
     """
     model = cmd.get_model(structure)
     # select_conserved_list = []
-    for i, atom in enumerate(model.atom):
-        cmd.set_color(f"{str(atom)+structure}color", color_by_number(score[i]))
-        cmd.color(f"{str(atom)+structure}color", f"resi {atom.resi} and chain {atom.chain} and {structure}")
+    for i, s in enumerate(score):
+        cmd.set_color(f"{str(model[i])+structure}color", color_by_number(s))
+        cmd.color(f"{str(model[i])+structure}color", f"resi {model.atom[i].resi} and {structure}")
         # if score[i] > 0.99:
             # select_conserved_list.append(int(atom.resi))
     # cmd.select(f"{structure}_conserved",structure+f" and not HETATM and chain A{list_to_selection(select_conserved_list)}")
