@@ -289,7 +289,7 @@ def SIMalign(ref_structure, structure_list_entire_chainA, iterations, tresshold_
     update_alignment(align)
     if break_flag == False:
         print(f"\tCompleted {iterations} iteration(s) of superimposion.")
-    return score_list, selection, structure_list_entire_chainA
+    return score_list, selection, structure_list_entire
 
 def run(ref_structure, files, iterations, tresshold_aa, max_dist, alignment_file_name, max_initial_rmsd):
     """
