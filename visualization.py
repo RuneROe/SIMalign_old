@@ -148,30 +148,32 @@ def select_exposed_AA(structure_list):
         for resi in exposed_residues:
             exposed_set.add(resi[1])
         exposed_list.append(exposed_set)
-    cmd.select("exposed_AA","chain A and not HETATM"+select_by_list(exposed_list,structure_list))
+    cmd.select("exposed_AA","not HETATM"+select_by_list(exposed_list,structure_list))
+
+import SIMalign
 
 def run(color_mode,hotspot_list,score_list,structure_list,core_selection,exposed_list,structure_format,show_in_pymol,color_by_element):
     print("Coloring and selecting in pymol...")
-    
+    structure_list_entire_chainA = SIMalign.select_first_chain(structure_list)
     #Select core_AA
     # print("not HETATM"+select_by_list(core_selection,structure_list,list_of_lists=False))
     # print("not HETATM and chain A"+select_by_list(score_list,structure_list,select_above99=True))
     # print("not conserved and not HETATM and chain A")
     # print("chain A and not HETATM"+select_by_list(hotspot_list,structure_list))
     # print("chain A and not HETATM"+select_by_list(exposed_list,structure_list))
-    cmd.select("core_AA","not HETATM"+select_by_list(core_selection,structure_list,list_of_lists=False))
+    cmd.select("core_AA","not HETATM"+select_by_list(core_selection,structure_list_entire_chainA,list_of_lists=False))
 
     #Select conserved and nonconserved
-    cmd.select("conserved", "not HETATM and chain A"+select_by_list(score_list,structure_list,select_above99=True))
+    cmd.select("conserved", "not HETATM"+select_by_list(score_list,structure_list_entire_chainA,select_above99=True))
     cmd.select("nonconserved","not conserved and not HETATM and chain A")
     
     if hotspot_list != None:
         #Select hotspots and exposed AA
-        cmd.select("hotspots","chain A and not HETATM"+select_by_list(hotspot_list,structure_list))
+        cmd.select("hotspots","not HETATM"+select_by_list(hotspot_list,structure_list_entire_chainA))
     if exposed_list != None and exposed_list != []:
-        cmd.select("exposed_AA","chain A and not HETATM"+select_by_list(exposed_list,structure_list))
+        cmd.select("exposed_AA","not HETATM"+select_by_list(exposed_list,structure_list_entire_chainA))
     else:
-        select_exposed_AA(structure_list)
+        select_exposed_AA(structure_list_entire_chainA)
     structure_formating(structure_format,show_in_pymol)
     if color_mode == "hotspot":
         print("\tColoring by hotspots")
@@ -184,7 +186,7 @@ def run(color_mode,hotspot_list,score_list,structure_list,core_selection,exposed
         #     simple_color_by_hotspot(structure, hotspot_list[j])
     elif color_mode == "similarity":
         print("\tColoring by similarity:")
-        for j, structure in enumerate(structure_list):
+        for j, structure in enumerate(structure_list_entire_chainA):
             print(f"\t\tColoring {structure}")
             color_by_score(structure, score_list[j])
     if color_by_element:
