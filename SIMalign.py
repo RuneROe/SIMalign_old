@@ -161,7 +161,8 @@ def average_coordinate(list_of_coordinates):
     return average
 
 
-def SIMalign(ref_structure, structure_list_entire, iterations, tresshold_aa, max_dist, max_initial_rmsd):
+def SIMalign(ref_structure, structure_list_entire_chainA, iterations, tresshold_aa, max_dist, max_initial_rmsd):
+    structure_list_entire = [x.split(" ")[0] for x in structure_list_entire_chainA]
     n_homologous_list = len(structure_list_entire) - 1
     break_flag = False
     to_outfile = [""]
@@ -175,22 +176,24 @@ def SIMalign(ref_structure, structure_list_entire, iterations, tresshold_aa, max
         # Super of all structures to ref_structure
         for i, structure in enumerate(structure_list_entire):
             if i != 0:
-                print(f"\tsuperimposing",structure.split(' ')[0],"towards",ref_structure.split(' ')[0])
+                print(f"\tsuperimposing",structure,"towards",ref_structure.split(' ')[0])
                 if selection == []:
-                    super = cmd.super(target=f"{ref_structure} and name CA", mobile=f"{structure} and name CA")
+                    super = cmd.super(target=f"{ref_structure} and name CA", mobile=f"{structure_list_entire_chainA[i]} and name CA")
                     if super[0] > max_initial_rmsd:
-                        print(f"\tStructure {structure.split(' ')[0]} was deleted because the RMSD to {ref_structure.split(' ')[0]} was above 5Å: {super[0]}Å")
+                        print(f"\tStructure {structure} was deleted because the RMSD to {ref_structure.split(' ')[0]} was above 5Å: {super[0]}Å")
                         cmd.delete(structure)
                 else:
-                    super = cmd.super(target=f"{ref_structure} and name CA{selection[0]}", mobile=f"{structure} and name CA{selection[i]}")
-                tmp_out += f"\t{structure_list_entire[i]}\t{round(super[0],3)}\t{super[1]}\n"
+                    super = cmd.super(target=f"{ref_structure} and name CA{selection[0]}", mobile=f"{structure_list_entire_chainA[i]} and name CA{selection[i]}")
+                tmp_out += f"\t{structure}\t{round(super[0],3)}\t{super[1]}\n"
         to_outfile.append(tmp_out)
         selection = []
-        structure_list_entire = select_first_chain(cmd.get_object_list())
+        structure_list_entire = cmd.get_object_list()
+        structure_list_entire_chainA = select_first_chain(structure_list_entire)
+        # structure_list_object = [x.split(" ")[0] for x in structure_list_entire]
 
         # Get models and cKDtree
         model_kd = dict()  
-        for structure in structure_list_entire:
+        for structure in structure_list_entire_chainA:
             model = cmd.get_model(structure+" and name CA")
             model_kd[model] = cKDTree([atom.coord for atom in model.atom])
         
@@ -286,7 +289,7 @@ def SIMalign(ref_structure, structure_list_entire, iterations, tresshold_aa, max
     update_alignment(align)
     if break_flag == False:
         print(f"\tCompleted {iterations} iteration(s) of superimposion.")
-    return score_list, selection, structure_list_entire
+    return score_list, selection, structure_list_entire_chainA
 
 def run(ref_structure, files, iterations, tresshold_aa, max_dist, alignment_file_name, max_initial_rmsd):
     """
