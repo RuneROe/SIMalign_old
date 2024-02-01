@@ -72,7 +72,7 @@ def color_by_score(structure, score):
     model = cmd.get_model(structure)
     # select_conserved_list = []
     for i, s in enumerate(score):
-        cmd.set_color(f"{str(model[i])+structure}color", color_by_number(s))
+        cmd.set_color(f"{str(model.atom[i])+structure}color", color_by_number(s))
         cmd.color(f"{str(model[i])+structure}color", f"resi {model.atom[i].resi} and {structure}")
         # if score[i] > 0.99:
             # select_conserved_list.append(int(atom.resi))
