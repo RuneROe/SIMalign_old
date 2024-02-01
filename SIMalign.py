@@ -175,7 +175,7 @@ def SIMalign(ref_structure, structure_list_entire, iterations, tresshold_aa, max
         # Super of all structures to ref_structure
         for i, structure in enumerate(structure_list_entire):
             if i != 0:
-                print(f"\tsuperimposing",structure,"towards",ref_structure)
+                print(f"\tsuperimposing",structure.split(' ')[0],"towards",ref_structure.split(' ')[0])
                 if selection == []:
                     super = cmd.super(target=f"{ref_structure} and name CA", mobile=f"{structure} and name CA")
                     if super[0] > max_initial_rmsd:
