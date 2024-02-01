@@ -70,10 +70,11 @@ def color_by_score(structure, score):
     from pymol import cmd
     """
     model = cmd.get_model(structure)
+    resi1 = int(model.atom[0].resi)
     # select_conserved_list = []
     for i, s in enumerate(score):
         cmd.set_color(f"{str(model.atom[i])+structure}color", color_by_number(s))
-        cmd.color(f"{str(model[i])+structure}color", f"resi {model.atom[i].resi} and {structure}")
+        cmd.color(f"{str(model.atom[i])+structure}color", f"resi {resi1+i} and {structure}")
         # if score[i] > 0.99:
             # select_conserved_list.append(int(atom.resi))
     # cmd.select(f"{structure}_conserved",structure+f" and not HETATM and chain A{list_to_selection(select_conserved_list)}")
