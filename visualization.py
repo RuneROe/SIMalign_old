@@ -188,7 +188,7 @@ def run(color_mode,hotspot_list,score_list,structure_list,core_selection,exposed
     elif color_mode == "similarity":
         print("\tColoring by similarity:")
         for j, structure in enumerate(structure_list_entire_chainA):
-            print(f"\t\tColoring {structure_list_entire_chainA[j]}")
+            print(f"\t\tColoring {structure_list_entire_chainA[j].split(' ')[0]}")
             color_by_score(structure, score_list[j])
     if color_by_element:
         cmd.util.cnc("all")
