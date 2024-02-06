@@ -77,7 +77,7 @@ def add_hotspot(closeAA_list,atom,i,structure_list,align,models):
     for j, seq in enumerate(align):
         align_char = seq[ref_index]
         try:
-            if align_char != amino_acid_translation[atom.resn] and align_char != "-":# and dist_points(atom.coord,models[j].atom[index_to_resi(ref_index,structure_list[j],structure_list,align)-1].coord) < 1:
+            if align_char != amino_acid_translation[atom.resn] and align_char != "-" and dist_points(atom.coord,models[j].atom[index_to_resi(ref_index,structure_list[j],structure_list,align)-1].coord) < 1:
                 flag = True
                 if not isinstance(closeAA_list[j][ref_index], str):
                     for closeAA in closeAA_list[j][ref_index]:
