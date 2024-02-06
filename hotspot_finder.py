@@ -48,7 +48,7 @@ def dist_points(coord1, coord2):
     coord2 = np.array(coord2)
     distance = np.linalg.norm(coord2 - coord1)
     return distance
-
+ 
 def add_hotspot(closeAA_list,atom,i,structure_list,align,models):
     amino_acid_translation = {
     'ALA': 'A',

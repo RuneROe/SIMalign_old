@@ -22,7 +22,7 @@ def foldseek_search(structure, DB,variable_tresshold):
         os.system(f"./foldseek/bin/foldseek easy-search {structure} {DB} foldseek_output/{structure.split('.')[0]}.txt tmp --format-output target")
     else:
         os.system(f"./foldseek/bin/foldseek easy-search {structure} {DB} foldseek_output/{structure.split('.')[0]}.txt tmp --format-output target,{variable_tresshold}")
-
+ 
 
 def remove_old_structures():
     if "foldseek_output" in os.listdir():
@@ -41,7 +41,6 @@ def run(database,variable_tresshold,value_tresshold,search_against,ref_structure
             print("\tDownloading thermophilic database...")
             os.system("pip install gdown")
             os.system("gdown --folder https://drive.google.com/drive/u/1/folders/1FN3Cfl94J0ML2UmRADNFuTAqabOkxdfN")
-            # os.system("gdown https://drive.google.com/file/d/1255hcwjyDTE7tR7Ahmik57W7cgyYuHkP/view?usp=sharing")
             print("\t\tDone")
             os.system("touch ThermoDB_READY")
         DB = "thermoDB/thermoDB"

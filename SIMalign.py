@@ -172,7 +172,7 @@ def SIMalign(ref_structure, structure_list_entire_chainA, iterations, tresshold_
 
         to_outfile.append(f"\tIteration {j+1}\n\tstructure\tRMSD\tresidues aligned\n")
         tmp_out = ""
-        
+         
         # Super of all structures to ref_structure
         for i, structure in enumerate(structure_list_entire):
             if i != 0:

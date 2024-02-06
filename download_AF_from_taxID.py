@@ -1,4 +1,4 @@
-import os
+import os 
 mainfolder = "homologs_foldseekAF-proteome"
 for file in os.listdir(mainfolder):
 	file = f"{mainfolder}/{file}"
@@ -6,7 +6,7 @@ for file in os.listdir(mainfolder):
 	print(f"Making folder: {folder}")
 	os.system(f"mkdir {folder}")
 	with open(file,"r") as infile:
-		lines = infile.readlines()[:20]
+		lines = infile.readlines()
 		for line in lines:
 			if line.endswith("cif.gz"):
 				cif = ".".join(line.split("\t")[1].split(".")[:-1])

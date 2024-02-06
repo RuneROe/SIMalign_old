@@ -167,7 +167,7 @@ def run(color_mode,hotspot_list,score_list,structure_list,core_selection,exposed
     #Select conserved and nonconserved
     cmd.select("conserved", "not HETATM"+select_by_list(score_list,structure_list_entire_chainA,select_above99=True))
     cmd.select("nonconserved","not conserved and not HETATM and chain A")
-    
+     
     if hotspot_list != None:
         #Select hotspots and exposed AA
         cmd.select("hotspots","not HETATM"+select_by_list(hotspot_list,structure_list_entire_chainA))

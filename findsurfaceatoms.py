@@ -61,7 +61,7 @@ ARGUMENTS
 
     cutoff = float: cutoff of what is exposed or not {default: 2.5 Ang**2}
 
-RETURNS
+RETURNS 
 
     (list: (chain, resv ) )
         A Python list of residue numbers corresponding
