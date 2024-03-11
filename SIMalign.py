@@ -161,137 +161,225 @@ def average_coordinate(list_of_coordinates):
     return average
 
 
-def SIMalign(ref_structure, structure_list_entire_chainA, iterations, tresshold_aa, max_dist, max_initial_rmsd):
+def SIMalign(ref_structure, structure_list_entire_chainA, max_dist, max_initial_rmsd):
     structure_list_entire = [x.split(" ")[0] for x in structure_list_entire_chainA]
     n_homologous_list = len(structure_list_entire) - 1
-    break_flag = False
-    to_outfile = [""]
     selection = []
 
-    for j in range(iterations):
+    for i, structure in enumerate(structure_list_entire):   # Super of all structures to ref_structure
+        if i != 0:
+            # print(f"\tsuperimposing",structure,"towards",ref_structure.split(' ')[0])
+            super = cmd.super(target=ref_structure,mobile=structure_list_entire_chainA[i])
+            if super[0] > max_initial_rmsd:
+                print(f"\tStructure {structure} was deleted because the RMSD to {ref_structure.split(' ')[0]} was above 5Å: {super[0]}Å")
+                cmd.delete(structure)
+            else:
+                print(f"\t{structure} was superimposed with: RMSD=\t{round(super[0],3)}, Aligned atoms={super[1]}")
+    
+    structure_list_entire = cmd.get_object_list()
+    structure_list_entire_chainA = select_first_chain(structure_list_entire)
 
-        to_outfile.append(f"\tIteration {j+1}\n\tstructure\tRMSD\tresidues aligned\n")
-        tmp_out = ""
+    # Get models and cKDtree
+    model_kd = dict()  
+    for structure in structure_list_entire_chainA:
+        model = cmd.get_model(structure+" and name CA")
+        model_kd[model] = cKDTree([atom.coord for atom in model.atom])
+
+    score_list = []
+    align = []
+
+    # LOOP through models
+    for i, model in enumerate(model_kd.keys()):
+
+        score = []
+        ref_kd = model_kd[model]
+
+        # LOOP through ca atoms to find scores of one model
+        for ref_atom in model.atom:
+            
+            s = 0
+            ref_resn = ref_atom.resn
+            ref_coord = ref_atom.coord
+            max_score = aa_to_blosom(ref_resn,ref_resn) + 4
+
+            tmp_coordinates = [ref_coord]
+            # Finding closest AA from other models to ref AA
+            for x, (m, kd) in enumerate(model_kd.items()):
+                
+                if m != model:
+                    closest_pair = kd.query(ref_coord)
+                    atom = m.atom[closest_pair[1]]
+                    if closest_pair[0] == ref_kd.query(atom.coord)[0] and closest_pair[0] <= max_dist: 
+                        s += ((aa_to_blosom(ref_resn,atom.resn) + 4)/(n_homologous_list*max_score))
+                        tmp_coordinates.append(atom.coord)
+            
+            # Updating seq alignment so it is based on structureal information
+            tmp_center = average_coordinate(tmp_coordinates)
+            tmp = {}
+            for x, (m, kd) in enumerate(model_kd.items()):
+                closest_pair = kd.query(tmp_center)
+                atom = m.atom[closest_pair[1]]
+                if closest_pair[0] <= max_dist: 
+                    tmp[structure_list_entire[x]] = atom.index
+            score.append(s)
+        
+            if tmp not in align:
+                flag = True
+                for ele in align:
+                    for structure in structure_list_entire:
+                        if structure in ele and structure in tmp:
+                            if tmp[structure] == ele[structure]:
+                                flag = False
+                if flag:
+                    if align == []:
+                        align.append(tmp)
+                    else:
+                        for structure in structure_list_entire:
+                            if structure in tmp.keys():
+                                key = structure
+                                break
+                        for x in range(len(align)+1):
+
+                            try:
+                                if x == len(align):
+                                    align.append(tmp)
+                                    break
+                                elif tmp[key] < align[x][key]:
+                                    align = align[:x]+[tmp]+align[x:]
+                                    break
+                            except:
+                                pass
+
+        
+        score_list.append(score)
+
+    align = process_dicts(align,structure_list_entire)
+    update_alignment(align)
+    return score_list, selection, structure_list_entire, structure_list_entire_chainA
+    # for j in range(iterations):
+
+    #     to_outfile.append(f"\tIteration {j+1}\n\tstructure\tRMSD\tresidues aligned\n")
+    #     tmp_out = ""
          
-        # Super of all structures to ref_structure
-        for i, structure in enumerate(structure_list_entire):
-            if i != 0:
-                print(f"\tsuperimposing",structure,"towards",ref_structure.split(' ')[0])
-                if selection == []:
-                    super = cmd.super(target=f"{ref_structure} and name CA", mobile=f"{structure_list_entire_chainA[i]} and name CA")
-                    if super[0] > max_initial_rmsd:
-                        print(f"\tStructure {structure} was deleted because the RMSD to {ref_structure.split(' ')[0]} was above 5Å: {super[0]}Å")
-                        cmd.delete(structure)
-                else:
-                    super = cmd.super(target=f"{ref_structure} and name CA{selection[0]}", mobile=f"{structure_list_entire_chainA[i]} and name CA{selection[i]}")
-                tmp_out += f"\t{structure}\t{round(super[0],3)}\t{super[1]}\n"
-        to_outfile.append(tmp_out)
-        selection = []
-        structure_list_entire = cmd.get_object_list()
-        structure_list_entire_chainA = select_first_chain(structure_list_entire)
-        # structure_list_object = [x.split(" ")[0] for x in structure_list_entire]
+    #     # Super of all structures to ref_structure
+    #     for i, structure in enumerate(structure_list_entire):
+    #         if i != 0:
+    #             print(f"\tsuperimposing",structure,"towards",ref_structure.split(' ')[0])
+    #             if selection == []:
+    #                 super = cmd.super(target=f"{ref_structure} and name CA", mobile=f"{structure_list_entire_chainA[i]} and name CA")
+    #                 if super[0] > max_initial_rmsd:
+    #                     print(f"\tStructure {structure} was deleted because the RMSD to {ref_structure.split(' ')[0]} was above 5Å: {super[0]}Å")
+    #                     cmd.delete(structure)
+    #             else:
+    #                 super = cmd.super(target=f"{ref_structure} and name CA{selection[0]}", mobile=f"{structure_list_entire_chainA[i]} and name CA{selection[i]}")
+    #             tmp_out += f"\t{structure}\t{round(super[0],3)}\t{super[1]}\n"
+    #     to_outfile.append(tmp_out)
+    #     selection = []
+    #     structure_list_entire = cmd.get_object_list()
+    #     structure_list_entire_chainA = select_first_chain(structure_list_entire)
+    #     # structure_list_object = [x.split(" ")[0] for x in structure_list_entire]
 
-        # Get models and cKDtree
-        model_kd = dict()  
-        for structure in structure_list_entire_chainA:
-            model = cmd.get_model(structure+" and name CA")
-            model_kd[model] = cKDTree([atom.coord for atom in model.atom])
+        # # Get models and cKDtree
+        # model_kd = dict()  
+        # for structure in structure_list_entire_chainA:
+        #     model = cmd.get_model(structure+" and name CA")
+        #     model_kd[model] = cKDTree([atom.coord for atom in model.atom])
         
-        score_list = []
+        # score_list = []
         
-        align = []
+        # align = []
 
         # LOOP through models
-        for i, model in enumerate(model_kd.keys()):
+    #     for i, model in enumerate(model_kd.keys()):
 
-            score = []
-            ref_kd = model_kd[model]
+    #         score = []
+    #         ref_kd = model_kd[model]
 
-            # LOOP through ca atoms to find scores of one model
-            for ref_atom in model.atom:
+    #         # LOOP through ca atoms to find scores of one model
+    #         for ref_atom in model.atom:
                 
-                s = 0
-                ref_resn = ref_atom.resn
-                ref_coord = ref_atom.coord
-                max_score = aa_to_blosom(ref_resn,ref_resn) + 4
+    #             s = 0
+    #             ref_resn = ref_atom.resn
+    #             ref_coord = ref_atom.coord
+    #             max_score = aa_to_blosom(ref_resn,ref_resn) + 4
 
-                tmp_coordinates = [ref_coord]
-                # Finding closest AA from other models to ref AA
-                for x, (m, kd) in enumerate(model_kd.items()):
+    #             tmp_coordinates = [ref_coord]
+    #             # Finding closest AA from other models to ref AA
+    #             for x, (m, kd) in enumerate(model_kd.items()):
                     
-                    if m != model:
-                        closest_pair = kd.query(ref_coord)
-                        atom = m.atom[closest_pair[1]]
-                        if closest_pair[0] == ref_kd.query(atom.coord)[0] and closest_pair[0] <= max_dist: 
-                            s += ((aa_to_blosom(ref_resn,atom.resn) + 4)/(n_homologous_list*max_score))
-                            tmp_coordinates.append(atom.coord)
+    #                 if m != model:
+    #                     closest_pair = kd.query(ref_coord)
+    #                     atom = m.atom[closest_pair[1]]
+    #                     if closest_pair[0] == ref_kd.query(atom.coord)[0] and closest_pair[0] <= max_dist: 
+    #                         s += ((aa_to_blosom(ref_resn,atom.resn) + 4)/(n_homologous_list*max_score))
+    #                         tmp_coordinates.append(atom.coord)
                 
-                # Updating seq alignment so it is based on structureal information
-                tmp_center = average_coordinate(tmp_coordinates)
-                tmp = {}
-                for x, (m, kd) in enumerate(model_kd.items()):
-                    closest_pair = kd.query(tmp_center)
-                    atom = m.atom[closest_pair[1]]
-                    if closest_pair[0] <= max_dist: 
-                        tmp[structure_list_entire[x]] = atom.index
-                score.append(s)
+    #             # Updating seq alignment so it is based on structureal information
+    #             tmp_center = average_coordinate(tmp_coordinates)
+    #             tmp = {}
+    #             for x, (m, kd) in enumerate(model_kd.items()):
+    #                 closest_pair = kd.query(tmp_center)
+    #                 atom = m.atom[closest_pair[1]]
+    #                 if closest_pair[0] <= max_dist: 
+    #                     tmp[structure_list_entire[x]] = atom.index
+    #             score.append(s)
             
-                if tmp not in align:
-                    flag = True
-                    for ele in align:
-                        for structure in structure_list_entire:
-                            if structure in ele and structure in tmp:
-                                if tmp[structure] == ele[structure]:
-                                    flag = False
-                    if flag:
-                        if align == []:
-                            align.append(tmp)
-                        else:
-                            for structure in structure_list_entire:
-                                if structure in tmp.keys():
-                                    key = structure
-                                    break
-                            for x in range(len(align)+1):
+    #             if tmp not in align:
+    #                 flag = True
+    #                 for ele in align:
+    #                     for structure in structure_list_entire:
+    #                         if structure in ele and structure in tmp:
+    #                             if tmp[structure] == ele[structure]:
+    #                                 flag = False
+    #                 if flag:
+    #                     if align == []:
+    #                         align.append(tmp)
+    #                     else:
+    #                         for structure in structure_list_entire:
+    #                             if structure in tmp.keys():
+    #                                 key = structure
+    #                                 break
+    #                         for x in range(len(align)+1):
 
-                                try:
-                                    if x == len(align):
-                                        align.append(tmp)
-                                        break
-                                    elif tmp[key] < align[x][key]:
-                                        align = align[:x]+[tmp]+align[x:]
-                                        break
-                                except:
-                                    pass
+    #                             try:
+    #                                 if x == len(align):
+    #                                     align.append(tmp)
+    #                                     break
+    #                                 elif tmp[key] < align[x][key]:
+    #                                     align = align[:x]+[tmp]+align[x:]
+    #                                     break
+    #                             except:
+    #                                 pass
 
            
-            score_list.append(score)
-            tmp_selection = select_by_score(score, model.atom)
-            # Checking that it is not below tresshold_aa
-            if len(re.findall(r"\s\d", tmp_selection)) < tresshold_aa:
-                print("\t"+structure_list_entire[i], len(re.findall(r"\s\d", tmp_selection)))
-                break_flag = True
-            selection.append(tmp_selection)
+    #         score_list.append(score)
+    #         tmp_selection = select_by_score(score, model.atom)
+    #         # Checking that it is not below tresshold_aa
+    #         if len(re.findall(r"\s\d", tmp_selection)) < tresshold_aa:
+    #             print("\t"+structure_list_entire[i], len(re.findall(r"\s\d", tmp_selection)))
+    #             break_flag = True
+    #         selection.append(tmp_selection)
         
-        if break_flag:
-            print(f"\tBreaked after {j} iteration(s) of superexposion. \nTry to change the parameter tresshold_aa if a higher number of iterations are wanted.")
-            break
+    #     if break_flag:
+    #         print(f"\tBreaked after {j} iteration(s) of superexposion. \nTry to change the parameter tresshold_aa if a higher number of iterations are wanted.")
+    #         break
 
-        align = process_dicts(align,structure_list_entire)
+    #     align = process_dicts(align,structure_list_entire)
 
-        print(to_outfile[-2]+to_outfile[-1][:-1])
-        if to_outfile[-1] == to_outfile[-3]:
-            break_flag = True
-            print(f"\tBreaked after {j+1} iteration(s) of superimposion.")
-            break
+    #     print(to_outfile[-2]+to_outfile[-1][:-1])
+    #     if to_outfile[-1] == to_outfile[-3]:
+    #         break_flag = True
+    #         print(f"\tBreaked after {j+1} iteration(s) of superimposion.")
+    #         break
         
-    with open("log.txt","w") as outfile:
-        outfile.write("".join(to_outfile))
-    update_alignment(align)
-    if break_flag == False:
-        print(f"\tCompleted {iterations} iteration(s) of superimposion.")
-    return score_list, selection, structure_list_entire
+    # with open("log.txt","w") as outfile:
+    #     outfile.write("".join(to_outfile))
+    # update_alignment(align)
+    # if break_flag == False:
+    #     print(f"\tCompleted {iterations} iteration(s) of superimposion.")
+    # return score_list, selection, structure_list_entire, structure_list_entire_chainA
 
-def run(ref_structure, files, iterations, tresshold_aa, max_dist, alignment_file_name, max_initial_rmsd):
+def run(ref_structure, files, max_dist, alignment_file_name, max_initial_rmsd):
     """
     DESCRIPTION
 
@@ -321,9 +409,9 @@ def run(ref_structure, files, iterations, tresshold_aa, max_dist, alignment_file
 
 # LOOP start
     print("Running SIMalign...")
-    score_list, core_selection, structure_list_entire = SIMalign(ref_structure, structure_list_entire, iterations, tresshold_aa, max_dist, max_initial_rmsd)
+    score_list, core_selection, structure_list_entire, structure_list_entire_chainA = SIMalign(ref_structure, structure_list_entire, max_dist, max_initial_rmsd)
     cmd.save(alignment_file_name, selection="aln")
 
     
 
-    return len(cmd.get_model(ref_structure).atom), score_list, structure_list_entire, core_selection
+    return len(cmd.get_model(ref_structure).atom), score_list, structure_list_entire, core_selection, structure_list_entire_chainA
