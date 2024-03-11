@@ -49,31 +49,31 @@ def aa_to_blosom(aa1,aa2):
 
 
 
-def select_by_score(score_list, modelatoms):
-    """
-    DESCRIPTION
+# def select_by_score(score_list, modelatoms):
+#     """
+#     DESCRIPTION
 
-    Takes list of scores and make a list of strings used for selection for the residues with score above procentive tresshold
+#     Takes list of scores and make a list of strings used for selection for the residues with score above procentive tresshold
 
-    DEPENDENCIES
+#     DEPENDENCIES
 
-    import numpy as np
-    """
+#     import numpy as np
+#     """
 
-    tresshold = np.median(np.array(list(filter(lambda num: num != 0, score_list))))
-    out_string = ""
-    chain = ""
-    for j, score in enumerate(score_list):
-        if score > tresshold:
-            if chain == "":
-                chain = modelatoms[j].chain
-                out_string = f" and ((chain {chain} and (resi {j+1}"
-            elif chain != modelatoms[j].chain:
-                chain = modelatoms[j].chain
-                out_string += f")) or (chain {chain} and (resi {j+1}"
-            else:
-                out_string += f" or resi {j+1}"
-    return out_string+")))"
+#     tresshold = np.median(np.array(list(filter(lambda num: num != 0, score_list))))
+#     out_string = ""
+#     chain = ""
+#     for j, score in enumerate(score_list):
+#         if score > tresshold:
+#             if chain == "":
+#                 chain = modelatoms[j].chain
+#                 out_string = f" and ((chain {chain} and (resi {j+1}"
+#             elif chain != modelatoms[j].chain:
+#                 chain = modelatoms[j].chain
+#                 out_string += f")) or (chain {chain} and (resi {j+1}"
+#             else:
+#                 out_string += f" or resi {j+1}"
+#     return out_string+")))"
     
 
 def select_first_chain(structure_list_entire):
@@ -164,7 +164,6 @@ def average_coordinate(list_of_coordinates):
 def SIMalign(ref_structure, structure_list_entire_chainA, max_dist, max_initial_rmsd):
     structure_list_entire = [x.split(" ")[0] for x in structure_list_entire_chainA]
     n_homologous_list = len(structure_list_entire) - 1
-    selection = []
 
     for i, structure in enumerate(structure_list_entire):   # Super of all structures to ref_structure
         if i != 0:
@@ -174,7 +173,7 @@ def SIMalign(ref_structure, structure_list_entire_chainA, max_dist, max_initial_
                 print(f"\tStructure {structure} was deleted because the RMSD to {ref_structure.split(' ')[0]} was above 5Å: {super[0]}Å")
                 cmd.delete(structure)
             else:
-                print(f"\t{structure} was superimposed with: RMSD=\t{round(super[0],3)}, Aligned atoms={super[1]}")
+                print(f"\t{structure} was superimposed with: RMSD={round(super[0],3)}, Aligned atoms={super[1]}")
     
     structure_list_entire = cmd.get_object_list()
     structure_list_entire_chainA = select_first_chain(structure_list_entire)
@@ -255,7 +254,7 @@ def SIMalign(ref_structure, structure_list_entire_chainA, max_dist, max_initial_
 
     align = process_dicts(align,structure_list_entire)
     update_alignment(align)
-    return score_list, selection, structure_list_entire, structure_list_entire_chainA
+    return score_list, structure_list_entire, structure_list_entire_chainA
     # for j in range(iterations):
 
     #     to_outfile.append(f"\tIteration {j+1}\n\tstructure\tRMSD\tresidues aligned\n")
@@ -409,9 +408,9 @@ def run(ref_structure, files, max_dist, alignment_file_name, max_initial_rmsd):
 
 # LOOP start
     print("Running SIMalign...")
-    score_list, core_selection, structure_list_entire, structure_list_entire_chainA = SIMalign(ref_structure, structure_list_entire, max_dist, max_initial_rmsd)
+    score_list, structure_list_entire, structure_list_entire_chainA = SIMalign(ref_structure, structure_list_entire, max_dist, max_initial_rmsd)
     cmd.save(alignment_file_name, selection="aln")
 
     
 
-    return len(cmd.get_model(ref_structure).atom), score_list, structure_list_entire, core_selection, structure_list_entire_chainA
+    return len(cmd.get_model(ref_structure).atom), score_list, structure_list_entire, structure_list_entire_chainA

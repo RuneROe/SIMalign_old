@@ -153,7 +153,7 @@ def select_exposed_AA(structure_list):
 
 import SIMalign
 
-def run(color_mode,hotspot_list,score_list,structure_list,core_selection,exposed_list,structure_format,show_in_pymol,color_by_element):
+def run(color_mode,hotspot_list,score_list,structure_list,exposed_list,structure_format,show_in_pymol,color_by_element):
     print("Coloring and selecting in pymol...")
     structure_list_entire_chainA = SIMalign.select_first_chain(structure_list)
     #Select core_AA
@@ -162,7 +162,7 @@ def run(color_mode,hotspot_list,score_list,structure_list,core_selection,exposed
     # print("not conserved and not HETATM and chain A")
     # print("chain A and not HETATM"+select_by_list(hotspot_list,structure_list))
     # print("chain A and not HETATM"+select_by_list(exposed_list,structure_list))
-    cmd.select("core_AA","not HETATM"+select_by_list(core_selection,structure_list_entire_chainA,list_of_lists=False))
+    # cmd.select("core_AA","not HETATM"+select_by_list(core_selection,structure_list_entire_chainA,list_of_lists=False))
 
     #Select conserved and nonconserved
     cmd.select("conserved", "not HETATM"+select_by_list(score_list,structure_list_entire_chainA,select_above99=True))
