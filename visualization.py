@@ -154,7 +154,7 @@ def select_exposed_AA(structure_list):
 
 import SIMalign
 
-def run(color_mode,hotspot_list,score_list,structure_list,exposed_list,structure_format,show_in_pymol,color_by_element):
+def run(color_mode,hotspot_list,score_list,structure_list,structure_format,show_in_pymol,color_by_element):
     print("Coloring and selecting in pymol...")
     structure_list_entire_chainA = SIMalign.select_first_chain(structure_list)
     #Select core_AA
@@ -172,8 +172,8 @@ def run(color_mode,hotspot_list,score_list,structure_list,exposed_list,structure
     if hotspot_list != None:
         #Select hotspots and exposed AA
         cmd.select("hotspots","not HETATM"+select_by_list(hotspot_list,structure_list_entire_chainA))
-    if exposed_list != None and exposed_list != []:
-        cmd.select("exposed_AA","not HETATM"+select_by_list(exposed_list,structure_list_entire_chainA))
+    # if exposed_list != None and exposed_list != []:
+    #     cmd.select("exposed_AA","not HETATM"+select_by_list(exposed_list,structure_list_entire_chainA))
     else:
         select_exposed_AA(structure_list_entire_chainA)
     structure_formating(structure_format,show_in_pymol)
