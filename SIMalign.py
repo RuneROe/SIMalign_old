@@ -173,7 +173,7 @@ def SIMalign(ref_structure, structure_list_entire_chainA, max_dist, max_initial_
                 print(f"\tStructure {structure} was deleted because the RMSD to {ref_structure.split(' ')[0]} was above 5Å: {super[0]}Å")
                 cmd.delete(structure)
             else:
-                print(f"\t{structure} was superimposed with: RMSD={round(super[0],3)}, Aligned atoms={super[1]}")
+                print(f"\t{structure} was superimposed with: RMSD={round(super[0],3)}Å, Aligned atoms={super[1]}")
     
     structure_list_entire = cmd.get_object_list()
     structure_list_entire_chainA = select_first_chain(structure_list_entire)

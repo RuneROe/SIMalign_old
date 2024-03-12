@@ -4,22 +4,22 @@ from scipy.spatial import cKDTree
 from Bio import AlignIO
 
 
-def resi_to_index(residue,ref_structure,structure_list,align,atomsCA):
+def resi_to_index(residue,align_seq,atomsCA):
     # atomsCA = cmd.get_model(ref_structure+" and name CA").atom
-    ref_index = structure_list.index(ref_structure)
+    # ref_index = structure_list.index(ref_structure)
     # print("ref_index",ref_index)
     count = 0
-    for index, AA in enumerate(align[ref_index].seq):
+    for index, AA in enumerate(align_seq.seq):
         if AA != "-":
             if int(atomsCA[count].resi) == residue:
                 return index
             count += 1
 
-def index_to_resi(index,ref_structure,structure_list,align,atomsCA):
+def index_to_resi(index,align_seq,atomsCA):
     # atomsCA = cmd.get_model(ref_structure+" and name CA").atom
-    ref_index = structure_list.index(ref_structure)
+    # ref_index = structure_list.index(ref_structure)
     count = 0
-    for i, AA in enumerate(align[ref_index].seq):
+    for i, AA in enumerate(align_seq.seq):
         if AA != "-":
             if i == index:
                 return int(atomsCA[count].resi)
@@ -114,7 +114,7 @@ def add_hotspot(closeAA_list,structure_list,align,atoms_list,resn,resi,coord,cou
     'VAL': 'V'}
     residue = None
     resi_list = []
-    ref_index = resi_to_index(resi,structure_list[0],structure_list,align,atoms_list[0])   
+    ref_index = resi_to_index(resi,align[0],atoms_list[0])   
     # align_char = align[0][ref_index]
     # print(ref_index,resi,structure_list[0],structure_list,align,atoms_list[0])
     for j, seq in enumerate(align[1:]):
@@ -124,7 +124,7 @@ def add_hotspot(closeAA_list,structure_list,align,atoms_list,resn,resi,coord,cou
         # try:
         if align_char != "-" and align_char != amino_acid_translation[resn]:
             for x in atoms_list[k]:
-                if int(x.resi) == index_to_resi(ref_index,structure_list[k],structure_list,align,atoms_list[k]):
+                if int(x.resi) == index_to_resi(ref_index,seq,atoms_list[k]):
                     break
             if dist_points(coord,x.coord) < 1:
                 flag = True
@@ -133,11 +133,12 @@ def add_hotspot(closeAA_list,structure_list,align,atoms_list,resn,resi,coord,cou
                     # print(j,ref_index,count)
                     # close_index = resi_to_index(closeAA,structure_list[j],structure_list,align)
                     # if close_index != None:
+                    print(j, closeAA)
                     if bigger_AA(seq[closeAA],align[0][closeAA]):
                         flag = False     
                 if flag:
                     residue = resi
-                    resi_list.append(index_to_resi(ref_index,structure_list[k],structure_list,align,atoms_list[k]))
+                    resi_list.append(index_to_resi(ref_index,seq,atoms_list[k]))
                 else:
                     resi_list.append("-")
             else:
@@ -293,10 +294,10 @@ from statistics import median
 #     return output
 
 
-def update_closeAA_list(close_AA_list, tmp_close_AAs, count, residue, resi_list, index, ref_structure, structure_list, align, atomsCA):
+def update_closeAA_list(close_AA_list, tmp_close_AAs, count, residue, resi_list, index, align_seq, atomsCA):
     close_AAs = set()
     for ele in tmp_close_AAs:
-        close_AAs.add(resi_to_index(ele,ref_structure,structure_list,align, atomsCA))
+        close_AAs.add(resi_to_index(ele,align_seq, atomsCA))
     try:
         while len(resi_list[:resi_list.index(residue)]) > count:
             # close_AA_list[j][count] = close_AAs
@@ -357,7 +358,7 @@ def get_new_close_AA(structure_list,align,score_list,structure_list_chainA,atoms
     hotspot_involved_index = [] 
     # hotspot_involved_resi = []      # Change hotspot_involved to list with alignment index
     for residue in hotspot_involved_set:
-        hotspot_involved_index.append(resi_to_index(residue,ref_structure,structure_list,align,CAatoms))
+        hotspot_involved_index.append(resi_to_index(residue,align[0],CAatoms))
         # hotspot_involved_resi.append(residue)
     # hotspot_involved_set = set(hotspot_involved)
     # print(hotspot_involved)
@@ -370,7 +371,7 @@ def get_new_close_AA(structure_list,align,score_list,structure_list_chainA,atoms
         # print(structure)
         resi_list = [0]
         for index in hotspot_involved_index:
-            resi_list.append(index_to_resi(index,structure,structure_list,align,atoms_list[j+1]))
+            resi_list.append(index_to_resi(index,align[j+1],atoms_list[j+1]))
         resi_set = set(resi_list)
         # print(structure,resi_set)
         close_AA_list.append([])
@@ -384,13 +385,13 @@ def get_new_close_AA(structure_list,align,score_list,structure_list_chainA,atoms
         count = 0
         for atom in atoms:
             if residue != int(atom.resi):
-                close_AA_list, close_AAs, count = update_closeAA_list(close_AA_list, close_AAs, count, residue, resi_list, j, structure, structure_list, align, atoms_list[j+1])
+                close_AA_list, close_AAs, count = update_closeAA_list(close_AA_list, close_AAs, count, residue, resi_list, j, align[j+1], atoms_list[j+1])
                 residue = int(atom.resi)
             if residue in resi_set:
                 tmp_set = set([int(atoms[x].resi) for x in kd.query_ball_point(atom.coord,4)])
                 tmp_set.discard(residue)
                 close_AAs.update(tmp_set)
-        close_AA_list, close_AAs, count = update_closeAA_list(close_AA_list, close_AAs, count, residue, resi_list, j, structure, structure_list, align, atoms_list[j+1])
+        close_AA_list, close_AAs, count = update_closeAA_list(close_AA_list, close_AAs, count, residue, resi_list, j, align[j+1], atoms_list[j+1])
         # print(j+1,close_AA_list[j])
         #     if residue != int(atom.resi):
         #         if tmp != "":
