@@ -90,28 +90,36 @@ def dist_points(coord1, coord2):
     distance = np.linalg.norm(coord2 - coord1)
     return distance
  
-def add_hotspot(closeAA_list,structure_list,align,atoms_list,resn,resi,coord,count):
-    amino_acid_translation = {
-    'ALA': 'A',
-    'ARG': 'R',
-    'ASN': 'N',
-    'ASP': 'D',
-    'CYS': 'C',
-    'GLU': 'E',
-    'GLN': 'Q',
-    'GLY': 'G',
-    'HIS': 'H',
-    'ILE': 'I',
-    'LEU': 'L',
-    'LYS': 'K',
-    'MET': 'M',
-    'PHE': 'F',
-    'PRO': 'P',
-    'SER': 'S',
-    'THR': 'T',
-    'TRP': 'W',
-    'TYR': 'Y',    
-    'VAL': 'V'}
+def threeletter2oneletter(AA):
+    try:
+        amino_acid_translation = {
+        'ALA': 'A',
+        'ARG': 'R',
+        'ASN': 'N',
+        'ASP': 'D',
+        'CYS': 'C',
+        'GLU': 'E',
+        'GLN': 'Q',
+        'GLY': 'G',
+        'HIS': 'H',
+        'ILE': 'I',
+        'LEU': 'L',
+        'LYS': 'K',
+        'MET': 'M',
+        'PHE': 'F',
+        'PRO': 'P',
+        'SER': 'S',
+        'THR': 'T',
+        'TRP': 'W',
+        'TYR': 'Y',    
+        'VAL': 'V'}
+        return amino_acid_translation[AA]
+    except:
+        return None
+
+
+def add_hotspot(closeAA_list,align,atoms_list,resn,resi,coord,count):
+
     residue = None
     resi_list = []
     ref_index = resi_to_index(resi,align[0],atoms_list[0])   
@@ -122,7 +130,7 @@ def add_hotspot(closeAA_list,structure_list,align,atoms_list,resn,resi,coord,cou
     # seq = align[0]
         align_char = seq[ref_index]
         # try:
-        if align_char != "-" and align_char != amino_acid_translation[resn]:
+        if align_char != "-" and align_char != threeletter2oneletter(resn):
             for x in atoms_list[k]:
                 if int(x.resi) == index_to_resi(ref_index,seq,atoms_list[k]):
                     break
@@ -133,7 +141,7 @@ def add_hotspot(closeAA_list,structure_list,align,atoms_list,resn,resi,coord,cou
                     # print(j,ref_index,count)
                     # close_index = resi_to_index(closeAA,structure_list[j],structure_list,align)
                     # if close_index != None:
-                    print(j, closeAA)
+                    # print(j, closeAA)
                     if bigger_AA(seq[closeAA],align[0][closeAA]):
                         flag = False     
                 if flag:
@@ -227,7 +235,7 @@ def run(structure_list,alignment_file_name,structure_list_chainA,score_list):
     count = 0
     for atom in atoms_list[0]:
         if int(atom.resi) in hotspot_involved:
-            k,v = add_hotspot(closeAA_list,structure_list,align,atoms_list,atom.resn,int(atom.resi),atom.coord,count)
+            k,v = add_hotspot(closeAA_list,align,atoms_list,atom.resn,int(atom.resi),atom.coord,count)
             if k != None:
                 hotspot[k] = v
             count += 1
@@ -242,15 +250,35 @@ def run(structure_list,alignment_file_name,structure_list_chainA,score_list):
 
 
 def print_hotspot(hotspot,structure_list):
-    model_list = []
+    atoms_list = []
     for structure in structure_list:
-        model_list.append(cmd.get_model(structure+" and name CA").atom)
+        atoms_list.append(cmd.get_model(structure+" and name CA").atom)
+    ret_atoms = atoms_list[0]
     # for i, hotspot in enumerate(hotspot_list):
     print("\tPrinting possible single mutations in "+structure_list[0])
-    for k,v in hotspot.items():
-        for j, resi in enumerate(v):
-            if resi != "-":
-                print("\t\t"+model_list[0][k-1].resn+model_list[0][k-1].resi+" -> "+model_list[j+1][resi-1].resn+" as structure: "+structure_list[j+1])
+    for atom in ret_atoms:
+        if int(atom.resi) in hotspot:
+            k = int(atom.resi)
+            v = hotspot[k]
+            for j, resi in enumerate(v):
+                if resi != "-":
+                    for x in atoms_list[j+1]:
+                        if int(x.resi) == resi:
+                            break
+                    print("\t\t"+atom.resn+atom.resi+" -> "+x.resn+" as structure: "+structure_list[j+1])
+
+
+    #         for x in atoms_list[k]:
+    #             if int(x.resi) == index_to_resi(ref_index,seq,atoms_list[k]):
+    #                 break
+
+    # for k,v in hotspot.items():
+    #     for j, resi in enumerate(v):
+    #         if resi != "-":
+    #             print(k-1,resi-1,j+1)
+    #             print(len(model_list[0]),len(model_list),len(structure_list))
+    #             print(len(model_list[j+1]))
+    #             print("\t\t"+model_list[0][k-1].resn+model_list[0][k-1].resi+" -> "+model_list[j+1][resi-1].resn+" as structure: "+structure_list[j+1])
     # if print_hospots_from_structure == "ref_structure":
     #     break
 
@@ -322,7 +350,7 @@ def get_new_close_AA(structure_list,align,score_list,structure_list_chainA,atoms
     # kd = cKDTree([atom.coord for atom in atoms])
     CAatoms = atoms_list[0]
     kdCA = cKDTree([atom.coord for atom in CAatoms])
-    ref_structure = structure_list[0]
+    # ref_structure = structure_list[0]
     hotspot_involved_set = set()
     med = median(score_list[0])
     for i, score in enumerate(score_list[0]):    # Get upper median
