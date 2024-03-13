@@ -171,11 +171,18 @@ def run(color_mode,hotspot_list,score_list,structure_list,structure_format,show_
      
     if hotspot_list != None:
         #Select hotspots and exposed AA
-        cmd.select("hotspots","not HETATM"+select_by_list(hotspot_list,structure_list_entire_chainA))
+        # hotspot_list_new = [list(hotspot_list.keys())]
+        # for v in hotspot_list[hotspot_list_new[0]]:
+        #     hotspot_list_new.append([])
+        # for i in range(len(hotspot_list[hotspot_list_new[0]])):
+        #     for j in range(len(hotspot_list)):
+        #         hotspot_list_new[]
+        cmd.select("hotspots","not HETATM"+select_by_list([list(hotspot_list.keys())],[structure_list_entire_chainA[0]]))
+        # cmd.select("hotspots","not HETATM"+select_by_list(hotspot_list,structure_list_entire_chainA))
     # if exposed_list != None and exposed_list != []:
     #     cmd.select("exposed_AA","not HETATM"+select_by_list(exposed_list,structure_list_entire_chainA))
-    else:
-        select_exposed_AA(structure_list_entire_chainA)
+    # else:
+    #     select_exposed_AA(structure_list_entire_chainA)
     structure_formating(structure_format,show_in_pymol)
     if color_mode == "hotspot":
         print("\tColoring by hotspots")

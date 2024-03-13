@@ -10,7 +10,7 @@ def resi_to_index(residue,align_seq,atomsCA):
     # print("ref_index",ref_index)
     count = 0
     for index, AA in enumerate(align_seq.seq):
-        if AA != "-":
+        if AA != "-" and AA != "?":
             if int(atomsCA[count].resi) == residue:
                 return index
             count += 1
@@ -20,7 +20,7 @@ def index_to_resi(index,align_seq,atomsCA):
     # ref_index = structure_list.index(ref_structure)
     count = 0
     for i, AA in enumerate(align_seq.seq):
-        if AA != "-":
+        if AA != "-" and AA != "?":
             if i == index:
                 return int(atomsCA[count].resi)
             count += 1
