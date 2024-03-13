@@ -11,7 +11,7 @@ def resi_to_index(residue,align_seq,atomsCA):
     count = 0
     for index, AA in enumerate(align_seq.seq):
         if AA != "-":
-            if AA != "?":
+            # if AA != "?":
                 if int(atomsCA[count].resi) == residue:
                 
                     return index
