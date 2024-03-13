@@ -11,10 +11,11 @@ def resi_to_index(residue,align_seq,atomsCA):
     count = 0
     for index, AA in enumerate(align_seq.seq):
         if AA != "-":
-            if int(atomsCA[count].resi) == residue:
-                if AA != "?":
+            if AA != "?":
+                if int(atomsCA[count].resi) == residue:
+                
                     return index
-            count += 1
+                count += 1
 
 def index_to_resi(index,align_seq,atomsCA):
     # atomsCA = cmd.get_model(ref_structure+" and name CA").atom
@@ -22,10 +23,12 @@ def index_to_resi(index,align_seq,atomsCA):
     count = 0
     for i, AA in enumerate(align_seq.seq):
         if AA != "-":
-            if i == index:
-                if AA != "?":
+            if AA != "?":
+                if i == index:
                     return int(atomsCA[count].resi)
-            count += 1
+                count += 1
+            elif i == index:
+                return "-"
         elif i == index:
             return "-"
 
