@@ -23,12 +23,15 @@ def index_to_resi(index,align_seq,atomsCA):
     count = 0
     for i, AA in enumerate(align_seq.seq):
         if AA != "-":
-            if AA != "?":
+            # if AA != "?":
                 if i == index:
-                    return int(atomsCA[count].resi)
+                    if AA == "?":
+                        return "-"
+                    else:
+                        return int(atomsCA[count].resi)
                 count += 1
-            elif i == index:
-                return "-"
+            # elif i == index:
+            #     return "-"
         elif i == index:
             return "-"
 
