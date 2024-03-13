@@ -141,6 +141,7 @@ def add_hotspot(closeAA_list,align,atoms_list,resn,resi,coord,count):
                     # print(j,ref_index,count)
                     # close_index = resi_to_index(closeAA,structure_list[j],structure_list,align)
                     # if close_index != None:
+                    print("ccc",count,closeAA_list[j])
                     print(j, closeAA)
                     if bigger_AA(seq[closeAA],align[0][closeAA]):
                         flag = False     
