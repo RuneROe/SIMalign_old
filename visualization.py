@@ -74,7 +74,7 @@ def color_by_score(structure, score):
     modelCA = SIMalign.get_singleCA(structure)
     resi1 = int(model.atom[0].resi)
     # select_conserved_list = []
-    for i, atomCA in enumerate(modelCA.atom):
+    for i, atomCA in enumerate(modelCA):
         cmd.set_color(f"{str(model.atom[i])+structure}color", color_by_number(score[i]))
         cmd.color(f"{str(model.atom[i])+structure}color", f"resi {atomCA.resi} and {structure}")
         # if score[i] > 0.99:
