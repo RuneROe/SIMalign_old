@@ -70,7 +70,8 @@ def color_by_score(structure, score):
     from pymol import cmd
     """
     model = cmd.get_model(structure)
-    modelCA = cmd.get_model(structure+" and name CA")
+    import SIMalign
+    modelCA = SIMalign.get_singleCA(structure)
     resi1 = int(model.atom[0].resi)
     # select_conserved_list = []
     for i, atomCA in enumerate(modelCA.atom):

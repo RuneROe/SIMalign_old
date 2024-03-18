@@ -224,10 +224,10 @@ def run(structure_list,alignment_file_name,structure_list_chainA,score_list):
     print("Finding hotspots...")
     align = AlignIO.read(alignment_file_name,"clustal")
 
-
+    import SIMalign
     atoms_list = []
     for structure in structure_list:
-        atoms_list.append(cmd.get_model(structure+" and name CA").atom)
+        atoms_list.append(SIMalign.get_singleCA(structure))
 
     # print("start")
     # closeAA_list = get_close_aa_list(structure_list,align)
@@ -260,9 +260,10 @@ def run(structure_list,alignment_file_name,structure_list_chainA,score_list):
 
 
 def print_hotspot(hotspot,structure_list):
+    import SIMalign
     atoms_list = []
     for structure in structure_list:
-        atoms_list.append(cmd.get_model(structure+" and name CA").atom)
+        atoms_list.append(SIMalign.get_singleCA(structure))
     ret_atoms = atoms_list[0]
     # for i, hotspot in enumerate(hotspot_list):
     print("\tPrinting possible single mutations in "+structure_list[0])

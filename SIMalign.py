@@ -48,6 +48,16 @@ def aa_to_blosom(aa1,aa2):
     return blosom62[id1][id2]
 
 
+def get_singleCA(structure):
+    out = []
+    atoms = cmd.get_model(structure+" and name CA").atom
+    residue = 0
+    for atom in atoms:
+        if int(atom.resi) != residue:
+            out.append(atom)
+            residue = int(atom.resi)
+    return out
+
 
 # def select_by_score(score_list, modelatoms):
 #     """
@@ -110,7 +120,7 @@ def get_align(alignment_file_name,structure_list):
     resi = []
     for seq in alignIO:
         resi.append(0)
-    modelsatoms = [cmd.get_model(structure+" and name CA").atom for structure in structure_list]
+    modelsatoms = [get_singleCA(structure) for structure in structure_list]
     for i in range(len(alignIO[0].seq)):
         tmp = {}
         for j, seq in enumerate(alignIO):
@@ -192,9 +202,10 @@ def SIMalign(ref_structure, structure_list_entire_chainA, max_dist, max_initial_
 
         score = []
         ref_kd = model_kd[model]
+        ref_atoms = get_singleCA(structure_list_entire_chainA[i])
 
         # LOOP through ca atoms to find scores of one model
-        for ref_atom in model.atom:
+        for ref_atom in ref_atoms:
             
             s = 0
             ref_resn = ref_atom.resn
