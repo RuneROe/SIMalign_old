@@ -49,7 +49,7 @@ def aa_to_blosom(aa1,aa2):
 
 
 def get_singleCA(structure):
-    print(structure)
+    # print(structure)
     out = []
     atoms = cmd.get_model(structure+" and name CA").atom
     residue = 0
@@ -96,12 +96,12 @@ def select_first_chain(structure_list_entire):
 
 from pymol import stored
 def test_pdb_format(structure):
-    print(structure)
+    # print(structure)
     structure = structure.split("/")[-1].split(".")[0]
     stored.residues = []
     cmd.iterate(structure,"stored.residues.append(resi)")
     if [resi for resi in stored.residues if not resi.isdigit()]:
-        print(structure,"was removed due to error in its residues")
+        print("\t"+structure,"was removed due to error in its residues")
         cmd.delete(structure)
 
 def downloading_files(ref_structure,files):

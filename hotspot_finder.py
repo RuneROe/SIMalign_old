@@ -226,7 +226,7 @@ def run(structure_list,alignment_file_name,structure_list_chainA,score_list):
 
     import SIMalign
     atoms_list = []
-    for structure in structure_list:
+    for structure in structure_list_chainA:
         atoms_list.append(SIMalign.get_singleCA(structure))
 
     # print("start")
