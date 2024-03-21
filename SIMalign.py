@@ -107,7 +107,7 @@ def test_pdb_format(structure):
 def downloading_files(ref_structure,files):
     try:
         cmd.load(ref_structure)
-        test_pdb_format(ref_structure):
+        test_pdb_format(ref_structure)
     except:
         print("Import ERROR: Reference structure could not be imported into PyMOL!")
         print("Program stoped!")
