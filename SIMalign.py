@@ -93,23 +93,58 @@ def select_first_chain(structure_list_entire):
         structure_list.append(structure+" and not HETATM and chain "+cmd.get_model(structure+" and not HETATM and name CA").atom[0].chain)
     return structure_list
 
+
+from pymol import stored
+def test_pdb_format(structure):
+    print(structure)
+    structure = structure.split("/")[-1].split(".")[0]
+    stored.residues = []
+    cmd.iterate(structure,"stored.residues.append(resi)")
+    if [resi for resi in stored.residues if not resi.isdigit()]:
+        print(structure,"was removed due to error in its residues")
+        cmd.delete(structure)
+
 def downloading_files(ref_structure,files):
     try:
         cmd.load(ref_structure)
-        for file in files:
-            if file != ref_structure:
+        test_pdb_format(ref_structure):
+    except:
+        print("Import ERROR: Reference structure could not be imported into PyMOL!")
+        print("Program stoped!")
+        sys.exit(1)
+    for file in files:
+        if file != ref_structure:
+            try:
                 if len(file.split(".")) == 1:
                     print("\tFetch:",file)
                     cmd.fetch(file)
                 else:
                     print("\tLoad:",file)
                     cmd.load(file)
-        structure_list = select_first_chain(cmd.get_object_list())      
-        return structure_list[0], structure_list
-    except:
-        print("\n- - - - - - - - - - - - - - - - - -\nImport ERROR")
-        print("\nCouldn't import one or more of the files in pymol\n- - - - - - - - - - - - - - - - - -\n")
-        sys.exit(1)
+                test_pdb_format(file)
+            except:
+                print("Import ERROR:",file,"could not be loaded in PyMOL")
+    structure_list = select_first_chain(cmd.get_object_list())
+    return structure_list[0], structure_list
+
+    # except:
+    #     print("c")
+    # try:
+    #     cmd.load(ref_structure)
+    #     for file in files:
+    #         if file != ref_structure:
+    #             if len(file.split(".")) == 1:
+    #                 print("\tFetch:",file)
+    #                 cmd.fetch(file)
+    #             else:
+    #                 print("\tLoad:",file)
+    #                 cmd.load(file)
+    #     structure_list = select_first_chain(cmd.get_object_list())      
+    #     return structure_list[0], structure_list
+    # except:
+    #     print("\n- - - - - - - - - - - - - - - - - -\nImport ERROR")
+    #     print("\nCouldn't import one or more of the files in pymol\n- - - - - - - - - - - - - - - - - -\n")
+    #     sys.exit(1)
     
 from Bio import AlignIO
 
