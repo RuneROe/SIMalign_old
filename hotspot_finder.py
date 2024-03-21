@@ -264,10 +264,10 @@ def print_hotspot(hotspot,structure_list):
     atoms_list = []
     for structure in structure_list:
         atoms_list.append(SIMalign.get_singleCA(structure))
-    ret_atoms = atoms_list[0]
+    ref_atoms = atoms_list[0]
     # for i, hotspot in enumerate(hotspot_list):
     print("\tPrinting possible single mutations in "+structure_list[0])
-    for atom in ret_atoms:
+    for atom in ref_atoms:
         if int(atom.resi) in hotspot:
             k = int(atom.resi)
             v = hotspot[k]

@@ -49,6 +49,7 @@ def aa_to_blosom(aa1,aa2):
 
 
 def get_singleCA(structure):
+    print(structure)
     out = []
     atoms = cmd.get_model(structure+" and name CA").atom
     residue = 0
@@ -196,7 +197,7 @@ def SIMalign(ref_structure, structure_list_entire_chainA, max_dist, max_initial_
 
     score_list = []
     align = []
-
+    print("Updating sequence alignment...")
     # LOOP through models
     for i, model in enumerate(model_kd.keys()):
 
