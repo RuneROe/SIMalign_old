@@ -121,7 +121,8 @@ def threeletter2oneletter(AA):
         'THR': 'T',
         'TRP': 'W',
         'TYR': 'Y',    
-        'VAL': 'V'}
+        'VAL': 'V',
+        'MSE': 'M'}
         return amino_acid_translation[AA]
     except:
         return None

@@ -50,12 +50,14 @@ def aa_to_blosom(aa1,aa2):
 
 def get_singleCA(structure):
     # print(structure)
+    AA_set = {"ALA","ARG","ASN","ASP","CYS","GLN","GLU","GLY","HIS","ILE","LEU","LYS","MET","PHE","PRO","SER","THR","TRP","TYR","VAL","MSE"}
     out = []
     atoms = cmd.get_model(structure+" and name CA").atom
     residue = 0
     for atom in atoms:
         if int(atom.resi) != residue:
-            out.append(atom)
+            if atom.resn in AA_set:
+                out.append(atom)
             residue = int(atom.resi)
     return out
 
@@ -90,7 +92,7 @@ def get_singleCA(structure):
 def select_first_chain(structure_list_entire):
     structure_list = []
     for structure in structure_list_entire:
-        structure_list.append(structure+" and not HETATM and chain "+cmd.get_model(structure+" and not HETATM and name CA").atom[0].chain)
+        structure_list.append(structure+" and chain "+cmd.get_model(structure+" and name CA").atom[0].chain)
     return structure_list
 
 
