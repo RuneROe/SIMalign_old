@@ -105,7 +105,7 @@ def get_singleCA(structure):
 def select_first_chain(structure_list_entire):
     structure_list = []
     for structure in structure_list_entire:
-        structure_list.append(structure+" and chain "+cmd.get_model(structure+" and name CA").atom[0].chain)
+        structure_list.append(structure+" and not HETATM and chain "+cmd.get_model(structure+" and name CA").atom[0].chain)
     return structure_list
 
 
