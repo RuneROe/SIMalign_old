@@ -48,16 +48,29 @@ def aa_to_blosom(aa1,aa2):
     return blosom62[id1][id2]
 
 
+# def get_singleCA(structure):
+#     # print(structure)
+#     AA_set = {"ALA","ARG","ASN","ASP","CYS","GLN","GLU","GLY","HIS","ILE","LEU","LYS","MET","PHE","PRO","SER","THR","TRP","TYR","VAL","MSE"}
+#     out = []
+#     atoms = cmd.get_model(structure+" and name CA").atom
+#     residue = 0
+#     for atom in atoms:
+#         if int(atom.resi) != residue:
+#             if atom.resn in AA_set:
+#                 out.append(atom)
+#             residue = int(atom.resi)
+#     return out
+
 def get_singleCA(structure):
     # print(structure)
-    AA_set = {"ALA","ARG","ASN","ASP","CYS","GLN","GLU","GLY","HIS","ILE","LEU","LYS","MET","PHE","PRO","SER","THR","TRP","TYR","VAL","MSE"}
+    # AA_set = {"ALA","ARG","ASN","ASP","CYS","GLN","GLU","GLY","HIS","ILE","LEU","LYS","MET","PHE","PRO","SER","THR","TRP","TYR","VAL","MSE"}
     out = []
-    atoms = cmd.get_model(structure+" and name CA").atom
+    atoms = cmd.get_model(structure+" and not HETATM and name CA").atom
     residue = 0
     for atom in atoms:
         if int(atom.resi) != residue:
-            if atom.resn in AA_set:
-                out.append(atom)
+            # if atom.resn in AA_set:
+            out.append(atom)
             residue = int(atom.resi)
     return out
 
@@ -104,6 +117,10 @@ def test_pdb_format(structure):
     cmd.iterate(structure,"stored.residues.append(resi)")
     if [resi for resi in stored.residues if not resi.isdigit()]:
         print("\t"+structure,"was removed due to error in its residues")
+        cmd.delete(structure)
+    fasta = "".join(cmd.get_fastastr(structure).split("\n")[1].split("?"))
+    if len(fasta) != len(get_singleCA(structure)):
+        print("\t"+structure,"was removed because it contain non canonical amino acids")
         cmd.delete(structure)
 
 def downloading_files(ref_structure,files):
