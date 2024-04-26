@@ -67,7 +67,12 @@ def get_singleCA(structure):
     out = []
     atoms = cmd.get_model(structure+" and not HETATM and name CA").atom
     residue = 0
+    chain = ""
     for atom in atoms:
+        if chain and chain != atom.chain:
+            return out
+        else:
+            chain = atom.chain
         if int(atom.resi) != residue:
             # if atom.resn in AA_set:
             out.append(atom)
