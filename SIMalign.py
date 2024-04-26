@@ -108,6 +108,15 @@ def select_first_chain(structure_list_entire):
         structure_list.append(structure+" and not HETATM and chain "+cmd.get_model(structure+" and name CA").atom[0].chain)
     return structure_list
 
+def get_fasta(structure):
+    lines = cmd.get_fastastr(structure).split("\n")
+    fasta = ""
+    for line in lines[1:]:
+        if line.startswith(">"):
+            return fasta
+        else:
+            fasta += line
+
 
 from pymol import stored
 def test_pdb_format(structure):
@@ -118,7 +127,7 @@ def test_pdb_format(structure):
     if [resi for resi in stored.residues if not resi.isdigit()]:
         print("\t"+structure,"was removed due to error in its residues")
         cmd.delete(structure)
-    fasta = "".join(cmd.get_fastastr(structure).split("\n")[1].split("?"))
+    fasta = get_fasta(structure)
     if len(fasta) != len(get_singleCA(structure)):
         print("\t"+structure,"was removed because it contain non canonical amino acids")
         cmd.delete(structure)
