@@ -144,6 +144,7 @@ def downloading_files(ref_structure,files):
     except:
         print("Import ERROR: Reference structure could not be imported into PyMOL!")
         print("Program stoped!")
+        print(ref_structure)
         sys.exit(1)
     for file in files:
         if file != ref_structure:
