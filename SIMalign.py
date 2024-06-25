@@ -128,14 +128,14 @@ from pymol import stored
 def test_pdb_format(structure):
     # print(structure)
     structure = structure.split("/")[-1].split(".")[0]
-    print(structure)
+    # print(structure)
     stored.residues = []
     cmd.iterate(structure,"stored.residues.append(resi)")
     if [resi for resi in stored.residues if not resi.isdigit()]:
         print("\t"+structure,"was removed due to error in its residues")
         cmd.delete(structure)
     fasta = get_fasta(structure)
-    print(fasta)
+    # print(fasta)
     if len(fasta) != len(get_singleCA(structure)):
         print("\t"+structure,"was removed because it contain non canonical amino acids")
         cmd.delete(structure)
@@ -143,12 +143,12 @@ def test_pdb_format(structure):
 def downloading_files(ref_structure,files):
     try:
         cmd.load(ref_structure)
-        print(select_first_chain(cmd.get_object_list()))
+        # print(select_first_chain(cmd.get_object_list()))
         test_pdb_format(ref_structure)
     except:
         print("Import ERROR: Reference structure could not be imported into PyMOL!")
         print("Program stoped!")
-        print(ref_structure)
+        # print(ref_structure)
         sys.exit(1)
     for file in files:
         if file != ref_structure:

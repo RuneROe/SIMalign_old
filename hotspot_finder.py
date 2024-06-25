@@ -28,7 +28,7 @@ def index_to_resi(index,align_seq,atomsCA):
                     if AA == "?":
                         return "-"
                     else:
-                        print(index,count)
+                        # print(index,count)
                         return int(atomsCA[count].resi)
                 count += 1
             # elif i == index:
@@ -281,6 +281,7 @@ def print_hotspot(hotspot,structure_list):
                     print("\t\t"+atom.resn+atom.resi+" -> "+x.resn+" as structure: "+structure_list[j+1])
 
 
+
     #         for x in atoms_list[k]:
     #             if int(x.resi) == index_to_resi(ref_index,seq,atoms_list[k]):
     #                 break
@@ -412,7 +413,7 @@ def get_new_close_AA(structure_list,align,score_list,structure_list_chainA,atoms
         # print(structure)
         resi_list = [0]
         for index in hotspot_involved_index:
-            print(j+1,structure_list[j+1])
+            # print(j+1,structure_list[j+1])
             resi_list.append(index_to_resi(index,align[j+1],atoms_list[j+1]))
         resi_set = set(resi_list)
         # print(structure,resi_set)
