@@ -121,6 +121,7 @@ def get_fasta(structure):
             return fasta
         else:
             fasta += line
+    return fasta
 
 
 from pymol import stored
